@@ -1,12 +1,63 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { AuthService } from '@core/services/auth.service';
+import { Shell } from '@shared/components/shell/shell';
+import { ToastContainer } from '@shared/ui/toast/toast-container';
 
 @Component({
-  selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.html',
-  styleUrl: './app.scss'
+  selector: 'brew-root',
+  standalone: true,
+  imports: [RouterOutlet, Shell, ToastContainer],
+  template: `
+    @if (authService.loading()) {
+      <div class="loading-screen">
+        <span class="loading-icon">☕</span>
+      </div>
+    } @else if (authService.isAuthenticated()) {
+      <brew-shell>
+        <router-outlet />
+      </brew-shell>
+    } @else {
+      <main class="auth-layout">
+        <router-outlet />
+      </main>
+    }
+    <brew-toast-container />
+  `,
+  styles: `
+    :host {
+      display: block;
+      min-height: 100dvh;
+    }
+
+    .auth-layout {
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--surface-base) 0%, var(--surface-subtle) 100%);
+      padding: var(--space-4);
+    }
+
+    .loading-screen {
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface-base);
+    }
+
+    .loading-icon {
+      font-size: 3rem;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.95); }
+    }
+  `
 })
 export class App {
-  protected readonly title = signal('brew-print');
+  authService = inject(AuthService);
 }

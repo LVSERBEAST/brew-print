@@ -1,0 +1,92 @@
+.page {
+  max-width: var(--container-lg);
+  margin: 0 auto;
+  animation: fadeIn var(--duration-normal) var(--ease-out);
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-6);
+  gap: var(--space-4);
+  h1 {
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    margin: 0 0 var(--space-1);
+  }
+  .subtitle {
+    color: var(--text-tertiary);
+    margin: 0;
+  }
+}
+
+.technique-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-4);
+}
+
+.tech-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.tech-card {
+  height: 100%;
+}
+
+.tech-name {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  margin: 0 0 var(--space-2);
+}
+
+.tech-desc {
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+  margin: 0 0 var(--space-4);
+  line-height: var(--leading-relaxed);
+}
+
+.tech-params {
+  display: flex;
+  gap: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.empty-state {
+  text-align: center;
+}
+
+.empty-content {
+  padding: var(--space-12) var(--space-4);
+  .empty-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: var(--space-4);
+    opacity: 0.5;
+  }
+  h3 {
+    font-family: var(--font-display);
+    margin: 0 0 var(--space-2);
+  }
+  p {
+    color: var(--text-tertiary);
+    margin-bottom: var(--space-6);
+  }
+}
+
+.loading-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-4);
+}
+
+.skeleton-card {
+  height: 140px;
+  border-radius: var(--radius-xl);
+  @extend .skeleton !optional;
+}

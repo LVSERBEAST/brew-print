@@ -1,1 +1,550 @@
-/* You can add global styles to this file, and also import other style files */
+// ============================================================================
+// BREWLOG DESIGN SYSTEM
+// Morning Cream Theme - Warm Neutral + Copper
+// ============================================================================
+
+// ============================================================================
+// CSS CUSTOM PROPERTIES (DESIGN TOKENS)
+// ============================================================================
+
+:root {
+  // -------------------------------------------------------------------------
+  // COLOR PALETTE
+  // -------------------------------------------------------------------------
+  
+  // Base neutrals (warm undertone)
+  --color-white: #ffffff;
+  --color-cream-50: #fefdfb;
+  --color-cream-100: #faf6f0;
+  --color-cream-200: #f5efe5;
+  --color-cream-300: #ebe5dc;
+  --color-cream-400: #d9d0c4;
+  --color-cream-500: #b8a898;
+  --color-cream-600: #9a8a7a;
+  --color-cream-700: #7a6a5a;
+  --color-cream-800: #5a4a3a;
+  --color-cream-900: #3d3530;
+  --color-cream-950: #2a2420;
+  
+  // Primary (Copper/Amber)
+  --color-copper-50: #fef8f0;
+  --color-copper-100: #fef5eb;
+  --color-copper-200: #fce9d4;
+  --color-copper-300: #f5d4b0;
+  --color-copper-400: #e8b880;
+  --color-copper-500: #c4956a;
+  --color-copper-600: #b8864e;
+  --color-copper-700: #9a6d3a;
+  --color-copper-800: #7a5530;
+  --color-copper-900: #5a4025;
+  
+  // Semantic colors
+  --color-success-light: #e8f5e8;
+  --color-success: #4a9a4a;
+  --color-success-dark: #2d6a2d;
+  
+  --color-warning-light: #fef5e0;
+  --color-warning: #c9a040;
+  --color-warning-dark: #8a6a20;
+  
+  --color-error-light: #fce8e8;
+  --color-error: #c85050;
+  --color-error-dark: #8a3030;
+  
+  --color-info-light: #e8f0f8;
+  --color-info: #5080b0;
+  --color-info-dark: #305070;
+  
+  // -------------------------------------------------------------------------
+  // SEMANTIC SURFACE COLORS
+  // -------------------------------------------------------------------------
+  
+  --surface-base: var(--color-cream-50);
+  --surface-subtle: var(--color-cream-100);
+  --surface-card: var(--color-white);
+  --surface-elevated: var(--color-white);
+  --surface-overlay: rgba(42, 36, 32, 0.5);
+  
+  // -------------------------------------------------------------------------
+  // SEMANTIC TEXT COLORS
+  // -------------------------------------------------------------------------
+  
+  --text-primary: var(--color-cream-900);
+  --text-secondary: var(--color-cream-700);
+  --text-tertiary: var(--color-cream-600);
+  --text-muted: var(--color-cream-500);
+  --text-inverse: var(--color-white);
+  --text-accent: var(--color-copper-600);
+  
+  // -------------------------------------------------------------------------
+  // SEMANTIC BORDER COLORS
+  // -------------------------------------------------------------------------
+  
+  --border-subtle: var(--color-cream-200);
+  --border-default: var(--color-cream-300);
+  --border-strong: var(--color-cream-400);
+  --border-focus: var(--color-copper-500);
+  
+  // -------------------------------------------------------------------------
+  // INTERACTIVE COLORS
+  // -------------------------------------------------------------------------
+  
+  --interactive-primary: var(--color-copper-500);
+  --interactive-primary-hover: var(--color-copper-600);
+  --interactive-primary-active: var(--color-copper-700);
+  
+  --interactive-secondary: transparent;
+  --interactive-secondary-hover: var(--color-cream-100);
+  --interactive-secondary-active: var(--color-cream-200);
+  
+  // -------------------------------------------------------------------------
+  // SPACING SCALE (4px base)
+  // -------------------------------------------------------------------------
+  
+  --space-0: 0;
+  --space-1: 0.25rem;   // 4px
+  --space-2: 0.5rem;    // 8px
+  --space-3: 0.75rem;   // 12px
+  --space-4: 1rem;      // 16px
+  --space-5: 1.25rem;   // 20px
+  --space-6: 1.5rem;    // 24px
+  --space-8: 2rem;      // 32px
+  --space-10: 2.5rem;   // 40px
+  --space-12: 3rem;     // 48px
+  --space-16: 4rem;     // 64px
+  --space-20: 5rem;     // 80px
+  --space-24: 6rem;     // 96px
+  
+  // -------------------------------------------------------------------------
+  // TYPOGRAPHY
+  // -------------------------------------------------------------------------
+  
+  --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+  
+  // Font sizes (fluid scale)
+  --text-xs: clamp(0.6875rem, 0.65rem + 0.1vw, 0.75rem);      // 11-12px
+  --text-sm: clamp(0.8125rem, 0.775rem + 0.1vw, 0.875rem);    // 13-14px
+  --text-base: clamp(0.9375rem, 0.9rem + 0.1vw, 1rem);        // 15-16px
+  --text-lg: clamp(1.0625rem, 1rem + 0.2vw, 1.125rem);        // 17-18px
+  --text-xl: clamp(1.1875rem, 1.1rem + 0.3vw, 1.25rem);       // 19-20px
+  --text-2xl: clamp(1.375rem, 1.25rem + 0.4vw, 1.5rem);       // 22-24px
+  --text-3xl: clamp(1.625rem, 1.45rem + 0.6vw, 1.875rem);     // 26-30px
+  --text-4xl: clamp(2rem, 1.75rem + 0.8vw, 2.5rem);           // 32-40px
+  --text-5xl: clamp(2.5rem, 2.1rem + 1.2vw, 3.25rem);         // 40-52px
+  
+  // Line heights
+  --leading-none: 1;
+  --leading-tight: 1.2;
+  --leading-snug: 1.35;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 1.8;
+  
+  // Letter spacing
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.02em;
+  --tracking-wider: 0.04em;
+  
+  // Font weights
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  
+  // -------------------------------------------------------------------------
+  // BORDER RADIUS
+  // -------------------------------------------------------------------------
+  
+  --radius-sm: 0.375rem;   // 6px
+  --radius-md: 0.625rem;   // 10px
+  --radius-lg: 0.875rem;   // 14px
+  --radius-xl: 1.25rem;    // 20px
+  --radius-2xl: 1.5rem;    // 24px
+  --radius-full: 9999px;
+  
+  // -------------------------------------------------------------------------
+  // SHADOWS
+  // -------------------------------------------------------------------------
+  
+  --shadow-xs: 0 1px 2px rgba(90, 74, 58, 0.04);
+  --shadow-sm: 0 2px 8px rgba(90, 74, 58, 0.06);
+  --shadow-md: 0 4px 16px rgba(90, 74, 58, 0.08);
+  --shadow-lg: 0 8px 24px rgba(90, 74, 58, 0.1);
+  --shadow-xl: 0 12px 40px rgba(90, 74, 58, 0.12);
+  --shadow-inner: inset 0 2px 4px rgba(90, 74, 58, 0.04);
+  
+  --shadow-focus: 0 0 0 3px rgba(196, 149, 106, 0.2);
+  --shadow-focus-error: 0 0 0 3px rgba(200, 80, 80, 0.2);
+  
+  // -------------------------------------------------------------------------
+  // TRANSITIONS
+  // -------------------------------------------------------------------------
+  
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+  
+  // -------------------------------------------------------------------------
+  // Z-INDEX SCALE
+  // -------------------------------------------------------------------------
+  
+  --z-base: 0;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal-backdrop: 300;
+  --z-modal: 400;
+  --z-popover: 500;
+  --z-toast: 600;
+  --z-tooltip: 700;
+  
+  // -------------------------------------------------------------------------
+  // LAYOUT
+  // -------------------------------------------------------------------------
+  
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  
+  --sidebar-width: 260px;
+  --header-height: 64px;
+  --mobile-nav-height: 72px;
+}
+
+// ============================================================================
+// CSS RESET & BASE STYLES
+// ============================================================================
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--weight-normal);
+  line-height: var(--leading-normal);
+  color: var(--text-primary);
+  background: var(--surface-base);
+  min-height: 100dvh;
+}
+
+// ============================================================================
+// TYPOGRAPHY UTILITIES
+// ============================================================================
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-primary);
+}
+
+h1 { font-size: var(--text-4xl); }
+h2 { font-size: var(--text-3xl); }
+h3 { font-size: var(--text-2xl); }
+h4 { font-size: var(--text-xl); }
+h5 { font-size: var(--text-lg); }
+h6 { font-size: var(--text-base); }
+
+p {
+  margin-bottom: var(--space-4);
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+a {
+  color: var(--text-accent);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-default);
+  
+  &:hover {
+    color: var(--interactive-primary-hover);
+  }
+}
+
+strong, b {
+  font-weight: var(--weight-semibold);
+}
+
+small {
+  font-size: var(--text-sm);
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--surface-subtle);
+  padding: 0.125em 0.375em;
+  border-radius: var(--radius-sm);
+}
+
+// ============================================================================
+// FORM ELEMENTS BASE
+// ============================================================================
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+input,
+select,
+textarea {
+  background: var(--surface-card);
+  border: 2px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-4);
+  width: 100%;
+  transition: 
+    border-color var(--duration-fast) var(--ease-default),
+    box-shadow var(--duration-fast) var(--ease-default);
+  
+  &::placeholder {
+    color: var(--text-muted);
+  }
+  
+  &:hover {
+    border-color: var(--border-strong);
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: var(--border-focus);
+    box-shadow: var(--shadow-focus);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237a6a5a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-3) center;
+  padding-right: var(--space-10);
+}
+
+label {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-2);
+}
+
+// ============================================================================
+// UTILITY CLASSES
+// ============================================================================
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+// ============================================================================
+// SCROLLBAR STYLING
+// ============================================================================
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface-subtle);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-cream-400);
+  border-radius: var(--radius-full);
+  
+  &:hover {
+    background: var(--color-cream-500);
+  }
+}
+
+// Firefox
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-cream-400) var(--surface-subtle);
+}
+
+// ============================================================================
+// ANIMATIONS
+// ============================================================================
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn var(--duration-normal) var(--ease-out);
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp var(--duration-normal) var(--ease-out);
+}
+
+.animate-scale-in {
+  animation: scaleIn var(--duration-normal) var(--ease-bounce);
+}
+
+// ============================================================================
+// LOADING SKELETON
+// ============================================================================
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-cream-200) 0%,
+    var(--color-cream-100) 50%,
+    var(--color-cream-200) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-md);
+}
+
+// ============================================================================
+// VIEW TRANSITIONS
+// ============================================================================
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--duration-normal);
+  animation-timing-function: var(--ease-default);
+}
+
+::view-transition-old(root) {
+  animation-name: fadeIn;
+  animation-direction: reverse;
+}
+
+::view-transition-new(root) {
+  animation-name: fadeIn;
+}

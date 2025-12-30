@@ -1,0 +1,166 @@
+<div class="dashboard">
+  <header class="dashboard-header">
+    <div class="greeting">
+      <h1>{{ greeting() }}, {{ userName() }}</h1>
+      <p class="date">{{ today }}</p>
+    </div>
+
+    <a routerLink="/brews/new" class="quick-add">
+      <brew-button>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+        Log Brew
+      </brew-button>
+    </a>
+  </header>
+
+  <!-- Stats Grid -->
+  <div class="stats-grid">
+    <!-- Streak Card -->
+    <brew-card class="stat-card stat-card--streak">
+      <div class="stat-content">
+        <div class="stat-icon streak-icon">🔥</div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats()?.totalBrews || 0 }}</span>
+          <span class="stat-label">Total Brews</span>
+        </div>
+      </div>
+      <div class="streak-dots">
+        @for (day of weekDays; track day.label; let i = $index) {
+        <div class="streak-day" [class.active]="isStreakDay(i)">
+          <span class="day-label">{{ day.label }}</span>
+          <span class="day-dot"></span>
+        </div>
+        }
+      </div>
+    </brew-card>
+
+    <!-- Rating Card -->
+    <brew-card class="stat-card">
+      <div class="stat-content">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-info">
+          <span class="stat-value"
+            >{{ (user()?.stats?.averageRating || 0) | number:'1.1-1' }}</span
+          >
+          <span class="stat-label">Avg Rating</span>
+        </div>
+      </div>
+      <div class="rating-bar">
+        <div
+          class="rating-fill"
+          [style.width.%]="(user()?.stats?.averageRating || 0) * 10"
+        ></div>
+      </div>
+    </brew-card>
+
+    <!-- Beans Card -->
+    <brew-card class="stat-card" [clickable]="true" routerLink="/beans">
+      <div class="stat-content">
+        <div class="stat-icon">🫘</div>
+        <div class="stat-info">
+          <span class="stat-value">{{ user()?.stats?.totalBeans || 0 }}</span>
+          <span class="stat-label">Beans</span>
+        </div>
+      </div>
+    </brew-card>
+
+    <!-- Equipment Card -->
+    <brew-card class="stat-card" [clickable]="true" routerLink="/equipment">
+      <div class="stat-content">
+        <div class="stat-icon">⚙️</div>
+        <div class="stat-info">
+          <span class="stat-value"
+            >{{ user()?.stats?.totalEquipment || 0 }}</span
+          >
+          <span class="stat-label">Equipment</span>
+        </div>
+      </div>
+    </brew-card>
+  </div>
+
+  <!-- Activity Chart -->
+  <brew-card title="Brew Activity" subtitle="Last 30 days" class="chart-card">
+    <div class="activity-chart">
+      @for (day of brewsByDay(); track day.date) {
+      <div
+        class="chart-bar"
+        [style.height.%]="getBarHeight(day.count)"
+        [class.chart-bar--today]="isToday(day.date)"
+        [title]="day.date + ': ' + day.count + ' brews'"
+      ></div>
+      }
+    </div>
+    <div class="chart-labels">
+      <span>30 days ago</span>
+      <span>Today</span>
+    </div>
+  </brew-card>
+
+  <!-- Recent Brews -->
+  <section class="recent-section">
+    <div class="section-header">
+      <h2>Recent Brews</h2>
+      <a routerLink="/brews" class="view-all">View all →</a>
+    </div>
+
+    @if (loading()) {
+    <div class="loading-state">
+      @for (i of [1, 2, 3]; track i) {
+      <div class="skeleton-card"></div>
+      }
+    </div>
+    } @else if (recentBrews().length === 0) {
+    <brew-card class="empty-state">
+      <div class="empty-content">
+        <span class="empty-icon">☕</span>
+        <h3>No brews yet</h3>
+        <p>Start tracking your coffee journey by logging your first brew.</p>
+        <a routerLink="/brews/new">
+          <brew-button>Log Your First Brew</brew-button>
+        </a>
+      </div>
+    </brew-card>
+    } @else {
+    <div class="brew-list">
+      @for (brew of recentBrews(); track brew.id) {
+      <a [routerLink]="['/brews', brew.id]" class="brew-item">
+        <brew-card [hoverable]="true">
+          <div class="brew-content">
+            <div class="brew-info">
+              <span class="brew-beans">{{ getBeanNames(brew) }}</span>
+              <span class="brew-date">{{ brew.date }}</span>
+            </div>
+            <div class="brew-meta">
+              <span class="brew-params">
+                {{ brew.coffeeGrams }}g · {{ brew.waterGrams }}g · 1:{{
+                brew.ratio }}
+              </span>
+              <div class="brew-rating">
+                @for (star of [1,2,3,4,5]; track star) {
+                <span class="star" [class.filled]="brew.rating / 2 >= star"
+                  >★</span
+                >
+                }
+              </div>
+            </div>
+          </div>
+        </brew-card>
+      </a>
+      }
+    </div>
+    }
+  </section>
+</div>

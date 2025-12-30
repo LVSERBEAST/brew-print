@@ -1,0 +1,63 @@
+<div class="page">
+  <header class="page-header">
+    <div>
+      <h1>Techniques</h1>
+      <p class="subtitle">{{ techniques().length }} saved</p>
+    </div>
+    <a routerLink="new"
+      ><brew-button
+        ><svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" /></svg
+        >New Technique</brew-button
+      ></a
+    >
+  </header>
+
+  @if (loading()) {
+  <div class="loading-grid">
+    @for (i of [1,2,3]; track i) {
+    <div class="skeleton-card"></div>
+    }
+  </div>
+  } @else if (techniques().length === 0) {
+  <brew-card class="empty-state">
+    <div class="empty-content">
+      <span class="empty-icon">📖</span>
+      <h3>No techniques yet</h3>
+      <p>Save your brewing recipes for quick access.</p>
+      <a routerLink="new"><brew-button>Create Technique</brew-button></a>
+    </div>
+  </brew-card>
+  } @else {
+  <div class="technique-grid">
+    @for (tech of techniques(); track tech.id) {
+    <a [routerLink]="[tech.id]" class="tech-link">
+      <brew-card [hoverable]="true" class="tech-card">
+        <h3 class="tech-name">{{ tech.name }}</h3>
+        @if (tech.description) {
+        <p class="tech-desc">
+          {{ tech.description | slice:0:80 }}{{ tech.description.length > 80 ?
+          '...' : '' }}
+        </p>
+        }
+        <div class="tech-params">
+          @if (tech.coffeeGrams) { <span>{{ tech.coffeeGrams }}g</span> } @if
+          (tech.ratio) { <span>1:{{ tech.ratio }}</span> } @if
+          (tech.brewTimeSeconds) {
+          <span>{{ formatTime(tech.brewTimeSeconds) }}</span> }
+        </div>
+      </brew-card>
+    </a>
+    }
+  </div>
+  }
+</div>
