@@ -226,7 +226,9 @@ export class FirestoreService {
       if (bean) {
         const coffeePerBean = data.coffeeGrams / data.beanIds.length;
         await this.updateBean(beanId, {
-          weightRemaining: Math.max(0, bean.weightRemaining - coffeePerBean),
+          weightRemaining: bean.weightRemaining
+            ? Math.max(0, bean.weightRemaining - coffeePerBean)
+            : undefined,
         });
       }
     }

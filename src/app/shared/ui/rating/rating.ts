@@ -24,40 +24,42 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
         (mouseleave)="hoverValue.set(0)"
       >
         @for (star of stars; track star) {
-          <button
-            type="button"
-            class="star"
-            [class.star--filled]="getStarFill(star) === 'full'"
-            [class.star--half]="getStarFill(star) === 'half'"
-            [class.star--hovered]="hoverValue() >= star"
-            [disabled]="disabled || readonly"
-            (mouseenter)="onHover(star)"
-            (click)="onSelect(star)"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              @if (getStarFill(star) === 'half') {
-                <defs>
-                  <linearGradient [id]="'half-' + star">
-                    <stop offset="50%" stop-color="currentColor"/>
-                    <stop offset="50%" stop-color="transparent"/>
-                  </linearGradient>
-                </defs>
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" [attr.fill]="'url(#half-' + star + ')'"/>
-              } @else {
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-              }
-            </svg>
-          </button>
-          
-          @if (allowHalf && star < 5) {
+          <div class="star-container">
             <button
               type="button"
-              class="star star--half-click"
+              class="star"
+              [class.star--filled]="getStarFill(star) === 'full'"
+              [class.star--half]="getStarFill(star) === 'half'"
+              [class.star--hovered]="hoverValue() >= star"
               [disabled]="disabled || readonly"
-              (mouseenter)="onHover(star + 0.5)"
-              (click)="onSelect(star + 0.5)"
-            ></button>
-          }
+              (mouseenter)="onHover(star)"
+              (click)="onSelect(star)"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                @if (getStarFill(star) === 'half') {
+                  <defs>
+                    <linearGradient [id]="'half-' + star">
+                      <stop offset="50%" stop-color="currentColor"/>
+                      <stop offset="50%" stop-color="transparent"/>
+                    </linearGradient>
+                  </defs>
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" [attr.fill]="'url(#half-' + star + ')'"/>
+                } @else {
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                }
+              </svg>
+            </button>
+            
+            @if (allowHalf && star < 5) {
+              <button
+                type="button"
+                class="star-half-click"
+                [disabled]="disabled || readonly"
+                (mouseenter)="onHover(star + 0.5)"
+                (click)="onSelect(star + 0.5)"
+              ></button>
+            }
+          </div>
         }
         
         <span class="rating-value">{{ displayValue() }}</span>
@@ -87,8 +89,12 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       gap: var(--space-1);
     }
     
-    .star {
+    .star-container {
       position: relative;
+      display: flex;
+    }
+    
+    .star {
       display: flex;
       color: var(--color-cream-300);
       transition: 
@@ -121,18 +127,27 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       }
     }
     
-    .star--half-click {
+    .star-half-click {
       position: absolute;
       left: 0;
       top: 0;
       width: 50%;
       height: 100%;
       opacity: 0;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      z-index: 1;
+      
+      &:disabled {
+        cursor: default;
+      }
     }
     
     .rating--readonly,
     .rating--disabled {
-      .star {
+      .star, .star-half-click {
         cursor: default;
         
         &:hover {

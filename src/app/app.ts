@@ -8,22 +8,7 @@ import { ToastContainer } from '@shared/ui/toast/toast-container';
   selector: 'brew-root',
   standalone: true,
   imports: [RouterOutlet, Shell, ToastContainer],
-  template: `
-    @if (authService.loading()) {
-      <div class="loading-screen">
-        <span class="loading-icon">☕</span>
-      </div>
-    } @else if (authService.isAuthenticated()) {
-      <brew-shell>
-        <router-outlet />
-      </brew-shell>
-    } @else {
-      <main class="auth-layout">
-        <router-outlet />
-      </main>
-    }
-    <brew-toast-container />
-  `,
+  templateUrl: 'app.html',
   styles: `
     :host {
       display: block;

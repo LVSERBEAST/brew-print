@@ -7,7 +7,10 @@ import { ToastService } from '@core/services/toast.service';
 import { Card } from '@shared/ui/card/card';
 import { Button } from '@shared/ui/button/button';
 import { InputComponent } from '@shared/ui/input/input';
-import type { Bean, RoastLevel, ProcessMethod } from '@core/models';
+import type { Bean, RoastLevel, ProcessMethod, WeightUnit } from '@core/models';
+
+// Default bean placeholder SVG as data URI
+const DEFAULT_BEAN_IMAGE = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Crect fill='%23f5efe5' width='200' height='200'/%3E%3Cg transform='translate(100,100)'%3E%3Cellipse cx='-15' cy='0' rx='35' ry='50' fill='%23c4956a' transform='rotate(-20)'/%3E%3Cellipse cx='15' cy='0' rx='35' ry='50' fill='%23b8864e' transform='rotate(20)'/%3E%3Cpath d='M-5,-45 Q0,-20 -5,45' stroke='%239a6d3a' stroke-width='3' fill='none'/%3E%3Cpath d='M5,-45 Q0,-20 5,45' stroke='%239a6d3a' stroke-width='3' fill='none'/%3E%3C/g%3E%3C/svg%3E`;
 
 @Component({
   selector: 'brew-bean-form',
@@ -126,25 +129,36 @@ import type { Bean, RoastLevel, ProcessMethod } from '@core/models';
           </div>
         </brew-card>
 
-        <brew-card title="Quantity" class="form-section">
-          <div class="form-grid">
+        <brew-card title="Quantity (Optional)" class="form-section">
+          <div class="form-grid-three">
             <brew-input
               label="Total Weight"
               type="number"
-              suffix="g"
               [(ngModel)]="formData.weight"
               name="weight"
-              [min]="1"
-              [required]="true"
+              [min]="0"
+              placeholder="e.g., 250"
             />
             <brew-input
               label="Remaining"
               type="number"
-              suffix="g"
               [(ngModel)]="formData.weightRemaining"
               name="weightRemaining"
               [min]="0"
+              placeholder="e.g., 200"
             />
+            <div class="select-wrapper">
+              <label class="select-label">Unit</label>
+              <select
+                class="select-input"
+                [(ngModel)]="formData.weightUnit"
+                name="weightUnit"
+              >
+                <option value="g">Grams (g)</option>
+                <option value="oz">Ounces (oz)</option>
+                <option value="lb">Pounds (lb)</option>
+              </select>
+            </div>
           </div>
           <brew-input
             label="Price"
@@ -159,19 +173,19 @@ import type { Bean, RoastLevel, ProcessMethod } from '@core/models';
 
         <brew-card title="Photo" class="form-section">
           <div class="photo-upload">
-            @if (photoPreview()) {
             <div class="photo-preview">
-              <img [src]="photoPreview()" alt="Bean photo" />
-              <button
-                type="button"
-                class="remove-photo"
-                (click)="removePhoto()"
-              >
-                ×
-              </button>
+              <img [src]="photoPreview() || defaultImage" alt="Bean photo" />
+              @if (photoPreview()) {
+                <button
+                  type="button"
+                  class="remove-photo"
+                  (click)="removePhoto()"
+                >
+                  ×
+                </button>
+              }
             </div>
-            } @else {
-            <label class="upload-area">
+            <label class="upload-btn">
               <input
                 type="file"
                 accept="image/*"
@@ -180,20 +194,19 @@ import type { Bean, RoastLevel, ProcessMethod } from '@core/models';
               />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
+                width="18"
+                height="18"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="1.5"
+                stroke-width="2"
               >
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                 <polyline points="17 8 12 3 7 8" />
                 <line x1="12" y1="3" x2="12" y2="15" />
               </svg>
-              <span>Upload photo</span>
+              {{ photoPreview() ? 'Change' : 'Upload' }} Photo
             </label>
-            }
           </div>
         </brew-card>
 
@@ -233,12 +246,61 @@ import type { Bean, RoastLevel, ProcessMethod } from '@core/models';
     .form-layout { display: flex; flex-direction: column; gap: var(--space-5); }
     .form-section { margin-bottom: 0; }
     .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-4); margin-bottom: var(--space-4); &:last-child { margin-bottom: 0; } }
+    .form-grid-three { display: grid; grid-template-columns: 1fr 1fr auto; gap: var(--space-4); margin-bottom: var(--space-4); @media (max-width: 500px) { grid-template-columns: 1fr 1fr; } }
     
-    .select-wrapper { display: flex; flex-direction: column; gap: var(--space-2); }
+    .select-wrapper { display: flex; flex-direction: column; gap: var(--space-2); min-width: 120px; }
     .select-label { font-size: var(--text-sm); font-weight: var(--weight-medium); color: var(--text-secondary); }
     .select-input { width: 100%; height: 48px; padding: 0 var(--space-4); background: var(--surface-card); border: 2px solid var(--border-default); border-radius: var(--radius-lg); font-size: var(--text-base); cursor: pointer; &:focus { outline: none; border-color: var(--border-focus); box-shadow: var(--shadow-focus); } }
     
-    .photo-upload { .photo-preview { position: relative; width: 200px; height: 200px; border-radius: var(--radius-lg); overflow: hidden; img { width: 100%; height: 100%; object-fit: cover; } .remove-photo { position: absolute; top: var(--space-2); right: var(--space-2); width: 28px; height: 28px; background: var(--surface-card); border-radius: var(--radius-full); font-size: 18px; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; &:hover { background: var(--color-error-light); color: var(--color-error); } } } .upload-area { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-2); width: 200px; height: 150px; border: 2px dashed var(--border-default); border-radius: var(--radius-lg); color: var(--text-muted); cursor: pointer; transition: all var(--duration-fast) var(--ease-default); &:hover { border-color: var(--color-copper-400); color: var(--color-copper-500); background: var(--color-copper-50); } } }
+    .photo-upload { 
+      display: flex; 
+      align-items: flex-start; 
+      gap: var(--space-4);
+      
+      .photo-preview { 
+        position: relative; 
+        width: 120px; 
+        height: 120px; 
+        border-radius: var(--radius-lg); 
+        overflow: hidden;
+        background: var(--surface-subtle);
+        flex-shrink: 0;
+        
+        img { width: 100%; height: 100%; object-fit: cover; } 
+        
+        .remove-photo { 
+          position: absolute; 
+          top: var(--space-2); 
+          right: var(--space-2); 
+          width: 28px; 
+          height: 28px; 
+          background: var(--surface-card); 
+          border-radius: var(--radius-full); 
+          font-size: 18px; 
+          color: var(--text-secondary); 
+          display: flex; 
+          align-items: center; 
+          justify-content: center;
+          box-shadow: var(--shadow-sm);
+          &:hover { background: var(--color-error-light); color: var(--color-error); } 
+        } 
+      } 
+      
+      .upload-btn { 
+        display: inline-flex; 
+        align-items: center; 
+        gap: var(--space-2); 
+        padding: var(--space-3) var(--space-4);
+        border: 2px dashed var(--border-default); 
+        border-radius: var(--radius-lg); 
+        color: var(--text-tertiary); 
+        font-weight: var(--weight-medium);
+        font-size: var(--text-sm);
+        cursor: pointer; 
+        transition: all var(--duration-fast) var(--ease-default); 
+        &:hover { border-color: var(--color-copper-400); color: var(--color-copper-500); background: var(--color-copper-50); } 
+      } 
+    }
     
     .textarea { width: 100%; padding: var(--space-3) var(--space-4); background: var(--surface-card); border: 2px solid var(--border-default); border-radius: var(--radius-lg); font-family: inherit; font-size: var(--text-base); resize: vertical; min-height: 100px; &:focus { outline: none; border-color: var(--border-focus); box-shadow: var(--shadow-focus); } }
     
@@ -256,6 +318,7 @@ export class BeanForm implements OnInit {
   saving = signal(false);
   photoPreview = signal<string | null>(null);
   photoFile: File | null = null;
+  defaultImage = DEFAULT_BEAN_IMAGE;
 
   roastDateString = '';
   purchaseDateString = '';
@@ -268,8 +331,9 @@ export class BeanForm implements OnInit {
     variety: '',
     process: 'washed' as ProcessMethod,
     roastLevel: 'medium' as RoastLevel,
-    weight: 250,
-    weightRemaining: 250,
+    weight: undefined,
+    weightRemaining: undefined,
+    weightUnit: 'g' as WeightUnit,
     price: undefined,
     notes: '',
     archived: false,
@@ -315,8 +379,7 @@ export class BeanForm implements OnInit {
     return !!(
       this.formData.name &&
       this.formData.roaster &&
-      this.formData.origin &&
-      this.formData.weight
+      this.formData.origin
     );
   }
 

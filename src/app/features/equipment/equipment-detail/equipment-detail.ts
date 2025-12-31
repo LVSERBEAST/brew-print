@@ -4,7 +4,12 @@ import { FirestoreService } from '@core/services/firestore.service';
 import { ToastService } from '@core/services/toast.service';
 import { Card } from '@shared/ui/card/card';
 import { Button } from '@shared/ui/button/button';
-import type { Equipment, BrewLog } from '@core/models';
+import type { Equipment, BrewLog, EquipmentCategory } from '@core/models';
+
+// Default icons by category (fallback if no custom icon set)
+const DEFAULT_CATEGORY_ICONS: Record<EquipmentCategory, string> = {
+  brewer: '☕', grinder: '⚙️', kettle: '🫖', scale: '⚖️', machine: '🔧', accessory: '📦', other: '📦'
+};
 
 @Component({
   selector: 'brew-equipment-detail',
@@ -15,6 +20,7 @@ import type { Equipment, BrewLog } from '@core/models';
       @if (equipment()) {
         <header class="page-header">
           <button class="back-btn" (click)="goBack()"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>Back</button>
+          <div class="equip-icon">{{ getIcon() }}</div>
           <span class="category-badge">{{ equipment()!.category }}</span>
           <h1>{{ equipment()!.name }}</h1>
           @if (equipment()!.brand) { <p class="brand">{{ equipment()!.brand }}{{ equipment()!.model ? ' ' + equipment()!.model : '' }}</p> }
@@ -65,6 +71,7 @@ import type { Equipment, BrewLog } from '@core/models';
     .page { max-width: 800px; margin: 0 auto; animation: fadeIn var(--duration-normal) var(--ease-out); }
     .page-header { margin-bottom: var(--space-6); }
     .back-btn { display: inline-flex; align-items: center; gap: var(--space-2); color: var(--text-tertiary); font-size: var(--text-sm); font-weight: var(--weight-medium); margin-bottom: var(--space-4); &:hover { color: var(--text-primary); } }
+    .equip-icon { font-size: 3rem; margin-bottom: var(--space-3); }
     .category-badge { display: inline-block; padding: var(--space-1) var(--space-3); background: var(--color-copper-100); color: var(--color-copper-700); border-radius: var(--radius-md); font-size: var(--text-sm); font-weight: var(--weight-medium); text-transform: capitalize; margin-bottom: var(--space-2); }
     h1 { font-family: var(--font-display); font-size: var(--text-3xl); margin: 0; }
     .brand { color: var(--text-tertiary); margin: var(--space-2) 0 var(--space-4); }
@@ -104,6 +111,12 @@ export class EquipmentDetail implements OnInit {
     ]);
     this.equipment.set(equip);
     this.brews.set(brews);
+  }
+  
+  getIcon(): string {
+    const equip = this.equipment();
+    if (!equip) return '📦';
+    return equip.icon || DEFAULT_CATEGORY_ICONS[equip.category] || '📦';
   }
   
   async deleteEquipment(): Promise<void> {

@@ -7,6 +7,12 @@
 export type ID = string;
 
 // ============================================================================
+// WEIGHT UNIT
+// ============================================================================
+
+export type WeightUnit = 'g' | 'oz' | 'lb';
+
+// ============================================================================
 // CUSTOM FIELDS SYSTEM
 // ============================================================================
 
@@ -94,6 +100,7 @@ export interface Equipment {
   brand?: string;
   model?: string;
   notes?: string;
+  icon?: string; // emoji or icon identifier
   customFields: CustomFieldDefinition[];
   createdAt: Date;
   updatedAt: Date;
@@ -136,8 +143,9 @@ export interface Bean {
   roastDate?: Date;
   purchaseDate?: Date;
   price?: number;
-  weight: number; // grams
-  weightRemaining: number; // grams
+  weight?: number; // optional now
+  weightRemaining?: number; // optional now
+  weightUnit?: WeightUnit; // g, oz, lb
   photoURL?: string;
   notes?: string;
   customFields: CustomFieldDefinition[];
@@ -183,8 +191,8 @@ export interface Technique {
 // ============================================================================
 
 export interface BrewLog {
-  id: ID;
-  userId: ID;
+  id?: ID;
+  userId?: ID;
   date: Date;
 
   // References
@@ -215,8 +223,8 @@ export interface BrewLog {
 
   customFields: CustomFieldDefinition[];
   customFieldValues: CustomFieldValue[];
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 // Future: Tasting notes

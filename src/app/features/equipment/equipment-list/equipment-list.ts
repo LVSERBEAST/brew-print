@@ -5,8 +5,9 @@ import { Card } from '@shared/ui/card/card';
 import { Button } from '@shared/ui/button/button';
 import type { Equipment, EquipmentCategory } from '@core/models';
 
-const CATEGORY_ICONS: Record<EquipmentCategory, string> = {
-  brewer: '☕', grinder: '⚙️', kettle: '🫖', scale: '⚖️', machine: '🔧', accessory: '🔩', other: '📦'
+// Default icons by category (fallback if no custom icon set)
+const DEFAULT_CATEGORY_ICONS: Record<EquipmentCategory, string> = {
+  brewer: '☕', grinder: '⚙️', kettle: '🫖', scale: '⚖️', machine: '🔧', accessory: '📦', other: '📦'
 };
 
 @Component({
@@ -43,7 +44,7 @@ const CATEGORY_ICONS: Record<EquipmentCategory, string> = {
           @for (item of filteredEquipment(); track item.id) {
             <a [routerLink]="[item.id]" class="equip-link">
               <brew-card [hoverable]="true" class="equip-card">
-                <div class="equip-icon">{{ getCategoryIcon(item.category) }}</div>
+                <div class="equip-icon">{{ getIcon(item) }}</div>
                 <h3 class="equip-name">{{ item.name }}</h3>
                 <span class="equip-category">{{ item.category }}</span>
                 @if (item.brand) { <span class="equip-brand">{{ item.brand }}{{ item.model ? ' ' + item.model : '' }}</span> }
@@ -98,5 +99,7 @@ export class EquipmentList implements OnInit {
     finally { this.loading.set(false); }
   }
   
-  getCategoryIcon(cat: EquipmentCategory): string { return CATEGORY_ICONS[cat] || '📦'; }
+  getIcon(item: Equipment): string { 
+    return item.icon || DEFAULT_CATEGORY_ICONS[item.category] || '📦'; 
+  }
 }

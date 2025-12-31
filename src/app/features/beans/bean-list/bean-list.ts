@@ -5,6 +5,9 @@ import { Card } from '@shared/ui/card/card';
 import { Button } from '@shared/ui/button/button';
 import type { Bean } from '@core/models';
 
+// Default bean placeholder SVG as data URI
+const DEFAULT_BEAN_IMAGE = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Crect fill='%23f5efe5' width='200' height='200'/%3E%3Cg transform='translate(100,100)'%3E%3Cellipse cx='-15' cy='0' rx='35' ry='50' fill='%23c4956a' transform='rotate(-20)'/%3E%3Cellipse cx='15' cy='0' rx='35' ry='50' fill='%23b8864e' transform='rotate(20)'/%3E%3Cpath d='M-5,-45 Q0,-20 -5,45' stroke='%239a6d3a' stroke-width='3' fill='none'/%3E%3Cpath d='M5,-45 Q0,-20 5,45' stroke='%239a6d3a' stroke-width='3' fill='none'/%3E%3C/g%3E%3C/svg%3E`;
+
 @Component({
   selector: 'brew-bean-list',
   standalone: true,
@@ -46,11 +49,9 @@ import type { Bean } from '@core/models';
           @for (bean of beans(); track bean.id) {
             <a [routerLink]="[bean.id]" class="bean-link">
               <brew-card [hoverable]="true" class="bean-card">
-                @if (bean.photoURL) {
-                  <div class="bean-image">
-                    <img [src]="bean.photoURL" [alt]="bean.name" />
-                  </div>
-                }
+                <div class="bean-image">
+                  <img [src]="bean.photoURL || defaultImage" [alt]="bean.name" />
+                </div>
                 <div class="bean-content">
                   <span class="bean-roaster">{{ bean.roaster }}</span>
                   <h3 class="bean-name">{{ bean.name }}</h3>
@@ -58,12 +59,14 @@ import type { Bean } from '@core/models';
                     <span class="bean-origin">{{ bean.origin }}</span>
                     <span class="bean-process">{{ bean.process }}</span>
                   </div>
-                  <div class="bean-weight">
-                    <div class="weight-bar">
-                      <div class="weight-fill" [style.width.%]="(bean.weightRemaining / bean.weight) * 100"></div>
+                  @if (bean.weight) {
+                    <div class="bean-weight">
+                      <div class="weight-bar">
+                        <div class="weight-fill" [style.width.%]="getWeightPercent(bean)"></div>
+                      </div>
+                      <span class="weight-text">{{ bean.weightRemaining || 0 }}{{ bean.weightUnit || 'g' }} / {{ bean.weight }}{{ bean.weightUnit || 'g' }}</span>
                     </div>
-                    <span class="weight-text">{{ bean.weightRemaining }}g / {{ bean.weight }}g</span>
-                  </div>
+                  }
                 </div>
               </brew-card>
             </a>
@@ -115,9 +118,12 @@ import type { Bean } from '@core/models';
     }
     
     .bean-image {
-      height: 140px;
+      width: 100%;
+      aspect-ratio: 1;
       margin: calc(var(--space-5) * -1) calc(var(--space-6) * -1) var(--space-4);
+      width: calc(100% + var(--space-6) * 2);
       overflow: hidden;
+      background: var(--surface-subtle);
       
       img {
         width: 100%;
@@ -185,7 +191,7 @@ import type { Bean } from '@core/models';
       gap: var(--space-4);
     }
     
-    .skeleton-card { height: 220px; border-radius: var(--radius-xl); @extend .skeleton !optional; }
+    .skeleton-card { height: 360px; border-radius: var(--radius-xl); @extend .skeleton !optional; }
   `
 })
 export class BeanList implements OnInit {
@@ -193,6 +199,7 @@ export class BeanList implements OnInit {
   
   loading = signal(true);
   beans = signal<Bean[]>([]);
+  defaultImage = DEFAULT_BEAN_IMAGE;
   
   async ngOnInit(): Promise<void> {
     try {
@@ -201,5 +208,10 @@ export class BeanList implements OnInit {
     } finally {
       this.loading.set(false);
     }
+  }
+  
+  getWeightPercent(bean: Bean): number {
+    if (!bean.weight || bean.weight === 0) return 0;
+    return ((bean.weightRemaining || 0) / bean.weight) * 100;
   }
 }

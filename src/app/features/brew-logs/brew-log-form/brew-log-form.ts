@@ -6,7 +6,7 @@ import {
   OnInit,
   Input,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { FirestoreService } from '@core/services/firestore.service';
 import { ToastService } from '@core/services/toast.service';
@@ -109,17 +109,27 @@ import type {
 
         <!-- Technique Selection -->
         <brew-card title="Technique (Optional)" class="form-section">
-          <select
-            class="select-input"
-            [(ngModel)]="formData.techniqueId"
-            name="techniqueId"
-            (change)="onTechniqueChange()"
-          >
-            <option [ngValue]="undefined">No technique</option>
-            @for (tech of techniques(); track tech.id) {
-            <option [value]="tech.id">{{ tech.name }}</option>
-            }
-          </select>
+          <div class="technique-row">
+            <select
+              class="select-input"
+              [(ngModel)]="formData.techniqueId"
+              name="techniqueId"
+              (change)="onTechniqueChange()"
+            >
+              <option [ngValue]="undefined">No technique</option>
+              @for (tech of techniques(); track tech.id) {
+              <option [value]="tech.id">{{ tech.name }}</option>
+              }
+            </select>
+            <button type="button" class="save-technique-btn" (click)="saveTechnique()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                <polyline points="17 21 17 13 7 13 7 21"/>
+                <polyline points="7 3 7 8 15 8"/>
+              </svg>
+              Save as Technique
+            </button>
+          </div>
         </brew-card>
 
         <!-- Brew Parameters -->
@@ -359,8 +369,18 @@ import type {
       color: var(--text-muted);
     }
     
+    .technique-row {
+      display: flex;
+      gap: var(--space-3);
+      align-items: stretch;
+      
+      @media (max-width: 500px) {
+        flex-direction: column;
+      }
+    }
+    
     .select-input {
-      width: 100%;
+      flex: 1;
       height: 48px;
       padding: 0 var(--space-4);
       background: var(--surface-card);
@@ -376,6 +396,29 @@ import type {
       }
     }
     
+    .save-technique-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 0 var(--space-4);
+      height: 48px;
+      background: var(--surface-subtle);
+      border: 2px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      color: var(--text-secondary);
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-default);
+      
+      &:hover {
+        background: var(--color-copper-100);
+        border-color: var(--color-copper-400);
+        color: var(--color-copper-700);
+      }
+    }
+    
     .input-mode-toggle {
       display: flex;
       gap: var(--space-2);
@@ -384,6 +427,8 @@ import type {
       background: var(--surface-subtle);
       border-radius: var(--radius-lg);
       width: fit-content;
+      position: relative;
+      z-index: 1;
     }
     
     .mode-btn {
@@ -393,6 +438,8 @@ import type {
       font-weight: var(--weight-medium);
       color: var(--text-tertiary);
       transition: all var(--duration-fast) var(--ease-default);
+      position: relative;
+      z-index: 2;
       
       &.active {
         background: var(--surface-card);
@@ -460,6 +507,7 @@ export class BrewLogForm implements OnInit {
   @Input() id?: string;
 
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private firestoreService = inject(FirestoreService);
   private toastService = inject(ToastService);
 
@@ -497,6 +545,16 @@ export class BrewLogForm implements OnInit {
     this.beans.set(beans);
     this.equipment.set(equipment);
     this.techniques.set(techniques);
+
+    // Check for returning from technique creation
+    const returnedTechniqueId = history.state?.newTechniqueId;
+    if (returnedTechniqueId) {
+      // Refresh techniques to get the new one
+      const updatedTechniques = await this.firestoreService.getAllTechniques();
+      this.techniques.set(updatedTechniques);
+      this.formData.techniqueId = returnedTechniqueId;
+      this.onTechniqueChange();
+    }
 
     if (this.id) {
       const brew = await this.firestoreService.getBrewLog(this.id);
@@ -545,6 +603,24 @@ export class BrewLogForm implements OnInit {
     }
   }
 
+  saveTechnique(): void {
+    // Navigate to technique form with current brew params as state
+    this.router.navigate(['/techniques/new'], {
+      state: {
+        fromBrewLog: true,
+        brewParams: {
+          inputMode: this.formData.inputMode,
+          coffeeGrams: this.formData.coffeeGrams,
+          waterGrams: this.formData.waterGrams,
+          ratio: this.formData.ratio,
+          waterTemp: this.formData.waterTemp,
+          brewTimeSeconds: this.formData.brewTimeSeconds,
+          grindDescription: this.formData.grindDescription,
+        }
+      }
+    });
+  }
+
   calculateRatio(): void {
     if (this.formData.coffeeGrams && this.formData.waterGrams) {
       this.formData.ratio =
@@ -581,8 +657,6 @@ export class BrewLogForm implements OnInit {
 
     try {
       const data: BrewLog = {
-        id: '', // FIX
-        userId: '', // FIX
         date: new Date(),
         beanIds: this.selectedBeans(),
         equipmentUsages: this.selectedEquipment().map((id) => ({
@@ -596,18 +670,16 @@ export class BrewLogForm implements OnInit {
         ratio: this.formData.ratio!,
         waterTemp: this.formData.waterTemp,
         brewTimeSeconds: this.formData.brewTimeSeconds,
-        bloomTimeSeconds: this.formData.bloomTimeSeconds, // FIX
-        bloomWaterGrams: this.formData.bloomWaterGrams, // FIX
-        preInfusionSeconds: this.formData.preInfusionSeconds, // FIX
-        pressureBars: this.formData.pressureBars, // FIX
+        bloomTimeSeconds: this.formData.bloomTimeSeconds,
+        bloomWaterGrams: this.formData.bloomWaterGrams,
+        preInfusionSeconds: this.formData.preInfusionSeconds,
+        pressureBars: this.formData.pressureBars,
         yieldGrams: this.formData.yieldGrams,
         grindDescription: this.formData.grindDescription,
         rating: this.formData.rating || 0,
         notes: this.formData.notes,
         customFields: [],
         customFieldValues: [],
-        createdAt: new Date(),
-        updatedAt: new Date()
       };
 
       if (this.isEdit) {

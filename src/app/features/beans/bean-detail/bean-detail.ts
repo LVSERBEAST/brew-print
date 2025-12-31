@@ -6,6 +6,9 @@ import { Card } from '@shared/ui/card/card';
 import { Button } from '@shared/ui/button/button';
 import type { Bean, BrewLog } from '@core/models';
 
+// Default bean placeholder SVG as data URI
+const DEFAULT_BEAN_IMAGE = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Crect fill='%23f5efe5' width='200' height='200'/%3E%3Cg transform='translate(100,100)'%3E%3Cellipse cx='-15' cy='0' rx='35' ry='50' fill='%23c4956a' transform='rotate(-20)'/%3E%3Cellipse cx='15' cy='0' rx='35' ry='50' fill='%23b8864e' transform='rotate(20)'/%3E%3Cpath d='M-5,-45 Q0,-20 -5,45' stroke='%239a6d3a' stroke-width='3' fill='none'/%3E%3Cpath d='M5,-45 Q0,-20 5,45' stroke='%239a6d3a' stroke-width='3' fill='none'/%3E%3C/g%3E%3C/svg%3E`;
+
 @Component({
   selector: 'brew-bean-detail',
   standalone: true,
@@ -18,11 +21,9 @@ import type { Bean, BrewLog } from '@core/models';
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
             Back
           </button>
-          @if (bean()!.photoURL) {
-            <div class="bean-hero">
-              <img [src]="bean()!.photoURL" [alt]="bean()!.name" />
-            </div>
-          }
+          <div class="bean-hero">
+            <img [src]="bean()!.photoURL || defaultImage" [alt]="bean()!.name" />
+          </div>
           <div class="header-content">
             <span class="roaster">{{ bean()!.roaster }}</span>
             <h1>{{ bean()!.name }}</h1>
@@ -45,15 +46,17 @@ import type { Bean, BrewLog } from '@core/models';
             </dl>
           </brew-card>
           
-          <brew-card title="Remaining">
-            <div class="weight-display">
-              <span class="weight-value">{{ bean()!.weightRemaining }}g</span>
-              <span class="weight-total">of {{ bean()!.weight }}g</span>
-            </div>
-            <div class="weight-bar">
-              <div class="weight-fill" [style.width.%]="(bean()!.weightRemaining / bean()!.weight) * 100"></div>
-            </div>
-          </brew-card>
+          @if (bean()!.weight) {
+            <brew-card title="Remaining">
+              <div class="weight-display">
+                <span class="weight-value">{{ bean()!.weightRemaining || 0 }}{{ bean()!.weightUnit || 'g' }}</span>
+                <span class="weight-total">of {{ bean()!.weight }}{{ bean()!.weightUnit || 'g' }}</span>
+              </div>
+              <div class="weight-bar">
+                <div class="weight-fill" [style.width.%]="getWeightPercent()"></div>
+              </div>
+            </brew-card>
+          }
         </div>
         
         @if (bean()!.notes) {
@@ -87,7 +90,19 @@ import type { Bean, BrewLog } from '@core/models';
     .page { max-width: 800px; margin: 0 auto; animation: fadeIn var(--duration-normal) var(--ease-out); }
     .page-header { margin-bottom: var(--space-6); }
     .back-btn { display: inline-flex; align-items: center; gap: var(--space-2); color: var(--text-tertiary); font-size: var(--text-sm); font-weight: var(--weight-medium); margin-bottom: var(--space-4); &:hover { color: var(--text-primary); } }
-    .bean-hero { height: 200px; margin-bottom: var(--space-4); border-radius: var(--radius-xl); overflow: hidden; img { width: 100%; height: 100%; object-fit: cover; } }
+    
+    .bean-hero { 
+      width: 100%;
+      max-width: 300px;
+      aspect-ratio: 1;
+      margin-bottom: var(--space-4); 
+      border-radius: var(--radius-xl); 
+      overflow: hidden;
+      background: var(--surface-subtle);
+      
+      img { width: 100%; height: 100%; object-fit: cover; } 
+    }
+    
     .roaster { color: var(--text-accent); font-weight: var(--weight-medium); }
     h1 { font-family: var(--font-display); font-size: var(--text-3xl); margin: var(--space-1) 0; }
     .origin-info { color: var(--text-tertiary); margin-bottom: var(--space-4); }
@@ -95,7 +110,7 @@ import type { Bean, BrewLog } from '@core/models';
     
     .detail-grid { display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-4); margin-bottom: var(--space-4); @media (max-width: 600px) { grid-template-columns: 1fr; } }
     .detail-list { display: grid; gap: var(--space-3); }
-    .detail-item { display: flex; justify-content: space-between; dt { color: var(--text-muted); } dd { font-weight: var(--weight-medium); text-transform: capitalize; } }
+    .detail-item { display: flex; justify-content: space-between; dt { color: var(--text-secondary); font-size: var(--text-base); } dd { font-weight: var(--weight-medium); text-transform: capitalize; font-size: var(--text-base); } }
     
     .weight-display { text-align: center; margin-bottom: var(--space-3); .weight-value { font-family: var(--font-display); font-size: var(--text-3xl); font-weight: var(--weight-semibold); display: block; } .weight-total { color: var(--text-muted); font-size: var(--text-sm); } }
     .weight-bar { height: 8px; background: var(--color-cream-200); border-radius: var(--radius-full); overflow: hidden; }
@@ -122,6 +137,7 @@ export class BeanDetail implements OnInit {
   
   bean = signal<Bean | null>(null);
   brews = signal<BrewLog[]>([]);
+  defaultImage = DEFAULT_BEAN_IMAGE;
   
   async ngOnInit(): Promise<void> {
     const [bean, brews] = await Promise.all([
@@ -130,6 +146,12 @@ export class BeanDetail implements OnInit {
     ]);
     this.bean.set(bean);
     this.brews.set(brews);
+  }
+  
+  getWeightPercent(): number {
+    const bean = this.bean();
+    if (!bean || !bean.weight || bean.weight === 0) return 0;
+    return ((bean.weightRemaining || 0) / bean.weight) * 100;
   }
   
   async deleteBean(): Promise<void> {

@@ -13,6 +13,13 @@ import type {
   CustomFieldType,
 } from '@core/models';
 
+// Equipment icon options (emojis for now, can be replaced with SVGs later)
+const EQUIPMENT_ICONS = [
+  '☕', '⚙️', '🫖', '⚖️', '🔧', '📦', '🥤', '🍵', 
+  '🔥', '💨', '🧊', '🥛', '🫗', '⏱️', '🌡️', '📊',
+  '🎚️', '🔩', '🪣', '🧹', '🧴', '🔌', '💡', '🎛️'
+];
+
 @Component({
   selector: 'brew-equipment-form',
   standalone: true,
@@ -71,6 +78,22 @@ import type {
             name="model"
             placeholder="e.g., C40 MK4"
           />
+        </brew-card>
+
+        <brew-card title="Icon" class="form-section">
+          <p class="hint">Choose an icon to represent this equipment</p>
+          <div class="icon-grid">
+            @for (icon of icons; track icon) {
+              <button
+                type="button"
+                class="icon-btn"
+                [class.selected]="formData.icon === icon"
+                (click)="formData.icon = icon"
+              >
+                {{ icon }}
+              </button>
+            }
+          </div>
         </brew-card>
 
         <brew-card
@@ -183,6 +206,36 @@ import type {
     .select-label { font-size: var(--text-sm); font-weight: var(--weight-medium); color: var(--text-secondary); }
     .select-input { width: 100%; height: 48px; padding: 0 var(--space-4); background: var(--surface-card); border: 2px solid var(--border-default); border-radius: var(--radius-lg); font-size: var(--text-base); cursor: pointer; text-transform: capitalize; &:focus { outline: none; border-color: var(--border-focus); box-shadow: var(--shadow-focus); } }
     .hint { font-size: var(--text-sm); color: var(--text-muted); margin-bottom: var(--space-4); }
+    
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+      gap: var(--space-2);
+    }
+    
+    .icon-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      font-size: 1.5rem;
+      background: var(--surface-subtle);
+      border: 2px solid transparent;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-default);
+      
+      &:hover {
+        background: var(--color-cream-200);
+      }
+      
+      &.selected {
+        background: var(--color-copper-100);
+        border-color: var(--color-copper-400);
+      }
+    }
+    
     .custom-field-row { display: grid; grid-template-columns: 1fr auto 1fr 1fr auto; gap: var(--space-3); align-items: end; padding: var(--space-4); background: var(--surface-subtle); border-radius: var(--radius-lg); margin-bottom: var(--space-3); @media (max-width: 700px) { grid-template-columns: 1fr 1fr; } }
     .remove-field { width: 36px; height: 36px; border-radius: var(--radius-md); color: var(--text-muted); font-size: 20px; display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-2); &:hover { background: var(--color-error-light); color: var(--color-error); } }
     .add-field-btn { display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-3) var(--space-4); border: 2px dashed var(--border-default); border-radius: var(--radius-lg); color: var(--text-tertiary); font-weight: var(--weight-medium); transition: all var(--duration-fast) var(--ease-default); &:hover { border-color: var(--color-copper-400); color: var(--color-copper-500); background: var(--color-copper-50); } }
@@ -207,6 +260,7 @@ export class EquipmentForm implements OnInit {
     'accessory',
     'other',
   ];
+  icons = EQUIPMENT_ICONS;
   customFields: (CustomFieldDefinition & { optionsString?: string })[] = [];
 
   formData: Partial<Equipment> = {
@@ -215,6 +269,7 @@ export class EquipmentForm implements OnInit {
     brand: '',
     model: '',
     notes: '',
+    icon: '☕',
     archived: false,
     customFields: [],
   };

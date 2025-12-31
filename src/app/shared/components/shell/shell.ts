@@ -67,19 +67,39 @@ interface NavItem {
         <ng-content />
       </main>
       
-      <!-- Mobile Bottom Nav -->
+      <!-- Mobile Bottom Nav - Floating Pill Dock -->
       <nav class="mobile-nav">
-        @for (item of navItems; track item.path) {
-          <a 
-            [routerLink]="item.path" 
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: item.path === '/' }"
-            class="mobile-nav-item"
-          >
-            <span class="mobile-nav-icon" [innerHTML]="item.icon"></span>
-            <span class="mobile-nav-label">{{ item.label }}</span>
-          </a>
-        }
+        <div class="mobile-nav-dock">
+          @for (item of mobileNavItems; track item.path; let i = $index) {
+            @if (i === 2) {
+              <!-- FAB in center -->
+              <a routerLink="/brews/new" class="mobile-fab">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"/>
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+              </a>
+            }
+            <a 
+              [routerLink]="item.path" 
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: item.path === '/' }"
+              class="mobile-nav-item"
+            >
+              <span class="mobile-nav-icon" [innerHTML]="item.icon"></span>
+              <span class="mobile-nav-label">{{ item.label }}</span>
+            </a>
+          }
+        </div>
+        
+        <!-- Profile Avatar - Distinct -->
+        <a routerLink="/profile" routerLinkActive="active" class="mobile-profile">
+          @if (user()?.photoURL) {
+            <img [src]="user()!.photoURL" [alt]="user()!.displayName" />
+          } @else {
+            {{ userInitials() }}
+          }
+        </a>
       </nav>
     </div>
   `,
@@ -244,47 +264,58 @@ interface NavItem {
       @media (max-width: 768px) {
         margin-left: 0;
         padding: var(--space-4);
-        padding-bottom: calc(var(--mobile-nav-height) + var(--space-4));
+        padding-bottom: calc(100px + var(--space-4));
       }
     }
     
     // =========================================================================
-    // MOBILE BOTTOM NAV
+    // MOBILE BOTTOM NAV - FLOATING PILL DOCK
     // =========================================================================
     
     .mobile-nav {
       display: none;
       position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: var(--mobile-nav-height);
-      background: var(--surface-card);
-      border-top: 1px solid var(--border-subtle);
-      padding: var(--space-2) var(--space-4);
-      padding-bottom: env(safe-area-inset-bottom, var(--space-2));
+      bottom: var(--space-4);
+      left: var(--space-4);
+      right: var(--space-4);
       z-index: var(--z-sticky);
+      align-items: center;
+      gap: var(--space-3);
       
       @media (max-width: 768px) {
         display: flex;
-        justify-content: space-around;
-        align-items: center;
       }
+    }
+    
+    .mobile-nav-dock {
+      flex: 1;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      height: 64px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: var(--radius-2xl);
+      box-shadow: 0 4px 24px rgba(90, 74, 58, 0.15), 0 0 0 1px rgba(90, 74, 58, 0.05);
+      padding: 0 var(--space-2);
     }
     
     .mobile-nav-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: var(--space-1);
+      justify-content: center;
+      gap: 2px;
       padding: var(--space-2);
-      border-radius: var(--radius-md);
-      color: var(--text-muted);
+      border-radius: var(--radius-lg);
+      color: var(--text-tertiary);
       text-decoration: none;
       transition: color var(--duration-fast) var(--ease-default);
+      min-width: 56px;
       
       &.active {
-        color: var(--color-copper-500);
+        color: var(--color-copper-600);
       }
     }
     
@@ -292,14 +323,65 @@ interface NavItem {
       display: flex;
       
       svg {
-        width: 24px;
-        height: 24px;
+        width: 22px;
+        height: 22px;
       }
     }
     
     .mobile-nav-label {
-      font-size: var(--text-xs);
-      font-weight: var(--weight-medium);
+      font-size: 11px;
+      font-weight: var(--weight-semibold);
+      letter-spacing: 0.02em;
+    }
+    
+    // FAB - Center Action Button
+    .mobile-fab {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, var(--color-copper-500) 0%, var(--color-copper-400) 100%);
+      border-radius: var(--radius-full);
+      color: white;
+      box-shadow: 0 4px 16px rgba(196, 149, 106, 0.4);
+      margin: 0 var(--space-1);
+      transform: translateY(-8px);
+      transition: transform var(--duration-fast) var(--ease-default), 
+                  box-shadow var(--duration-fast) var(--ease-default);
+      
+      &:active {
+        transform: translateY(-6px);
+        box-shadow: 0 2px 8px rgba(196, 149, 106, 0.3);
+      }
+    }
+    
+    // Profile Avatar - Distinct
+    .mobile-profile {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-full);
+      background: linear-gradient(135deg, var(--color-copper-400), var(--color-copper-500));
+      color: white;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      box-shadow: 0 2px 12px rgba(196, 149, 106, 0.3);
+      overflow: hidden;
+      flex-shrink: 0;
+      text-decoration: none;
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      
+      &.active {
+        box-shadow: 0 0 0 3px var(--color-copper-200), 0 2px 12px rgba(196, 149, 106, 0.3);
+      }
     }
   `
 })
@@ -338,6 +420,30 @@ export class Shell {
       path: '/techniques',
       label: 'Techniques',
       icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`
+    }
+  ];
+  
+  // Mobile nav - 4 items (FAB replaces Brew Log as center action)
+  mobileNavItems: NavItem[] = [
+    {
+      path: '/',
+      label: 'Home',
+      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`
+    },
+    {
+      path: '/beans',
+      label: 'Beans',
+      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"/><path d="M8.5 8.5v.01"/><path d="M16 15.5v.01"/><path d="M12 12v.01"/><path d="M11 17v.01"/><path d="M7 14v.01"/></svg>`
+    },
+    {
+      path: '/equipment',
+      label: 'Gear',
+      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`
+    },
+    {
+      path: '/techniques',
+      label: 'Recipes',
+      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`
     }
   ];
   
