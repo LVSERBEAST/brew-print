@@ -67,19 +67,10 @@ interface NavItem {
         <ng-content />
       </main>
       
-      <!-- Mobile Bottom Nav - Floating Pill Dock -->
+      <!-- Mobile Bottom Nav -->
       <nav class="mobile-nav">
         <div class="mobile-nav-dock">
-          @for (item of mobileNavItems; track item.path; let i = $index) {
-            @if (i === 2) {
-              <!-- FAB in center -->
-              <a routerLink="/brews/new" class="mobile-fab">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="12" y1="5" x2="12" y2="19"/>
-                  <line x1="5" y1="12" x2="19" y2="12"/>
-                </svg>
-              </a>
-            }
+          @for (item of mobileNavItems; track item.path) {
             <a 
               [routerLink]="item.path" 
               routerLinkActive="active"
@@ -91,15 +82,6 @@ interface NavItem {
             </a>
           }
         </div>
-        
-        <!-- Profile Avatar - Distinct -->
-        <a routerLink="/profile" routerLinkActive="active" class="mobile-profile">
-          @if (user()?.photoURL) {
-            <img [src]="user()!.photoURL" [alt]="user()!.displayName" />
-          } @else {
-            {{ userInitials() }}
-          }
-        </a>
       </nav>
     </div>
   `,
@@ -269,7 +251,7 @@ interface NavItem {
     }
     
     // =========================================================================
-    // MOBILE BOTTOM NAV - FLOATING PILL DOCK
+    // MOBILE BOTTOM NAV
     // =========================================================================
     
     .mobile-nav {
@@ -279,8 +261,6 @@ interface NavItem {
       left: var(--space-4);
       right: var(--space-4);
       z-index: var(--z-sticky);
-      align-items: center;
-      gap: var(--space-3);
       
       @media (max-width: 768px) {
         display: flex;
@@ -297,7 +277,7 @@ interface NavItem {
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-radius: var(--radius-2xl);
-      box-shadow: 0 4px 24px rgba(90, 74, 58, 0.15), 0 0 0 1px rgba(90, 74, 58, 0.05);
+      box-shadow: 0 4px 24px rgba(42, 39, 36, 0.15), 0 0 0 1px rgba(42, 39, 36, 0.05);
       padding: 0 var(--space-2);
     }
     
@@ -312,7 +292,7 @@ interface NavItem {
       color: var(--text-tertiary);
       text-decoration: none;
       transition: color var(--duration-fast) var(--ease-default);
-      min-width: 56px;
+      min-width: 64px;
       
       &.active {
         color: var(--color-copper-600);
@@ -332,56 +312,6 @@ interface NavItem {
       font-size: 11px;
       font-weight: var(--weight-semibold);
       letter-spacing: 0.02em;
-    }
-    
-    // FAB - Center Action Button
-    .mobile-fab {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 52px;
-      height: 52px;
-      background: linear-gradient(135deg, var(--color-copper-500) 0%, var(--color-copper-400) 100%);
-      border-radius: var(--radius-full);
-      color: white;
-      box-shadow: 0 4px 16px rgba(196, 149, 106, 0.4);
-      margin: 0 var(--space-1);
-      transform: translateY(-8px);
-      transition: transform var(--duration-fast) var(--ease-default), 
-                  box-shadow var(--duration-fast) var(--ease-default);
-      
-      &:active {
-        transform: translateY(-6px);
-        box-shadow: 0 2px 8px rgba(196, 149, 106, 0.3);
-      }
-    }
-    
-    // Profile Avatar - Distinct
-    .mobile-profile {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 48px;
-      height: 48px;
-      border-radius: var(--radius-full);
-      background: linear-gradient(135deg, var(--color-copper-400), var(--color-copper-500));
-      color: white;
-      font-size: var(--text-sm);
-      font-weight: var(--weight-semibold);
-      box-shadow: 0 2px 12px rgba(196, 149, 106, 0.3);
-      overflow: hidden;
-      flex-shrink: 0;
-      text-decoration: none;
-      
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-      
-      &.active {
-        box-shadow: 0 0 0 3px var(--color-copper-200), 0 2px 12px rgba(196, 149, 106, 0.3);
-      }
     }
   `
 })
@@ -403,7 +333,7 @@ export class Shell {
     },
     {
       path: '/brews',
-      label: 'Brew Log',
+      label: 'Brews',
       icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>`
     },
     {
@@ -413,22 +343,21 @@ export class Shell {
     },
     {
       path: '/equipment',
-      label: 'Equipment',
+      label: 'Gear',
       icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`
-    },
-    {
-      path: '/techniques',
-      label: 'Techniques',
-      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`
     }
   ];
   
-  // Mobile nav - 4 items (FAB replaces Brew Log as center action)
   mobileNavItems: NavItem[] = [
     {
       path: '/',
       label: 'Home',
       icon: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`
+    },
+    {
+      path: '/brews',
+      label: 'Brews',
+      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>`
     },
     {
       path: '/beans',
@@ -439,11 +368,6 @@ export class Shell {
       path: '/equipment',
       label: 'Gear',
       icon: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`
-    },
-    {
-      path: '/techniques',
-      label: 'Recipes',
-      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`
     }
   ];
   

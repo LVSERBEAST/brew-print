@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="24" viewBox="0 0 36 24" fill="none">
+  <!-- Main body - trapezoidal, slightly wider at top -->
+  <path d="M13 5 L11 21 L27 21 L25 5 Z" fill="#3d4550"/>
+  
+  <!-- Body darker shade -->
+  <path d="M20 5 L19 21 L27 21 L25 5 Z" fill="#2a2d33"/>
+  
+  <!-- Lid top surface -->
+  <rect x="14" y="3.5" width="10" height="2" rx="0.3" fill="#5c6670"/>
+  
+  <!-- Lid knob -->
+  <rect x="17.5" y="1.5" width="3" height="2.5" rx="0.3" fill="#3d4550"/>
+  
+  <!-- Gooseneck spout - elegant S-curve from body to tip pointing down -->
+  <path d="M13 14 
+           Q8 14 6 10 
+           Q4 6 4 3.5
+           L5.5 3.5
+           Q5.5 6 7 9
+           Q9 13 13 13
+           Z" fill="#3d4550"/>
+  
+  <!-- Spout tip pointing down -->
+  <path d="M4 3.5 L3 5 L4.5 5 L5.5 3.5 Z" fill="#3d4550"/>
+  
+  <!-- Handle - angular squared bracket shape -->
+  <path d="M25 7 L29 5 L31 5 L31 7 L31 17 L31 19 L29 19 L25 17" fill="#3d4550"/>
+  
+  <!-- Handle inner space -->
+  <path d="M26 9 L28 8 L29 8 L29 16 L28 16 L26 15 Z" fill="#7b8794"/>
+</svg>

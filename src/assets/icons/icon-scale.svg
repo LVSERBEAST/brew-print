@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <!-- Scale body -->
+  <rect x="2" y="8" width="20" height="14" rx="2" fill="#3d4550"/>
+  
+  <!-- Scale top surface -->
+  <rect x="3" y="4" width="18" height="5" rx="1" fill="#9aa5b1"/>
+  <rect x="11" y="4" width="9" height="5" fill="#7b8794"/>
+  
+  <!-- Display -->
+  <rect x="5" y="12" width="14" height="6" rx="1" fill="#2a2d33"/>
+  
+  <!-- Weight reading -->
+  <text x="12" y="17" font-family="monospace" font-size="5" fill="#8B4513" text-anchor="middle">18.0g</text>
+  
+  <!-- Buttons -->
+  <circle cx="7" cy="20" r="1" fill="#5c6670"/>
+  <circle cx="12" cy="20" r="1" fill="#5c6670"/>
+  <circle cx="17" cy="20" r="1" fill="#5c6670"/>
+</svg>

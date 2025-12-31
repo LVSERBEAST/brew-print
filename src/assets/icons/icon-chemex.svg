@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="36" viewBox="0 0 24 36" fill="none">
+  <!-- Chemex upper cone -->
+  <path d="M4 2 L9 15 L15 15 L20 2 Z" fill="#9aa5b1"/>
+  
+  <!-- Upper cone darker shade -->
+  <path d="M12 2 L14 15 L15 15 L20 2 Z" fill="#7b8794"/>
+  
+  <!-- Chemex neck/waist -->
+  <rect x="9" y="15" width="6" height="4" fill="#9aa5b1"/>
+  
+  <!-- Wood collar -->
+  <rect x="8" y="14" width="8" height="6" rx="1" fill="#8B6914"/>
+  
+  <!-- Leather tie -->
+  <path d="M8 17 Q6 17 6 19 Q6 21 8 21" stroke="#5c4a1f" stroke-width="1" fill="none"/>
+  
+  <!-- Chemex lower body -->
+  <path d="M9 20 L6 33 Q6 35 8 35 L16 35 Q18 35 18 33 L15 20 Z" fill="#f5f5f5"/>
+  
+  <!-- Coffee in lower body -->
+  <path d="M7 27 L6 33 Q6 35 8 35 L16 35 Q18 35 18 33 L17 27 Z" fill="#8B4513"/>
+  
+  <!-- Glass highlight -->
+  <path d="M7.5 22 L7 26" stroke="#ffffff" stroke-width="0.5" opacity="0.5"/>
+</svg>

@@ -28,9 +28,9 @@ export const routes: Routes = [
         data: { animation: 'equipment' }
       },
       {
-        path: 'techniques',
-        loadChildren: () => import('@features/techniques/techniques.routes').then(m => m.TECHNIQUE_ROUTES),
-        data: { animation: 'techniques' }
+        path: 'methods',
+        loadChildren: () => import('@features/methods/methods.routes').then(m => m.METHOD_ROUTES),
+        data: { animation: 'methods' }
       },
       {
         path: 'profile',

@@ -6,10 +6,10 @@ import { ToastService } from '@core/services/toast.service';
 import { Card } from '@shared/ui/card/card';
 import { Button } from '@shared/ui/button/button';
 import { InputComponent } from '@shared/ui/input/input';
-import type { Technique, InputMode } from '@core/models';
+import type { Method, InputMode } from '@core/models';
 
 @Component({
-  selector: 'brew-technique-form',
+  selector: 'brew-method-form',
   standalone: true,
   imports: [FormsModule, Card, Button, InputComponent],
   template: `
@@ -28,9 +28,9 @@ import type { Technique, InputMode } from '@core/models';
             <path d="m15 18-6-6 6-6" /></svg
           >Back
         </button>
-        <h1>{{ isEdit ? 'Edit Technique' : 'New Technique' }}</h1>
+        <h1>{{ isEdit ? 'Edit Brew Method' : 'New Brew Method' }}</h1>
         @if (fromBrewLog) {
-          <p class="from-brew-hint">Creating from brew parameters</p>
+        <p class="from-brew-hint">Creating from brew parameters</p>
         }
       </header>
 
@@ -50,7 +50,7 @@ import type { Technique, InputMode } from '@core/models';
               [(ngModel)]="formData.description"
               name="description"
               rows="4"
-              placeholder="Describe the technique, pour stages, timing..."
+              placeholder="Describe the method, pour stages, timing..."
             ></textarea>
           </div>
         </brew-card>
@@ -190,14 +190,6 @@ import type { Technique, InputMode } from '@core/models';
           </div>
 
           <brew-input
-            label="Yield"
-            type="number"
-            suffix="g"
-            [(ngModel)]="formData.yieldGrams"
-            name="yield"
-            [min]="0"
-          />
-          <brew-input
             label="Grind Description"
             [(ngModel)]="formData.grindDescription"
             name="grind"
@@ -234,7 +226,7 @@ import type { Technique, InputMode } from '@core/models';
     .form-actions { display: flex; justify-content: flex-end; gap: var(--space-3); padding-top: var(--space-4); border-top: 1px solid var(--border-subtle); }
   `,
 })
-export class TechniqueForm implements OnInit {
+export class MethodForm implements OnInit {
   @Input() id?: string;
 
   private router = inject(Router);
@@ -243,8 +235,8 @@ export class TechniqueForm implements OnInit {
 
   saving = signal(false);
   fromBrewLog = false;
-  
-  formData: Partial<Technique> = {
+
+  formData: Partial<Method> = {
     name: '',
     description: '',
     inputMode: 'absolute',
@@ -275,13 +267,15 @@ export class TechniqueForm implements OnInit {
         waterGrams: params.waterGrams || this.formData.waterGrams,
         ratio: params.ratio || this.formData.ratio,
         waterTemp: params.waterTemp || this.formData.waterTemp,
-        brewTimeSeconds: params.brewTimeSeconds || this.formData.brewTimeSeconds,
-        grindDescription: params.grindDescription || this.formData.grindDescription,
+        brewTimeSeconds:
+          params.brewTimeSeconds || this.formData.brewTimeSeconds,
+        grindDescription:
+          params.grindDescription || this.formData.grindDescription,
       };
     }
-    
+
     if (this.id) {
-      const tech = await this.firestoreService.getTechnique(this.id);
+      const tech = await this.firestoreService.getMethod(this.id);
       if (tech) this.formData = { ...tech };
     }
   }
@@ -305,26 +299,26 @@ export class TechniqueForm implements OnInit {
     if (!this.formData.name) return;
     this.saving.set(true);
     try {
-      const data = this.formData as Technique;
+      const data = this.formData as Method;
       let newId: string | undefined;
-      
+
       if (this.isEdit) {
-        await this.firestoreService.updateTechnique(this.id!, data);
+        await this.firestoreService.updateMethod(this.id!, data);
       } else {
-        newId = await this.firestoreService.createTechnique(data);
+        newId = await this.firestoreService.createMethod(data);
       }
-      
+
       this.toastService.success(
-        this.isEdit ? 'Technique updated!' : 'Technique created!'
+        this.isEdit ? 'Brew method updated!' : 'Brew method created!'
       );
-      
-      // If coming from brew log, navigate back with new technique ID
+
+      // If coming from brew log, navigate back with new method ID
       if (this.fromBrewLog && newId) {
         this.router.navigate(['/brews/new'], {
-          state: { newTechniqueId: newId }
+          state: { newMethodId: newId },
         });
       } else {
-        this.router.navigate(['/techniques']);
+        this.router.navigate(['/methods']);
       }
     } catch {
       this.toastService.error('Failed to save');
@@ -337,7 +331,7 @@ export class TechniqueForm implements OnInit {
     if (this.fromBrewLog) {
       this.router.navigate(['/brews/new']);
     } else {
-      this.router.navigate(['/techniques']);
+      this.router.navigate(['/methods']);
     }
   }
 }

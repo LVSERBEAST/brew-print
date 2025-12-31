@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <!-- Group head -->
+  <rect x="6" y="2" width="12" height="4" rx="1" fill="#3d4550"/>
+  
+  <!-- Portafilter basket -->
+  <path d="M7 6 L7 10 L17 10 L17 6 Z" fill="#7b8794"/>
+  <ellipse cx="12" cy="10" rx="5" ry="1.5" fill="#9aa5b1"/>
+  
+  <!-- Coffee puck -->
+  <ellipse cx="12" cy="9" rx="4" ry="1" fill="#5c3d2e"/>
+  
+  <!-- Pressure arrows -->
+  <path d="M12 3 L12 5" stroke="#8B4513" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M9 3.5 L9 5" stroke="#8B4513" stroke-width="1" stroke-linecap="round"/>
+  <path d="M15 3.5 L15 5" stroke="#8B4513" stroke-width="1" stroke-linecap="round"/>
+  
+  <!-- Espresso streams -->
+  <path d="M10 11 L9 18" stroke="#8B4513" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M14 11 L15 18" stroke="#8B4513" stroke-width="1.5" stroke-linecap="round"/>
+  
+  <!-- Espresso cup -->
+  <path d="M7 18 L7 22 Q7 23 8 23 L16 23 Q17 23 17 22 L17 18 Z" fill="#f5f5f5"/>
+  <path d="M17 19 Q19 19 19 21 Q19 23 17 23" stroke="#e8e8e8" stroke-width="1" fill="none"/>
+</svg>

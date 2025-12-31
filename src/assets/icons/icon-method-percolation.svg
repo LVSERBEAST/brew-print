@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <!-- Moka pot style body -->
+  <path d="M6 8 L5 20 Q5 22 7 22 L17 22 Q19 22 19 20 L18 8 Z" fill="#9aa5b1"/>
+  <path d="M12 8 L12 20 Q12 22 14 22 L17 22 Q19 22 19 20 L18 8 Z" fill="#7b8794"/>
+  
+  <!-- Middle band -->
+  <rect x="5" y="12" width="14" height="2" fill="#3d4550"/>
+  
+  <!-- Top/collector -->
+  <path d="M7 4 L8 8 L16 8 L17 4 Z" fill="#7b8794"/>
+  
+  <!-- Lid -->
+  <rect x="9" y="2" width="6" height="2" rx="0.5" fill="#5c6670"/>
+  
+  <!-- Percolation arrows (water rising) -->
+  <path d="M10 18 L10 15 L9 15 L11 13 L13 15 L12 15 L12 18" fill="#87CEEB" opacity="0.7"/>
+  
+  <!-- Heat indicator at bottom -->
+  <path d="M8 23 Q9 22 10 23 Q11 24 12 23 Q13 22 14 23 Q15 24 16 23" stroke="#ff6b35" stroke-width="1" fill="none"/>
+</svg>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="36" viewBox="0 0 24 36" fill="none">
+  <!-- Pitcher body -->
+  <path d="M5 8 L4 32 Q4 35 7 35 L17 35 Q20 35 20 32 L19 8 Z" fill="#9aa5b1"/>
+  
+  <!-- Body darker shade -->
+  <path d="M12 8 L12 32 Q12 35 14 35 L17 35 Q20 35 20 32 L19 8 Z" fill="#7b8794"/>
+  
+  <!-- Milk inside -->
+  <path d="M5 14 L4.5 32 Q4.5 34.5 7 34.5 L17 34.5 Q19.5 34.5 19.5 32 L19 14 Z" fill="#f5f5f5"/>
+  
+  <!-- Spout -->
+  <path d="M5 8 L2 6 L4 8 Z" fill="#7b8794"/>
+  
+  <!-- Rim -->
+  <ellipse cx="12" cy="8" rx="8" ry="2" fill="#7b8794"/>
+  
+  <!-- Handle -->
+  <path d="M20 12 Q24 12 24 22 Q24 32 20 32" stroke="#7b8794" stroke-width="2.5" fill="none"/>
+  
+  <!-- Measurement lines -->
+  <line x1="5.5" y1="18" x2="8" y2="18" stroke="#6d7a85" stroke-width="0.5"/>
+  <line x1="5.5" y1="24" x2="8" y2="24" stroke="#6d7a85" stroke-width="0.5"/>
+  <line x1="5" y1="30" x2="8" y2="30" stroke="#6d7a85" stroke-width="0.5"/>
+</svg>

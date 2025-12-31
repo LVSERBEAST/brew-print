@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <!-- Stack of filters - back -->
+  <path d="M4 6 L12 22 L20 6 Z" fill="#e8e8e8"/>
+  
+  <!-- Stack of filters - middle -->
+  <path d="M4.5 5 L12 20 L19.5 5 Z" fill="#f0f0f0"/>
+  
+  <!-- Stack of filters - front -->
+  <path d="M5 4 L12 18 L19 4 Z" fill="#f5f5f5"/>
+  
+  <!-- Filter texture/ribbing -->
+  <line x1="7" y1="6" x2="10" y2="14" stroke="#e8e8e8" stroke-width="0.5"/>
+  <line x1="9" y1="5" x2="11" y2="12" stroke="#e8e8e8" stroke-width="0.5"/>
+  <line x1="12" y1="4" x2="12" y2="16" stroke="#e8e8e8" stroke-width="0.5"/>
+  <line x1="15" y1="5" x2="13" y2="12" stroke="#e8e8e8" stroke-width="0.5"/>
+  <line x1="17" y1="6" x2="14" y2="14" stroke="#e8e8e8" stroke-width="0.5"/>
+  
+  <!-- Top edge -->
+  <line x1="5" y1="4" x2="19" y2="4" stroke="#d9d0c4" stroke-width="1"/>
+</svg>

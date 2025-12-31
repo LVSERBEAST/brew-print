@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="36" viewBox="0 0 24 36" fill="none">
+  <!-- Server body -->
+  <path d="M6 8 L5 32 Q5 35 8 35 L16 35 Q19 35 19 32 L18 8 Z" fill="#9aa5b1"/>
+  
+  <!-- Body darker shade -->
+  <path d="M12 8 L12 32 Q12 35 14 35 L16 35 Q19 35 19 32 L18 8 Z" fill="#7b8794"/>
+  
+  <!-- Coffee inside -->
+  <path d="M5.5 18 L5 32 Q5 35 8 35 L16 35 Q19 35 19 32 L18.5 18 Z" fill="#8B4513" opacity="0.7"/>
+  
+  <!-- Lid -->
+  <rect x="5" y="5" width="14" height="3.5" rx="0.5" fill="#3d4550"/>
+  
+  <!-- Lid knob -->
+  <rect x="10" y="2" width="4" height="3" rx="0.5" fill="#5c6670"/>
+  
+  <!-- Spout -->
+  <path d="M6 8 L3 6 L5 8 Z" fill="#7b8794"/>
+  
+  <!-- Handle -->
+  <path d="M19 10 Q23 10 23 20 Q23 30 19 30" stroke="#7b8794" stroke-width="2.5" fill="none"/>
+  
+  <!-- Measurement markings -->
+  <line x1="6" y1="14" x2="8" y2="14" stroke="#6d7a85" stroke-width="0.5"/>
+  <line x1="5.5" y1="20" x2="8" y2="20" stroke="#6d7a85" stroke-width="0.5"/>
+  <line x1="5.5" y1="26" x2="8" y2="26" stroke="#6d7a85" stroke-width="0.5"/>
+</svg>

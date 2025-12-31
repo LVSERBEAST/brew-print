@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <!-- Clever-style dripper -->
+  <path d="M5 4 L7 18 L17 18 L19 4 Z" fill="#9aa5b1"/>
+  <path d="M12 4 L14 18 L17 18 L19 4 Z" fill="#7b8794"/>
+  
+  <!-- Top rim -->
+  <rect x="4" y="2" width="16" height="2.5" rx="0.5" fill="#7b8794"/>
+  
+  <!-- Immersion indicator (steep) -->
+  <rect x="6" y="8" width="12" height="8" rx="0.3" fill="#8B4513" opacity="0.5"/>
+  <circle cx="9" cy="11" r="1" fill="#5c3d2e"/>
+  <circle cx="14" cy="13" r="0.8" fill="#5c3d2e"/>
+  
+  <!-- Release valve/switch -->
+  <rect x="1" y="14" width="3" height="2" rx="0.5" fill="#3d4550"/>
+  
+  <!-- Drip indicator -->
+  <line x1="12" y1="18" x2="12" y2="21" stroke="#8B4513" stroke-width="1" stroke-linecap="round" stroke-dasharray="1 1"/>
+  
+  <!-- Cup -->
+  <path d="M9 21 L9 23.5 Q9 24 10 24 L14 24 Q15 24 15 23.5 L15 21 Z" fill="#f5f5f5"/>
+  
+  <!-- Hybrid symbol (combined) -->
+  <circle cx="21" cy="5" r="2.5" fill="none" stroke="#8B4513" stroke-width="0.8"/>
+  <line x1="21" y1="3" x2="21" y2="7" stroke="#8B4513" stroke-width="0.8"/>
+  <line x1="19" y1="5" x2="23" y2="5" stroke="#8B4513" stroke-width="0.8"/>
+</svg>

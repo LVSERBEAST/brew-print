@@ -14,13 +14,7 @@ import { Card } from '@shared/ui/card/card';
 import { Button } from '@shared/ui/button/button';
 import { InputComponent } from '@shared/ui/input/input';
 import { RatingComponent } from '@shared/ui/rating/rating';
-import type {
-  Bean,
-  Equipment,
-  Technique,
-  BrewLog,
-  InputMode,
-} from '@core/models';
+import type { Bean, Equipment, Method, BrewLog, InputMode } from '@core/models';
 
 @Component({
   selector: 'brew-brew-log-form',
@@ -107,29 +101,19 @@ import type {
           }
         </brew-card>
 
-        <!-- Technique Selection -->
-        <brew-card title="Technique (Optional)" class="form-section">
-          <div class="technique-row">
-            <select
-              class="select-input"
-              [(ngModel)]="formData.techniqueId"
-              name="techniqueId"
-              (change)="onTechniqueChange()"
-            >
-              <option [ngValue]="undefined">No technique</option>
-              @for (tech of techniques(); track tech.id) {
-              <option [value]="tech.id">{{ tech.name }}</option>
-              }
-            </select>
-            <button type="button" class="save-technique-btn" (click)="saveTechnique()">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-                <polyline points="17 21 17 13 7 13 7 21"/>
-                <polyline points="7 3 7 8 15 8"/>
-              </svg>
-              Save as Technique
-            </button>
-          </div>
+        <!-- Brew Method Selection -->
+        <brew-card title="Brew Method (Optional)" class="form-section">
+          <select
+            class="select-input"
+            [(ngModel)]="formData.methodId"
+            name="methodId"
+            (change)="onMethodChange()"
+          >
+            <option [ngValue]="undefined">No brew method</option>
+            @for (tech of methods(); track tech.id) {
+            <option [value]="tech.id">{{ tech.name }}</option>
+            }
+          </select>
         </brew-card>
 
         <!-- Brew Parameters -->
@@ -230,14 +214,6 @@ import type {
               [(ngModel)]="formData.brewTimeSeconds"
               name="brewTime"
             />
-            <brew-input
-              label="Yield"
-              type="number"
-              [min]="0"
-              suffix="g"
-              [(ngModel)]="formData.yieldGrams"
-              name="yield"
-            />
           </div>
 
           <brew-input
@@ -268,6 +244,30 @@ import type {
             ></textarea>
           </div>
         </brew-card>
+
+        <!-- Save as Brew Method -->
+        <button
+          type="button"
+          class="save-method-btn"
+          (click)="saveBrewMethod()"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"
+            />
+            <polyline points="17 21 17 13 7 13 7 21" />
+            <polyline points="7 3 7 8 15 8" />
+          </svg>
+          Save as Brew Method
+        </button>
 
         <!-- Actions -->
         <div class="form-actions">
@@ -369,18 +369,8 @@ import type {
       color: var(--text-muted);
     }
     
-    .technique-row {
-      display: flex;
-      gap: var(--space-3);
-      align-items: stretch;
-      
-      @media (max-width: 500px) {
-        flex-direction: column;
-      }
-    }
-    
     .select-input {
-      flex: 1;
+      width: 100%;
       height: 48px;
       padding: 0 var(--space-4);
       background: var(--surface-card);
@@ -393,29 +383,6 @@ import type {
         outline: none;
         border-color: var(--border-focus);
         box-shadow: var(--shadow-focus);
-      }
-    }
-    
-    .save-technique-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-2);
-      padding: 0 var(--space-4);
-      height: 48px;
-      background: var(--surface-subtle);
-      border: 2px solid var(--border-default);
-      border-radius: var(--radius-lg);
-      font-size: var(--text-sm);
-      font-weight: var(--weight-medium);
-      color: var(--text-secondary);
-      white-space: nowrap;
-      cursor: pointer;
-      transition: all var(--duration-fast) var(--ease-default);
-      
-      &:hover {
-        background: var(--color-copper-100);
-        border-color: var(--color-copper-400);
-        color: var(--color-copper-700);
       }
     }
     
@@ -485,6 +452,29 @@ import type {
       }
     }
     
+    .save-method-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      width: 100%;
+      padding: var(--space-4);
+      border: 2px dashed var(--border-default);
+      border-radius: var(--radius-lg);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      color: var(--text-secondary);
+      background: transparent;
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-default);
+      
+      &:hover {
+        background: var(--color-copper-50);
+        border-color: var(--color-copper-400);
+        color: var(--color-copper-700);
+      }
+    }
+    
     .form-actions {
       display: flex;
       justify-content: flex-end;
@@ -515,7 +505,7 @@ export class BrewLogForm implements OnInit {
   saving = signal(false);
   beans = signal<Bean[]>([]);
   equipment = signal<Equipment[]>([]);
-  techniques = signal<Technique[]>([]);
+  methods = signal<Method[]>([]);
   selectedBeans = signal<string[]>([]);
   selectedEquipment = signal<string[]>([]);
 
@@ -536,24 +526,24 @@ export class BrewLogForm implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    const [beans, equipment, techniques] = await Promise.all([
+    const [beans, equipment, methods] = await Promise.all([
       this.firestoreService.getAllBeans(),
       this.firestoreService.getAllEquipment(),
-      this.firestoreService.getAllTechniques(),
+      this.firestoreService.getAllMethods(),
     ]);
 
     this.beans.set(beans);
     this.equipment.set(equipment);
-    this.techniques.set(techniques);
+    this.methods.set(methods);
 
-    // Check for returning from technique creation
-    const returnedTechniqueId = history.state?.newTechniqueId;
-    if (returnedTechniqueId) {
-      // Refresh techniques to get the new one
-      const updatedTechniques = await this.firestoreService.getAllTechniques();
-      this.techniques.set(updatedTechniques);
-      this.formData.techniqueId = returnedTechniqueId;
-      this.onTechniqueChange();
+    // Check for returning from method creation
+    const returnedMethodId = history.state?.newMethodId;
+    if (returnedMethodId) {
+      // Refresh methods to get the new one
+      const updatedMethods = await this.firestoreService.getAllMethods();
+      this.methods.set(updatedMethods);
+      this.formData.methodId = returnedMethodId;
+      this.onMethodChange();
     }
 
     if (this.id) {
@@ -582,30 +572,29 @@ export class BrewLogForm implements OnInit {
     );
   }
 
-  onTechniqueChange(): void {
-    if (this.formData.techniqueId) {
-      const technique = this.techniques().find(
-        (t) => t.id === this.formData.techniqueId
+  onMethodChange(): void {
+    if (this.formData.methodId) {
+      const method = this.methods().find(
+        (t) => t.id === this.formData.methodId
       );
-      if (technique) {
+      if (method) {
         this.formData.coffeeGrams =
-          technique.coffeeGrams || this.formData.coffeeGrams;
+          method.coffeeGrams || this.formData.coffeeGrams;
         this.formData.waterGrams =
-          technique.waterGrams || this.formData.waterGrams;
-        this.formData.ratio = technique.ratio || this.formData.ratio;
-        this.formData.waterTemp =
-          technique.waterTemp || this.formData.waterTemp;
+          method.waterGrams || this.formData.waterGrams;
+        this.formData.ratio = method.ratio || this.formData.ratio;
+        this.formData.waterTemp = method.waterTemp || this.formData.waterTemp;
         this.formData.brewTimeSeconds =
-          technique.brewTimeSeconds || this.formData.brewTimeSeconds;
+          method.brewTimeSeconds || this.formData.brewTimeSeconds;
         this.formData.grindDescription =
-          technique.grindDescription || this.formData.grindDescription;
+          method.grindDescription || this.formData.grindDescription;
       }
     }
   }
 
-  saveTechnique(): void {
-    // Navigate to technique form with current brew params as state
-    this.router.navigate(['/techniques/new'], {
+  saveBrewMethod(): void {
+    // Navigate to method form with current brew params as state
+    this.router.navigate(['/methods/new'], {
       state: {
         fromBrewLog: true,
         brewParams: {
@@ -616,8 +605,8 @@ export class BrewLogForm implements OnInit {
           waterTemp: this.formData.waterTemp,
           brewTimeSeconds: this.formData.brewTimeSeconds,
           grindDescription: this.formData.grindDescription,
-        }
-      }
+        },
+      },
     });
   }
 
@@ -663,7 +652,7 @@ export class BrewLogForm implements OnInit {
           equipmentId: id,
           customFieldValues: [],
         })),
-        techniqueId: this.formData.techniqueId,
+        methodId: this.formData.methodId,
         inputMode: this.formData.inputMode as InputMode,
         coffeeGrams: this.formData.coffeeGrams!,
         waterGrams: this.formData.waterGrams!,
@@ -674,7 +663,6 @@ export class BrewLogForm implements OnInit {
         bloomWaterGrams: this.formData.bloomWaterGrams,
         preInfusionSeconds: this.formData.preInfusionSeconds,
         pressureBars: this.formData.pressureBars,
-        yieldGrams: this.formData.yieldGrams,
         grindDescription: this.formData.grindDescription,
         rating: this.formData.rating || 0,
         notes: this.formData.notes,

@@ -1,6 +1,6 @@
 // ============================================================================
 // BREWLOG DESIGN SYSTEM
-// Morning Cream Theme - Warm Neutral + Copper
+// Warm Clay Theme - Terracotta + Warm Neutrals
 // ============================================================================
 
 // ============================================================================
@@ -14,29 +14,29 @@
   
   // Base neutrals (warm undertone)
   --color-white: #ffffff;
-  --color-cream-50: #fefdfb;
-  --color-cream-100: #faf6f0;
-  --color-cream-200: #f5efe5;
-  --color-cream-300: #ebe5dc;
-  --color-cream-400: #d9d0c4;
-  --color-cream-500: #b8a898;
-  --color-cream-600: #9a8a7a;
-  --color-cream-700: #7a6a5a;
-  --color-cream-800: #5a4a3a;
-  --color-cream-900: #3d3530;
-  --color-cream-950: #2a2420;
+  --color-cream-50: #faf8f5;
+  --color-cream-100: #f5f2ed;
+  --color-cream-200: #e8e4dd;
+  --color-cream-300: #d9d4cb;
+  --color-cream-400: #c4bdb2;
+  --color-cream-500: #a69f94;
+  --color-cream-600: #857e74;
+  --color-cream-700: #635d55;
+  --color-cream-800: #433f3a;
+  --color-cream-900: #2a2724;
+  --color-cream-950: #1a1816;
   
-  // Primary (Copper/Amber)
-  --color-copper-50: #fef8f0;
-  --color-copper-100: #fef5eb;
-  --color-copper-200: #fce9d4;
-  --color-copper-300: #f5d4b0;
-  --color-copper-400: #e8b880;
-  --color-copper-500: #c4956a;
-  --color-copper-600: #b8864e;
-  --color-copper-700: #9a6d3a;
-  --color-copper-800: #7a5530;
-  --color-copper-900: #5a4025;
+  // Primary (Terracotta)
+  --color-copper-50: #fef5f2;
+  --color-copper-100: #fdebe5;
+  --color-copper-200: #fbd5c9;
+  --color-copper-300: #f7b8a3;
+  --color-copper-400: #e8927a;
+  --color-copper-500: #c4704b;
+  --color-copper-600: #b55d3a;
+  --color-copper-700: #974a2d;
+  --color-copper-800: #7a3d26;
+  --color-copper-900: #5c2e1d;
   
   // Semantic colors
   --color-success-light: #e8f5e8;
@@ -63,7 +63,7 @@
   --surface-subtle: var(--color-cream-100);
   --surface-card: var(--color-white);
   --surface-elevated: var(--color-white);
-  --surface-overlay: rgba(42, 36, 32, 0.5);
+  --surface-overlay: rgba(42, 39, 36, 0.5);
   
   // -------------------------------------------------------------------------
   // SEMANTIC TEXT COLORS
@@ -119,8 +119,8 @@
   // TYPOGRAPHY
   // -------------------------------------------------------------------------
   
-  --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-display: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
   
   // Font sizes (fluid scale)
@@ -169,14 +169,14 @@
   // SHADOWS
   // -------------------------------------------------------------------------
   
-  --shadow-xs: 0 1px 2px rgba(90, 74, 58, 0.04);
-  --shadow-sm: 0 2px 8px rgba(90, 74, 58, 0.06);
-  --shadow-md: 0 4px 16px rgba(90, 74, 58, 0.08);
-  --shadow-lg: 0 8px 24px rgba(90, 74, 58, 0.1);
-  --shadow-xl: 0 12px 40px rgba(90, 74, 58, 0.12);
-  --shadow-inner: inset 0 2px 4px rgba(90, 74, 58, 0.04);
+  --shadow-xs: 0 1px 2px rgba(42, 39, 36, 0.04);
+  --shadow-sm: 0 2px 8px rgba(42, 39, 36, 0.06);
+  --shadow-md: 0 4px 16px rgba(42, 39, 36, 0.08);
+  --shadow-lg: 0 8px 24px rgba(42, 39, 36, 0.1);
+  --shadow-xl: 0 12px 40px rgba(42, 39, 36, 0.12);
+  --shadow-inner: inset 0 2px 4px rgba(42, 39, 36, 0.04);
   
-  --shadow-focus: 0 0 0 3px rgba(196, 149, 106, 0.2);
+  --shadow-focus: 0 0 0 3px rgba(196, 112, 75, 0.2);
   --shadow-focus-error: 0 0 0 3px rgba(200, 80, 80, 0.2);
   
   // -------------------------------------------------------------------------
@@ -362,7 +362,7 @@ textarea {
 select {
   cursor: pointer;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237a6a5a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23635d55' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right var(--space-3) center;
   padding-right: var(--space-10);

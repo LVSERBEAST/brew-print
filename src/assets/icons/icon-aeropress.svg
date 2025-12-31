@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="36" viewBox="0 0 24 36" fill="none">
+  <!-- Mug body - touching the lip -->
+  <path d="M7 25.5 L7 34 Q7 35 8 35 L16 35 Q17 35 17 34 L17 25.5 Z" fill="#f5f5f5"/>
+  
+  <!-- Coffee in mug -->
+  <path d="M7 29 L7 34 Q7 35 8 35 L16 35 Q17 35 17 34 L17 29 Z" fill="#8B4513"/>
+  
+  <!-- Mug handle -->
+  <path d="M17 27 Q20 27 20 30.5 Q20 34 17 34" stroke="#e8e8e8" stroke-width="1.8" fill="none"/>
+  
+  <!-- Lip/flange at bottom of aeropress -->
+  <rect x="5" y="24" width="14" height="1.5" rx="0.3" fill="#7b8794"/>
+  
+  <!-- Filter cap -->
+  <rect x="6" y="22" width="12" height="2" rx="0.5" fill="#3d4550"/>
+  
+  <!-- Main chamber - outer -->
+  <rect x="6.5" y="8" width="11" height="14" rx="0.5" fill="#9aa5b1"/>
+  
+  <!-- Plunger inside chamber - light gray, extends slightly up for overlap -->
+  <rect x="9" y="7.5" width="6" height="14.5" fill="#6d7a85"/>
+  
+  <!-- Plunger stem outside - dark, drawn on top to cover the overlap above chamber -->
+  <rect x="9" y="4.5" width="6" height="3.5" fill="#3d4550"/>
+  
+  <!-- Plunger T-handle -->
+  <rect x="6" y="1" width="12" height="3.5" rx="0.5" fill="#3d4550"/>
+</svg>

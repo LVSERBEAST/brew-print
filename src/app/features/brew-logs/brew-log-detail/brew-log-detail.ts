@@ -4,7 +4,7 @@ import { FirestoreService } from '@core/services/firestore.service';
 import { ToastService } from '@core/services/toast.service';
 import { Card } from '@shared/ui/card/card';
 import { Button } from '@shared/ui/button/button';
-import type { BrewLog, Bean, Equipment, Technique } from '@core/models';
+import type { BrewLog, Bean, Equipment, Method } from '@core/models';
 
 @Component({
   selector: 'brew-brew-log-detail',
@@ -81,11 +81,6 @@ import type { BrewLog, Bean, Equipment, Technique } from '@core/models';
             }}</span>
             <span class="param-label">brew time</span>
           </div>
-          } @if (brew()!.yieldGrams) {
-          <div class="param-item">
-            <span class="param-value">{{ brew()!.yieldGrams }}</span>
-            <span class="param-label">g yield</span>
-          </div>
           }
         </div>
         @if (brew()!.grindDescription) {
@@ -107,12 +102,12 @@ import type { BrewLog, Bean, Equipment, Technique } from '@core/models';
       </brew-card>
       }
 
-      <!-- Technique -->
-      @if (technique()) {
-      <brew-card title="Technique" class="detail-card">
-        <h3 class="technique-name">{{ technique()!.name }}</h3>
-        @if (technique()!.description) {
-        <p class="technique-desc">{{ technique()!.description }}</p>
+      <!-- Method -->
+      @if (method()) {
+      <brew-card title="Method" class="detail-card">
+        <h3 class="method-name">{{ method()!.name }}</h3>
+        @if (method()!.description) {
+        <p class="method-desc">{{ method()!.description }}</p>
         }
       </brew-card>
       }
@@ -242,13 +237,13 @@ import type { BrewLog, Bean, Equipment, Technique } from '@core/models';
       color: var(--text-secondary);
     }
     
-    .technique-name {
+    .method-name {
       font-family: var(--font-display);
       font-size: var(--text-lg);
       margin: 0 0 var(--space-2);
     }
     
-    .technique-desc {
+    .method-desc {
       color: var(--text-secondary);
       margin: 0;
     }
@@ -278,7 +273,7 @@ export class BrewLogDetail implements OnInit {
   brew = signal<BrewLog | null>(null);
   beans = signal<Bean[]>([]);
   equipment = signal<Equipment[]>([]);
-  technique = signal<Technique | null>(null);
+  method = signal<Method | null>(null);
 
   async ngOnInit(): Promise<void> {
     const [brew, beans, equipment] = await Promise.all([
@@ -291,9 +286,9 @@ export class BrewLogDetail implements OnInit {
     this.beans.set(beans);
     this.equipment.set(equipment);
 
-    if (brew?.techniqueId) {
-      const tech = await this.firestoreService.getTechnique(brew.techniqueId);
-      this.technique.set(tech);
+    if (brew?.methodId) {
+      const tech = await this.firestoreService.getMethod(brew.methodId);
+      this.method.set(tech);
     }
 
     this.loading.set(false);

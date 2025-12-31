@@ -21,14 +21,14 @@ import { AuthService } from './auth.service';
 import type {
   Bean,
   Equipment,
-  Technique,
+  Method,
   BrewLog,
   PaginationParams,
   BrewLogFilters,
   ID,
 } from '@core/models';
 
-type CollectionName = 'beans' | 'equipment' | 'techniques' | 'brewLogs';
+type CollectionName = 'beans' | 'equipment' | 'methods' | 'brewLogs';
 
 @Injectable({ providedIn: 'root' })
 export class FirestoreService {
@@ -186,31 +186,31 @@ export class FirestoreService {
   }
 
   // ============================================================================
-  // TECHNIQUES
+  // METHODS
   // ============================================================================
 
-  async createTechnique(data: Technique): Promise<ID> {
-    return this.create<Technique>('techniques', data);
+  async createMethod(data: Method): Promise<ID> {
+    return this.create<Method>('methods', data);
   }
 
-  async updateTechnique(id: ID, data: Partial<Technique>): Promise<void> {
-    return this.update('techniques', id, data);
+  async updateMethod(id: ID, data: Partial<Method>): Promise<void> {
+    return this.update('methods', id, data);
   }
 
-  async deleteTechnique(id: ID): Promise<void> {
-    return this.delete('techniques', id);
+  async deleteMethod(id: ID): Promise<void> {
+    return this.delete('methods', id);
   }
 
-  async getTechnique(id: ID): Promise<Technique | null> {
-    return this.getOne<Technique>('techniques', id);
+  async getMethod(id: ID): Promise<Method | null> {
+    return this.getOne<Method>('methods', id);
   }
 
-  async getAllTechniques(includeArchived = false): Promise<Technique[]> {
+  async getAllMethods(includeArchived = false): Promise<Method[]> {
     const constraints: QueryConstraint[] = [orderBy('name', 'asc')];
     if (!includeArchived) {
       constraints.unshift(where('archived', '==', false));
     }
-    return this.getMany<Technique>('techniques', constraints);
+    return this.getMany<Method>('methods', constraints);
   }
 
   // ============================================================================
@@ -262,8 +262,8 @@ export class FirestoreService {
       constraints.push(where('beanIds', 'array-contains', filters.beanId));
     }
 
-    if (filters.techniqueId) {
-      constraints.push(where('techniqueId', '==', filters.techniqueId));
+    if (filters.methodId) {
+      constraints.push(where('methodId', '==', filters.methodId));
     }
 
     if (filters.minRating) {
@@ -296,9 +296,9 @@ export class FirestoreService {
     );
   }
 
-  async getBrewLogsByTechnique(techniqueId: ID): Promise<BrewLog[]> {
+  async getBrewLogsByMethod(methodId: ID): Promise<BrewLog[]> {
     return this.getMany<BrewLog>('brewLogs', [
-      where('techniqueId', '==', techniqueId),
+      where('methodId', '==', methodId),
       orderBy('date', 'desc'),
     ]);
   }
@@ -321,7 +321,7 @@ export class FirestoreService {
     const brewLogs = await this.getBrewLogs();
     const beans = await this.getAllBeans(true);
     const equipment = await this.getAllEquipment(true);
-    const techniques = await this.getAllTechniques(true);
+    const methods = await this.getAllMethods(true);
 
     // Calculate streak
     const { currentStreak, longestStreak, lastBrewDate } =
@@ -343,7 +343,7 @@ export class FirestoreService {
       'stats.averageRating': Math.round(averageRating * 10) / 10,
       'stats.totalBeans': beans.length,
       'stats.totalEquipment': equipment.length,
-      'stats.totalTechniques': techniques.length,
+      'stats.totalMethods': methods.length,
       updatedAt: new Date(),
     });
   }
@@ -420,7 +420,7 @@ export class FirestoreService {
     const brewLogs = await this.getBrewLogs();
     const beans = await this.getAllBeans();
     const equipment = await this.getAllEquipment();
-    const techniques = await this.getAllTechniques();
+    const methods = await this.getAllMethods();
 
     // Rating distribution
     const ratingDistribution: Record<number, number> = {};
@@ -479,22 +479,19 @@ export class FirestoreService {
         count,
       }));
 
-    // Top techniques
+    // Top methods
     const techCounts = new Map<string, number>();
     brewLogs.forEach((log) => {
-      if (log.techniqueId) {
-        techCounts.set(
-          log.techniqueId,
-          (techCounts.get(log.techniqueId) || 0) + 1
-        );
+      if (log.methodId) {
+        techCounts.set(log.methodId, (techCounts.get(log.methodId) || 0) + 1);
       }
     });
-    const topTechniques = [...techCounts.entries()]
+    const topMethods = [...techCounts.entries()]
       .sort((a, b) => b[1] - a[1])
       .slice(0, 5)
-      .map(([techniqueId, count]) => ({
-        techniqueId,
-        name: techniques.find((t) => t.id === techniqueId)?.name || 'Unknown',
+      .map(([methodId, count]) => ({
+        methodId,
+        name: methods.find((t) => t.id === methodId)?.name || 'Unknown',
         count,
       }));
 
@@ -522,7 +519,7 @@ export class FirestoreService {
       brewsByDay,
       topBeans,
       topEquipment,
-      topTechniques,
+      topMethods,
       averageBrewParams: {
         coffeeGrams: Math.round((avgParams.coffeeGrams / count) * 10) / 10,
         waterGrams: Math.round(avgParams.waterGrams / count),

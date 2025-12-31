@@ -28,7 +28,7 @@ const DEFAULT_BEAN_IMAGE = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2
       </header>
       
       @if (loading()) {
-        <div class="loading-grid">
+        <div class="loading-list">
           @for (i of [1,2,3,4]; track i) {
             <div class="skeleton-card"></div>
           }
@@ -45,26 +45,28 @@ const DEFAULT_BEAN_IMAGE = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2
           </div>
         </brew-card>
       } @else {
-        <div class="bean-grid">
+        <div class="bean-list">
           @for (bean of beans(); track bean.id) {
             <a [routerLink]="[bean.id]" class="bean-link">
               <brew-card [hoverable]="true" class="bean-card">
-                <div class="bean-image">
-                  <img [src]="bean.photoURL || defaultImage" [alt]="bean.name" />
-                </div>
-                <div class="bean-content">
-                  <span class="bean-roaster">{{ bean.roaster }}</span>
-                  <h3 class="bean-name">{{ bean.name }}</h3>
-                  <div class="bean-meta">
-                    <span class="bean-origin">{{ bean.origin }}</span>
-                    <span class="bean-process">{{ bean.process }}</span>
+                <div class="bean-row">
+                  <div class="bean-image">
+                    <img [src]="bean.photoURL || defaultImage" [alt]="bean.name" />
+                  </div>
+                  <div class="bean-content">
+                    <span class="bean-roaster">{{ bean.roaster }}</span>
+                    <h3 class="bean-name">{{ bean.name }}</h3>
+                    <div class="bean-meta">
+                      <span class="bean-origin">{{ bean.origin }}</span>
+                      <span class="bean-process">{{ bean.process }}</span>
+                    </div>
                   </div>
                   @if (bean.weight) {
                     <div class="bean-weight">
                       <div class="weight-bar">
                         <div class="weight-fill" [style.width.%]="getWeightPercent(bean)"></div>
                       </div>
-                      <span class="weight-text">{{ bean.weightRemaining || 0 }}{{ bean.weightUnit || 'g' }} / {{ bean.weight }}{{ bean.weightUnit || 'g' }}</span>
+                      <span class="weight-text">{{ bean.weightRemaining || 0 }}{{ bean.weightUnit || 'g' }} left</span>
                     </div>
                   }
                 </div>
@@ -101,10 +103,10 @@ const DEFAULT_BEAN_IMAGE = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2
       }
     }
     
-    .bean-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: var(--space-4);
+    .bean-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
     }
     
     .bean-link {
@@ -114,22 +116,32 @@ const DEFAULT_BEAN_IMAGE = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2
     
     .bean-card {
       height: 100%;
-      overflow: hidden;
+    }
+    
+    .bean-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
     }
     
     .bean-image {
-      width: 100%;
-      aspect-ratio: 1;
-      margin: calc(var(--space-5) * -1) calc(var(--space-6) * -1) var(--space-4);
-      width: calc(100% + var(--space-6) * 2);
+      width: 64px;
+      height: 64px;
+      border-radius: var(--radius-lg);
       overflow: hidden;
       background: var(--surface-subtle);
+      flex-shrink: 0;
       
       img {
         width: 100%;
         height: 100%;
         object-fit: cover;
       }
+    }
+    
+    .bean-content {
+      flex: 1;
+      min-width: 0;
     }
     
     .bean-roaster {
@@ -141,7 +153,10 @@ const DEFAULT_BEAN_IMAGE = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2
     .bean-name {
       font-family: var(--font-display);
       font-size: var(--text-lg);
-      margin: var(--space-1) 0 var(--space-3);
+      margin: var(--space-1) 0 var(--space-2);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     
     .bean-meta {
@@ -149,16 +164,23 @@ const DEFAULT_BEAN_IMAGE = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2
       gap: var(--space-3);
       font-size: var(--text-sm);
       color: var(--text-muted);
-      margin-bottom: var(--space-4);
     }
     
     .bean-weight {
+      flex-shrink: 0;
+      width: 100px;
+      text-align: right;
+      
+      @media (max-width: 500px) {
+        display: none;
+      }
+      
       .weight-bar {
         height: 6px;
         background: var(--color-cream-200);
         border-radius: var(--radius-full);
         overflow: hidden;
-        margin-bottom: var(--space-2);
+        margin-bottom: var(--space-1);
       }
       
       .weight-fill {
@@ -185,13 +207,13 @@ const DEFAULT_BEAN_IMAGE = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2
       p { color: var(--text-tertiary); margin-bottom: var(--space-6); }
     }
     
-    .loading-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: var(--space-4);
+    .loading-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
     }
     
-    .skeleton-card { height: 360px; border-radius: var(--radius-xl); @extend .skeleton !optional; }
+    .skeleton-card { height: 88px; border-radius: var(--radius-xl); @extend .skeleton !optional; }
   `
 })
 export class BeanList implements OnInit {

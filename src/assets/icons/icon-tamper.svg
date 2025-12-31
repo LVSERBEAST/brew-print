@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="36" viewBox="0 0 24 36" fill="none">
+  <!-- Handle top (ergonomic bulb) -->
+  <ellipse cx="12" cy="6" rx="5" ry="5" fill="#5c3d2e"/>
+  
+  <!-- Handle top highlight -->
+  <ellipse cx="10" cy="4" rx="2" ry="1.5" fill="#6d4c3d" opacity="0.6"/>
+  
+  <!-- Handle neck/stem -->
+  <path d="M8 10 L8 20 Q8 22 10 22 L14 22 Q16 22 16 20 L16 10 Z" fill="#5c3d2e"/>
+  
+  <!-- Metal collar -->
+  <rect x="7" y="22" width="10" height="3" rx="0.5" fill="#7b8794"/>
+  
+  <!-- Tamper base (flat bottom) -->
+  <ellipse cx="12" cy="28" rx="7" ry="3" fill="#9aa5b1"/>
+  
+  <!-- Base bottom edge -->
+  <ellipse cx="12" cy="30" rx="7" ry="2" fill="#7b8794"/>
+  
+  <!-- Base side -->
+  <rect x="5" y="28" width="14" height="2" fill="#9aa5b1"/>
+  <rect x="12" y="28" width="7" height="2" fill="#7b8794"/>
+</svg>

@@ -29,7 +29,7 @@ const DEFAULT_STATS: UserStats = {
   averageRating: 0,
   totalBeans: 0,
   totalEquipment: 0,
-  totalTechniques: 0,
+  totalMethods: 0,
 };
 
 @Injectable({ providedIn: 'root' })

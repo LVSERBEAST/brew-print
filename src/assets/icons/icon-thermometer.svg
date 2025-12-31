@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="36" viewBox="0 0 24 36" fill="none">
+  <!-- Dial face -->
+  <circle cx="12" cy="12" r="10" fill="#f5f5f5"/>
+  <circle cx="12" cy="12" r="9" fill="#9aa5b1"/>
+  
+  <!-- Dial inner -->
+  <circle cx="12" cy="12" r="7" fill="#f5f5f5"/>
+  
+  <!-- Temperature markings -->
+  <line x1="12" y1="6" x2="12" y2="7.5" stroke="#3d4550" stroke-width="0.8"/>
+  <line x1="17" y1="12" x2="15.5" y2="12" stroke="#3d4550" stroke-width="0.8"/>
+  <line x1="12" y1="18" x2="12" y2="16.5" stroke="#3d4550" stroke-width="0.8"/>
+  <line x1="7" y1="12" x2="8.5" y2="12" stroke="#3d4550" stroke-width="0.8"/>
+  
+  <!-- Needle -->
+  <line x1="12" y1="12" x2="12" y2="7" stroke="#8B4513" stroke-width="1"/>
+  <circle cx="12" cy="12" r="1.5" fill="#3d4550"/>
+  
+  <!-- Probe stem -->
+  <rect x="11" y="22" width="2" height="12" rx="0.5" fill="#9aa5b1"/>
+  
+  <!-- Probe tip -->
+  <path d="M11 34 L12 36 L13 34 Z" fill="#7b8794"/>
+  
+  <!-- Clip -->
+  <rect x="14" y="24" width="4" height="6" rx="0.5" fill="#7b8794"/>
+  <rect x="15" y="25" width="2" height="4" fill="#9aa5b1"/>
+</svg>

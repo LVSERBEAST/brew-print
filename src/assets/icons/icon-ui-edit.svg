@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <!-- Pencil body -->
+  <path d="M4 20 L6 14 L18 2 L22 6 L10 18 Z" fill="#9aa5b1"/>
+  
+  <!-- Pencil tip section -->
+  <path d="M4 20 L6 14 L8 16 Z" fill="#7b8794"/>
+  
+  <!-- Eraser band -->
+  <path d="M18 2 L22 6 L20 8 L16 4 Z" fill="#8B4513"/>
+  
+  <!-- Edit line at bottom -->
+  <rect x="4" y="21" width="16" height="2" rx="0.5" fill="#7b8794"/>
+</svg>

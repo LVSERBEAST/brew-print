@@ -4,15 +4,15 @@ import { FirestoreService } from '@core/services/firestore.service';
 import { ToastService } from '@core/services/toast.service';
 import { Card } from '@shared/ui/card/card';
 import { Button } from '@shared/ui/button/button';
-import type { Technique, BrewLog } from '@core/models';
+import type { Method, BrewLog } from '@core/models';
 
 @Component({
-  selector: 'brew-technique-detail',
+  selector: 'brew-method-detail',
   standalone: true,
   imports: [RouterLink, Card, Button],
   template: `
     <div class="page">
-      @if (technique()) {
+      @if (method()) {
       <header class="page-header">
         <button class="back-btn" (click)="goBack()">
           <svg
@@ -27,68 +27,63 @@ import type { Technique, BrewLog } from '@core/models';
             <path d="m15 18-6-6 6-6" /></svg
           >Back
         </button>
-        <h1>{{ technique()!.name }}</h1>
+        <h1>{{ method()!.name }}</h1>
         <div class="header-actions">
           <a [routerLink]="['edit']"
             ><brew-button variant="secondary">Edit</brew-button></a
           >
-          <brew-button variant="danger" (onClick)="deleteTechnique()"
+          <brew-button variant="danger" (onClick)="deleteBrewMethod()"
             >Delete</brew-button
           >
         </div>
       </header>
 
-      @if (technique()!.description) {
+      @if (method()!.description) {
       <brew-card title="Description"
-        ><p class="description">{{ technique()!.description }}</p></brew-card
+        ><p class="description">{{ method()!.description }}</p></brew-card
       >
       }
 
       <brew-card title="Parameters">
         <div class="params-grid">
-          @if (technique()!.coffeeGrams) {
+          @if (method()!.coffeeGrams) {
           <div class="param">
-            <span class="param-value">{{ technique()!.coffeeGrams }}</span
+            <span class="param-value">{{ method()!.coffeeGrams }}</span
             ><span class="param-label">g coffee</span>
           </div>
-          } @if (technique()!.waterGrams) {
+          } @if (method()!.waterGrams) {
           <div class="param">
-            <span class="param-value">{{ technique()!.waterGrams }}</span
+            <span class="param-value">{{ method()!.waterGrams }}</span
             ><span class="param-label">g water</span>
           </div>
-          } @if (technique()!.ratio) {
+          } @if (method()!.ratio) {
           <div class="param">
-            <span class="param-value">1:{{ technique()!.ratio }}</span
+            <span class="param-value">1:{{ method()!.ratio }}</span
             ><span class="param-label">ratio</span>
           </div>
-          } @if (technique()!.waterTemp) {
+          } @if (method()!.waterTemp) {
           <div class="param">
-            <span class="param-value">{{ technique()!.waterTemp }}°</span
+            <span class="param-value">{{ method()!.waterTemp }}°</span
             ><span class="param-label">temp (C)</span>
           </div>
-          } @if (technique()!.brewTimeSeconds) {
+          } @if (method()!.brewTimeSeconds) {
           <div class="param">
             <span class="param-value">{{
-              formatTime(technique()!.brewTimeSeconds!)
+              formatTime(method()!.brewTimeSeconds!)
             }}</span
             ><span class="param-label">brew time</span>
           </div>
-          } @if (technique()!.bloomTimeSeconds) {
+          } @if (method()!.bloomTimeSeconds) {
           <div class="param">
-            <span class="param-value">{{ technique()!.bloomTimeSeconds }}s</span
+            <span class="param-value">{{ method()!.bloomTimeSeconds }}s</span
             ><span class="param-label">bloom</span>
-          </div>
-          } @if (technique()!.yieldGrams) {
-          <div class="param">
-            <span class="param-value">{{ technique()!.yieldGrams }}</span
-            ><span class="param-label">g yield</span>
           </div>
           }
         </div>
-        @if (technique()!.grindDescription) {
+        @if (method()!.grindDescription) {
         <div class="grind-info">
           <span class="grind-label">Grind:</span>
-          {{ technique()!.grindDescription }}
+          {{ method()!.grindDescription }}
         </div>
         }
       </brew-card>
@@ -139,22 +134,22 @@ import type { Technique, BrewLog } from '@core/models';
     .brew-params { font-family: var(--font-mono); font-size: var(--text-sm); color: var(--text-muted); }
   `,
 })
-export class TechniqueDetail implements OnInit {
+export class MethodDetail implements OnInit {
   @Input() id!: string;
 
   private router = inject(Router);
   private firestoreService = inject(FirestoreService);
   private toastService = inject(ToastService);
 
-  technique = signal<Technique | null>(null);
+  method = signal<Method | null>(null);
   brews = signal<BrewLog[]>([]);
 
   async ngOnInit(): Promise<void> {
     const [tech, brews] = await Promise.all([
-      this.firestoreService.getTechnique(this.id),
-      this.firestoreService.getBrewLogsByTechnique(this.id),
+      this.firestoreService.getMethod(this.id),
+      this.firestoreService.getBrewLogsByMethod(this.id),
     ]);
-    this.technique.set(tech);
+    this.method.set(tech);
     this.brews.set(brews);
   }
 
@@ -164,18 +159,18 @@ export class TechniqueDetail implements OnInit {
     return m > 0 ? `${m}:${s.toString().padStart(2, '0')}` : `${s}s`;
   }
 
-  async deleteTechnique(): Promise<void> {
-    if (!confirm('Delete this technique?')) return;
+  async deleteBrewMethod(): Promise<void> {
+    if (!confirm('Delete this brew method?')) return;
     try {
-      await this.firestoreService.deleteTechnique(this.id);
+      await this.firestoreService.deleteMethod(this.id);
       this.toastService.success('Deleted');
-      this.router.navigate(['/techniques']);
+      this.router.navigate(['/methods']);
     } catch {
       this.toastService.error('Failed');
     }
   }
 
   goBack(): void {
-    this.router.navigate(['/techniques']);
+    this.router.navigate(['/methods']);
   }
 }

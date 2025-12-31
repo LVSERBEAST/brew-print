@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="36" viewBox="0 0 24 36" fill="none">
+  <!-- Hopper -->
+  <path d="M6 1 L4 10 L20 10 L18 1 Z" fill="#9aa5b1"/>
+  <path d="M12 1 L11 10 L20 10 L18 1 Z" fill="#7b8794"/>
+  
+  <!-- Hopper lid -->
+  <rect x="5" y="0" width="14" height="1.5" rx="0.5" fill="#5c6670"/>
+  
+  <!-- Beans in hopper -->
+  <ellipse cx="10" cy="5" rx="1.5" ry="1" fill="#5c3d2e"/>
+  <ellipse cx="14" cy="4" rx="1.5" ry="1" fill="#5c3d2e"/>
+  <ellipse cx="12" cy="7" rx="1.5" ry="1" fill="#5c3d2e"/>
+  
+  <!-- Main body -->
+  <rect x="3" y="10" width="18" height="20" rx="1" fill="#3d4550"/>
+  
+  <!-- Body accent panel -->
+  <rect x="5" y="12" width="14" height="10" rx="0.5" fill="#5c6670"/>
+  
+  <!-- Display/controls -->
+  <rect x="7" y="14" width="10" height="4" rx="0.5" fill="#2a2d33"/>
+  <rect x="8" y="15" width="6" height="2" rx="0.3" fill="#8B4513"/>
+  
+  <!-- Grind button -->
+  <circle cx="12" cy="20" r="1.5" fill="#8B4513"/>
+  
+  <!-- Portafilter holder / chute -->
+  <rect x="8" y="26" width="8" height="4" rx="0.5" fill="#5c6670"/>
+  
+  <!-- Ground coffee dispensing -->
+  <path d="M10 30 L10 33 L14 33 L14 30" fill="#5c3d2e"/>
+  
+  <!-- Base -->
+  <rect x="2" y="30" width="20" height="4" rx="1" fill="#3d4550"/>
+</svg>

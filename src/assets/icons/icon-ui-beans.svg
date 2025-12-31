@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <!-- Bean 1 (larger, center) -->
+  <ellipse cx="12" cy="12" rx="5" ry="7" fill="#8B4513" transform="rotate(-15 12 12)"/>
+  <path d="M10 6 Q12 12 10 18" stroke="#5c3d2e" stroke-width="1.5" fill="none"/>
+  
+  <!-- Bean 2 (smaller, top right) -->
+  <ellipse cx="18" cy="7" rx="3" ry="4" fill="#9a6d3a" transform="rotate(20 18 7)"/>
+  <path d="M17 4 Q18 7 17 10" stroke="#7a5530" stroke-width="1" fill="none"/>
+  
+  <!-- Bean 3 (smaller, bottom left) -->
+  <ellipse cx="6" cy="17" rx="3" ry="4" fill="#9a6d3a" transform="rotate(-30 6 17)"/>
+  <path d="M5 14 Q6 17 5 20" stroke="#7a5530" stroke-width="1" fill="none"/>
+</svg>

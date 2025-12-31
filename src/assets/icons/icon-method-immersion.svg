@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <!-- Container -->
+  <rect x="4" y="4" width="16" height="18" rx="1" fill="#9aa5b1"/>
+  <rect x="12" y="4" width="7" height="18" fill="#7b8794"/>
+  
+  <!-- Water/coffee inside -->
+  <rect x="5" y="8" width="14" height="13" rx="0.5" fill="#8B4513" opacity="0.6"/>
+  
+  <!-- Brew particles floating -->
+  <circle cx="8" cy="12" r="1" fill="#5c3d2e"/>
+  <circle cx="14" cy="10" r="0.8" fill="#5c3d2e"/>
+  <circle cx="11" cy="15" r="1" fill="#5c3d2e"/>
+  <circle cx="16" cy="14" r="0.7" fill="#5c3d2e"/>
+  
+  <!-- Steep arrows (showing immersion) -->
+  <path d="M7 6 L7 8" stroke="#3d4550" stroke-width="1" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <path d="M12 6 L12 8" stroke="#3d4550" stroke-width="1" stroke-linecap="round"/>
+  <path d="M17 6 L17 8" stroke="#3d4550" stroke-width="1" stroke-linecap="round"/>
+</svg>

@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import { FirestoreService } from '@core/services/firestore.service';
 import { Card } from '@shared/ui/card/card';
 import { Button } from '@shared/ui/button/button';
-import type { BrewLog, Bean, Equipment, Technique } from '@core/models';
+import type { BrewLog, Bean, Equipment, Method } from '@core/models';
 import { DatePipe, SlicePipe } from '@angular/common';
 
 @Component({
@@ -86,9 +86,9 @@ import { DatePipe, SlicePipe } from '@angular/common';
               </div>
             </div>
 
-            @if (brew.techniqueId) {
-            <div class="brew-technique">
-              {{ getTechniqueName(brew.techniqueId) }}
+            @if (brew.methodId) {
+            <div class="brew-method">
+              {{ getMethodName(brew.methodId) }}
             </div>
             } @if (brew.notes) {
             <p class="brew-notes">
@@ -201,7 +201,7 @@ import { DatePipe, SlicePipe } from '@angular/common';
       color: var(--text-muted);
     }
     
-    .brew-technique {
+    .brew-method {
       display: inline-block;
       padding: var(--space-1) var(--space-3);
       background: var(--color-copper-100);
@@ -261,18 +261,18 @@ export class BrewLogList implements OnInit {
   loading = signal(true);
   brewLogs = signal<BrewLog[]>([]);
   beans = signal<Bean[]>([]);
-  techniques = signal<Technique[]>([]);
+  methods = signal<Method[]>([]);
 
   async ngOnInit(): Promise<void> {
     try {
-      const [brews, beans, techniques] = await Promise.all([
+      const [brews, beans, methods] = await Promise.all([
         this.firestoreService.getBrewLogs(),
         this.firestoreService.getAllBeans(),
-        this.firestoreService.getAllTechniques(),
+        this.firestoreService.getAllMethods(),
       ]);
       this.brewLogs.set(brews);
       this.beans.set(beans);
-      this.techniques.set(techniques);
+      this.methods.set(methods);
     } finally {
       this.loading.set(false);
     }
@@ -286,7 +286,7 @@ export class BrewLogList implements OnInit {
     );
   }
 
-  getTechniqueName(id: string): string {
-    return this.techniques().find((t) => t.id === id)?.name || 'Unknown';
+  getMethodName(id: string): string {
+    return this.methods().find((t) => t.id === id)?.name || 'Unknown';
   }
 }

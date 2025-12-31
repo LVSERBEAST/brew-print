@@ -76,7 +76,7 @@ export interface UserStats {
   averageRating: number;
   totalBeans: number;
   totalEquipment: number;
-  totalTechniques: number;
+  totalMethods: number;
 }
 
 // ============================================================================
@@ -156,12 +156,12 @@ export interface Bean {
 }
 
 // ============================================================================
-// TECHNIQUE
+// METHOD
 // ============================================================================
 
 export type InputMode = 'ratio' | 'absolute';
 
-export interface Technique {
+export interface Method {
   id: ID;
   userId: ID;
   name: string;
@@ -176,7 +176,6 @@ export interface Technique {
   bloomWaterGrams?: number;
   preInfusionSeconds?: number;
   pressureBars?: number;
-  yieldGrams?: number;
   grindDescription?: string;
   steps?: string[];
   customFields: CustomFieldDefinition[];
@@ -198,9 +197,9 @@ export interface BrewLog {
   // References
   beanIds: ID[]; // 1 or more beans
   equipmentUsages: EquipmentUsage[];
-  techniqueId?: ID;
+  methodId?: ID;
 
-  // Brew parameters (can override technique)
+  // Brew parameters (can override method)
   inputMode: InputMode;
   coffeeGrams: number;
   waterGrams: number;
@@ -211,7 +210,6 @@ export interface BrewLog {
   bloomWaterGrams?: number;
   preInfusionSeconds?: number;
   pressureBars?: number;
-  yieldGrams?: number;
   grindDescription?: string;
 
   // Evaluation
@@ -246,7 +244,7 @@ export interface PaginationParams {
 export interface BrewLogFilters {
   beanId?: ID;
   equipmentId?: ID;
-  techniqueId?: ID;
+  methodId?: ID;
   dateFrom?: Date;
   dateTo?: Date;
   minRating?: number;
@@ -263,7 +261,7 @@ export interface BrewStatistics {
   brewsByDay: { date: string; count: number }[];
   topBeans: { beanId: ID; name: string; count: number }[];
   topEquipment: { equipmentId: ID; name: string; count: number }[];
-  topTechniques: { techniqueId: ID; name: string; count: number }[];
+  topMethods: { methodId: ID; name: string; count: number }[];
   averageBrewParams: {
     coffeeGrams: number;
     waterGrams: number;

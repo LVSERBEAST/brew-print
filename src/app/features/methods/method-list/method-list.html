@@ -1,8 +1,8 @@
 <div class="page">
   <header class="page-header">
     <div>
-      <h1>Techniques</h1>
-      <p class="subtitle">{{ techniques().length }} saved</p>
+      <h1>Brew Methods</h1>
+      <p class="subtitle">{{ methods().length }} saved</p>
     </div>
     <a routerLink="new"
       ><brew-button
@@ -17,7 +17,7 @@
         >
           <line x1="12" y1="5" x2="12" y2="19" />
           <line x1="5" y1="12" x2="19" y2="12" /></svg
-        >New Technique</brew-button
+        >New Brew Method</brew-button
       ></a
     >
   </header>
@@ -28,18 +28,18 @@
     <div class="skeleton-card"></div>
     }
   </div>
-  } @else if (techniques().length === 0) {
+  } @else if (methods().length === 0) {
   <brew-card class="empty-state">
     <div class="empty-content">
       <span class="empty-icon">📖</span>
-      <h3>No techniques yet</h3>
+      <h3>No brew methods yet</h3>
       <p>Save your brewing recipes for quick access.</p>
-      <a routerLink="new"><brew-button>Create Technique</brew-button></a>
+      <a routerLink="new"><brew-button>Create Brew Method</brew-button></a>
     </div>
   </brew-card>
   } @else {
-  <div class="technique-grid">
-    @for (tech of techniques(); track tech.id) {
+  <div class="method-grid">
+    @for (tech of methods(); track tech.id) {
     <a [routerLink]="[tech.id]" class="tech-link">
       <brew-card [hoverable]="true" class="tech-card">
         <h3 class="tech-name">{{ tech.name }}</h3>

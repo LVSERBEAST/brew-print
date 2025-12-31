@@ -352,9 +352,9 @@ export class BeanForm implements OnInit {
         this.formData = { ...bean };
         if (bean.photoURL) this.photoPreview.set(bean.photoURL);
         if (bean.roastDate)
-          this.roastDateString = bean.roastDate.toDateString();
+          this.roastDateString = bean.roastDate ? bean.roastDate.toDateString() : '';
         if (bean.purchaseDate)
-          this.purchaseDateString = bean.purchaseDate.toDateString();
+          this.purchaseDateString = bean.purchaseDate ? bean.purchaseDate.toDateString() : '';
       }
     }
   }
