@@ -3,13 +3,15 @@ import { RouterLink } from '@angular/router';
 import { FirestoreService } from '@core/services/firestore.service';
 import { Card } from '@shared/ui/card/card';
 import { Button } from '@shared/ui/button/button';
-import type { BrewLog, Bean, Equipment, Method } from '@core/models';
-import { DatePipe, SlicePipe } from '@angular/common';
+import { FormatDatePipe } from '@shared/pipes/format-date.pipe';
+import { getBeanNames } from '@shared/utils/utils';
+import type { BrewLog, Bean, BrewMethod } from '@core/models/models';
+import { SlicePipe } from '@angular/common';
 
 @Component({
   selector: 'brew-brew-log-list',
   standalone: true,
-  imports: [RouterLink, Card, Button, SlicePipe],
+  imports: [RouterLink, Card, Button, SlicePipe, FormatDatePipe],
   template: `
     <div class="page">
       <header class="page-header">
@@ -19,15 +21,7 @@ import { DatePipe, SlicePipe } from '@angular/common';
         </div>
         <a routerLink="new">
           <brew-button>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
@@ -37,69 +31,68 @@ import { DatePipe, SlicePipe } from '@angular/common';
       </header>
 
       @if (loading()) {
-      <div class="loading-grid">
-        @for (i of [1,2,3,4,5,6]; track i) {
-        <div class="skeleton-card"></div>
-        }
-      </div>
-      } @else if (brewLogs().length === 0) {
-      <brew-card class="empty-state">
-        <div class="empty-content">
-          <span class="empty-icon">☕</span>
-          <h3>No brews yet</h3>
-          <p>Start tracking your coffee journey.</p>
-          <a routerLink="new">
-            <brew-button>Log Your First Brew</brew-button>
-          </a>
+        <div class="loading-grid">
+          @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+            <div class="skeleton-card"></div>
+          }
         </div>
-      </brew-card>
+      } @else if (brewLogs().length === 0) {
+        <brew-card class="empty-state">
+          <div class="empty-content">
+            <span class="empty-icon">☕</span>
+            <h3>No brews yet</h3>
+            <p>Start tracking your coffee journey.</p>
+            <a routerLink="new">
+              <brew-button>Log Your First Brew</brew-button>
+            </a>
+          </div>
+        </brew-card>
       } @else {
-      <div class="brew-grid">
-        @for (brew of brewLogs(); track brew.id) {
-        <a [routerLink]="[brew.id]" class="brew-link">
-          <brew-card [hoverable]="true" class="brew-card">
-            <div class="brew-header">
-              <span class="brew-date">{{ brew.date }}</span>
-              <div class="brew-rating">
-                @for (star of [1,2,3,4,5]; track star) {
-                <span class="star" [class.filled]="brew.rating / 2 >= star"
-                  >★</span
-                >
+        <div class="brew-grid">
+          @for (brew of brewLogs(); track brew.id) {
+            <a [routerLink]="[brew.id]" class="brew-link">
+              <brew-card [hoverable]="true" class="brew-card">
+                <div class="brew-header">
+                  <span class="brew-date">{{ brew.date | formatDate }}</span>
+                  <div class="brew-rating">
+                    @for (star of [1, 2, 3, 4, 5]; track star) {
+                      <span class="star" [class.filled]="brew.rating / 2 >= star">★</span>
+                    }
+                  </div>
+                </div>
+
+                <h3 class="brew-beans">{{ getBeanNamesForBrew(brew) }}</h3>
+
+                <div class="brew-params">
+                  <div class="param">
+                    <span class="param-value">{{ brew.params.coffeeGrams }}</span>
+                    <span class="param-label">g coffee</span>
+                  </div>
+                  <div class="param">
+                    <span class="param-value">{{ brew.params.waterGrams }}</span>
+                    <span class="param-label">g water</span>
+                  </div>
+                  <div class="param">
+                    <span class="param-value">1:{{ brew.params.ratio }}</span>
+                    <span class="param-label">ratio</span>
+                  </div>
+                </div>
+
+                @if (brew.brewMethodId) {
+                  <div class="brew-method">
+                    {{ getMethodNameById(brew.brewMethodId) }}
+                  </div>
                 }
-              </div>
-            </div>
 
-            <h3 class="brew-beans">{{ getBeanNames(brew) }}</h3>
-
-            <div class="brew-params">
-              <div class="param">
-                <span class="param-value">{{ brew.coffeeGrams }}</span>
-                <span class="param-label">g coffee</span>
-              </div>
-              <div class="param">
-                <span class="param-value">{{ brew.waterGrams }}</span>
-                <span class="param-label">g water</span>
-              </div>
-              <div class="param">
-                <span class="param-value">1:{{ brew.ratio }}</span>
-                <span class="param-label">ratio</span>
-              </div>
-            </div>
-
-            @if (brew.methodId) {
-            <div class="brew-method">
-              {{ getMethodName(brew.methodId) }}
-            </div>
-            } @if (brew.notes) {
-            <p class="brew-notes">
-              {{ brew.notes | slice : 0 : 100
-              }}{{ brew.notes.length > 100 ? '...' : '' }}
-            </p>
-            }
-          </brew-card>
-        </a>
-        }
-      </div>
+                @if (brew.notes) {
+                  <p class="brew-notes">
+                    {{ brew.notes | slice : 0 : 100 }}{{ brew.notes.length > 100 ? '...' : '' }}
+                  </p>
+                }
+              </brew-card>
+            </a>
+          }
+        </div>
       }
     </div>
   `,
@@ -109,7 +102,7 @@ import { DatePipe, SlicePipe } from '@angular/common';
       margin: 0 auto;
       animation: fadeIn var(--duration-normal) var(--ease-out);
     }
-    
+
     .page-header {
       display: flex;
       justify-content: space-between;
@@ -117,59 +110,61 @@ import { DatePipe, SlicePipe } from '@angular/common';
       margin-bottom: var(--space-6);
       gap: var(--space-4);
       flex-wrap: wrap;
-      
+
       h1 {
         font-family: var(--font-display);
         font-size: var(--text-3xl);
         margin: 0 0 var(--space-1);
       }
-      
+
       .subtitle {
         color: var(--text-tertiary);
         margin: 0;
       }
     }
-    
+
     .brew-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: var(--space-4);
     }
-    
+
     .brew-link {
       text-decoration: none;
       color: inherit;
     }
-    
+
     .brew-card {
       height: 100%;
     }
-    
+
     .brew-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: var(--space-3);
     }
-    
+
     .brew-date {
       font-size: var(--text-sm);
       color: var(--text-muted);
       font-weight: var(--weight-medium);
     }
-    
+
     .brew-rating {
       display: flex;
       gap: 2px;
-      
+
       .star {
         color: var(--color-cream-300);
         font-size: var(--text-sm);
-        
-        &.filled { color: var(--color-copper-400); }
+
+        &.filled {
+          color: var(--color-copper-400);
+        }
       }
     }
-    
+
     .brew-beans {
       font-family: var(--font-display);
       font-size: var(--text-lg);
@@ -177,30 +172,30 @@ import { DatePipe, SlicePipe } from '@angular/common';
       margin: 0 0 var(--space-4);
       color: var(--text-primary);
     }
-    
+
     .brew-params {
       display: flex;
       gap: var(--space-4);
       margin-bottom: var(--space-3);
     }
-    
+
     .param {
       display: flex;
       flex-direction: column;
     }
-    
+
     .param-value {
       font-family: var(--font-mono);
       font-size: var(--text-lg);
       font-weight: var(--weight-medium);
       color: var(--text-primary);
     }
-    
+
     .param-label {
       font-size: var(--text-xs);
       color: var(--text-muted);
     }
-    
+
     .brew-method {
       display: inline-block;
       padding: var(--space-1) var(--space-3);
@@ -211,47 +206,50 @@ import { DatePipe, SlicePipe } from '@angular/common';
       font-weight: var(--weight-medium);
       margin-bottom: var(--space-3);
     }
-    
+
     .brew-notes {
       font-size: var(--text-sm);
       color: var(--text-tertiary);
       margin: 0;
       line-height: var(--leading-relaxed);
     }
-    
-    .empty-state { text-align: center; }
-    
+
+    .empty-state {
+      text-align: center;
+    }
+
     .empty-content {
       padding: var(--space-12) var(--space-4);
-      
+
       .empty-icon {
         font-size: 3rem;
         display: block;
         margin-bottom: var(--space-4);
         opacity: 0.5;
       }
-      
+
       h3 {
         font-family: var(--font-display);
         margin: 0 0 var(--space-2);
       }
-      
+
       p {
         color: var(--text-tertiary);
         margin-bottom: var(--space-6);
       }
     }
-    
+
     .loading-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: var(--space-4);
     }
-    
+
     .skeleton-card {
       height: 200px;
       border-radius: var(--radius-xl);
-      @extend .skeleton !optional;
+      background: var(--surface-card);
+      animation: pulse 1.5s ease-in-out infinite;
     }
   `,
 })
@@ -261,14 +259,14 @@ export class BrewLogList implements OnInit {
   loading = signal(true);
   brewLogs = signal<BrewLog[]>([]);
   beans = signal<Bean[]>([]);
-  methods = signal<Method[]>([]);
+  methods = signal<BrewMethod[]>([]);
 
   async ngOnInit(): Promise<void> {
     try {
       const [brews, beans, methods] = await Promise.all([
         this.firestoreService.getBrewLogs(),
         this.firestoreService.getAllBeans(),
-        this.firestoreService.getAllMethods(),
+        this.firestoreService.getAllBrewMethods(),
       ]);
       this.brewLogs.set(brews);
       this.beans.set(beans);
@@ -278,15 +276,11 @@ export class BrewLogList implements OnInit {
     }
   }
 
-  getBeanNames(brew: BrewLog): string {
-    return (
-      brew.beanIds
-        .map((id) => this.beans().find((b) => b.id === id)?.name || 'Unknown')
-        .join(', ') || 'No beans'
-    );
+  getBeanNamesForBrew(brew: BrewLog): string {
+    return getBeanNames(brew.beanIds, this.beans());
   }
 
-  getMethodName(id: string): string {
-    return this.methods().find((t) => t.id === id)?.name || 'Unknown';
+  getMethodNameById(id: string): string {
+    return this.methods().find((m) => m.id === id)?.name || 'Unknown';
   }
 }
