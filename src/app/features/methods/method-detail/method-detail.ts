@@ -1,4 +1,4 @@
-import { Component, inject, signal, Input, OnInit } from '@angular/core';
+import { Component, inject, signal, Input, OnInit, input } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FirestoreService } from '@core/services/firestore.service';
 import { ToastService } from '@core/services/toast.service';
@@ -15,98 +15,110 @@ import type { BrewMethod, BrewLog } from '@core/models/models';
   template: `
     <div class="page">
       @if (method()) {
-        <header class="page-header">
-          <button class="back-btn" (click)="goBack()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="m15 18-6-6 6-6" />
-            </svg>
-            Back
-          </button>
-          <h1>{{ method()!.name }}</h1>
-          <div class="header-actions">
-            <a [routerLink]="['edit']">
-              <brew-button variant="secondary">Edit</brew-button>
-            </a>
-            <brew-button variant="danger" (onClick)="deleteBrewMethod()">Delete</brew-button>
-          </div>
-        </header>
+      <header class="page-header">
+        <button class="back-btn" (click)="goBack()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="m15 18-6-6 6-6" />
+          </svg>
+          Back
+        </button>
+        <h1>{{ method()!.name }}</h1>
+        <div class="header-actions">
+          <a [routerLink]="['edit']">
+            <brew-button variant="secondary">Edit</brew-button>
+          </a>
+          <brew-button variant="danger" (onClick)="deleteBrewMethod()"
+            >Delete</brew-button
+          >
+        </div>
+      </header>
 
-        @if (method()!.description) {
-          <brew-card title="Description">
-            <p class="description">{{ method()!.description }}</p>
-          </brew-card>
+      @if (method()!.description) {
+      <brew-card title="Description">
+        <p class="description">{{ method()!.description }}</p>
+      </brew-card>
+      }
+
+      <brew-card title="Parameters">
+        <div class="params-grid">
+          @if (method()!.params.coffeeGrams) {
+          <div class="param">
+            <span class="param-value">{{ method()!.params.coffeeGrams }}</span>
+            <span class="param-label">g coffee</span>
+          </div>
+          } @if (method()!.params.waterGrams) {
+          <div class="param">
+            <span class="param-value">{{ method()!.params.waterGrams }}</span>
+            <span class="param-label">g water</span>
+          </div>
+          } @if (method()!.params.ratio) {
+          <div class="param">
+            <span class="param-value">1:{{ method()!.params.ratio }}</span>
+            <span class="param-label">ratio</span>
+          </div>
+          } @if (method()!.params.waterTemp) {
+          <div class="param">
+            <span class="param-value">{{ method()!.params.waterTemp }}°</span>
+            <span class="param-label">temp (C)</span>
+          </div>
+          } @if (method()!.params.brewTimeSeconds) {
+          <div class="param">
+            <span class="param-value">{{
+              method()!.params.brewTimeSeconds | formatTime
+            }}</span>
+            <span class="param-label">brew time</span>
+          </div>
+          } @if (method()!.params.bloomTimeSeconds) {
+          <div class="param">
+            <span class="param-value"
+              >{{ method()!.params.bloomTimeSeconds }}s</span
+            >
+            <span class="param-label">bloom</span>
+          </div>
+          } @if (method()!.params.yieldGrams) {
+          <div class="param">
+            <span class="param-value">{{ method()!.params.yieldGrams }}</span>
+            <span class="param-label">g yield</span>
+          </div>
+          }
+        </div>
+        @if (method()!.params.grindDescription) {
+        <div class="grind-info">
+          <span class="grind-label">Grind:</span>
+          {{ method()!.params.grindDescription }}
+        </div>
         }
+      </brew-card>
 
-        <brew-card title="Parameters">
-          <div class="params-grid">
-            @if (method()!.params.coffeeGrams) {
-              <div class="param">
-                <span class="param-value">{{ method()!.params.coffeeGrams }}</span>
-                <span class="param-label">g coffee</span>
+      <section class="brews-section">
+        <h2>Used in {{ brews().length }} brews</h2>
+        @if (brews().length > 0) {
+        <div class="brew-list">
+          @for (brew of brews().slice(0, 10); track brew.id) {
+          <a [routerLink]="['/brews', brew.id]" class="brew-item">
+            <brew-card [hoverable]="true">
+              <div class="brew-row">
+                <span class="brew-date">{{ brew.createdAt | formatDate }}</span>
+                <span class="brew-params"
+                  >{{ brew.params.coffeeGrams }}g · 1:{{
+                    brew.params.ratio
+                  }}</span
+                >
               </div>
-            }
-            @if (method()!.params.waterGrams) {
-              <div class="param">
-                <span class="param-value">{{ method()!.params.waterGrams }}</span>
-                <span class="param-label">g water</span>
-              </div>
-            }
-            @if (method()!.params.ratio) {
-              <div class="param">
-                <span class="param-value">1:{{ method()!.params.ratio }}</span>
-                <span class="param-label">ratio</span>
-              </div>
-            }
-            @if (method()!.params.waterTemp) {
-              <div class="param">
-                <span class="param-value">{{ method()!.params.waterTemp }}°</span>
-                <span class="param-label">temp (C)</span>
-              </div>
-            }
-            @if (method()!.params.brewTimeSeconds) {
-              <div class="param">
-                <span class="param-value">{{ method()!.params.brewTimeSeconds | formatTime }}</span>
-                <span class="param-label">brew time</span>
-              </div>
-            }
-            @if (method()!.params.bloomTimeSeconds) {
-              <div class="param">
-                <span class="param-value">{{ method()!.params.bloomTimeSeconds }}s</span>
-                <span class="param-label">bloom</span>
-              </div>
-            }
-            @if (method()!.params.yieldGrams) {
-              <div class="param">
-                <span class="param-value">{{ method()!.params.yieldGrams }}</span>
-                <span class="param-label">g yield</span>
-              </div>
-            }
-          </div>
-          @if (method()!.params.grindDescription) {
-            <div class="grind-info">
-              <span class="grind-label">Grind:</span>
-              {{ method()!.params.grindDescription }}
-            </div>
+            </brew-card>
+          </a>
           }
-        </brew-card>
-
-        <section class="brews-section">
-          <h2>Used in {{ brews().length }} brews</h2>
-          @if (brews().length > 0) {
-            <div class="brew-list">
-              @for (brew of brews().slice(0, 10); track brew.id) {
-                <a [routerLink]="['/brews', brew.id]" class="brew-item">
-                  <brew-card [hoverable]="true">
-                    <div class="brew-row">
-                      <span class="brew-date">{{ brew.date | formatDate }}</span>
-                      <span class="brew-params">{{ brew.params.coffeeGrams }}g · 1:{{ brew.params.ratio }}</span>
-                    </div>
-                  </brew-card>
-                </a>
-              }
-            </div>
-          }
-        </section>
+        </div>
+        }
+      </section>
       }
     </div>
   `,
@@ -229,7 +241,7 @@ import type { BrewMethod, BrewLog } from '@core/models/models';
   `,
 })
 export class MethodDetail implements OnInit {
-  @Input() id!: string;
+  id = input.required<string>();
 
   private router = inject(Router);
   private firestoreService = inject(FirestoreService);
@@ -240,8 +252,8 @@ export class MethodDetail implements OnInit {
 
   async ngOnInit(): Promise<void> {
     const [method, brews] = await Promise.all([
-      this.firestoreService.getBrewMethod(this.id),
-      this.firestoreService.getBrewLogsByBrewMethod(this.id),
+      this.firestoreService.getBrewMethod(this.id()),
+      this.firestoreService.getBrewLogsByBrewMethod(this.id()),
     ]);
     this.method.set(method);
     this.brews.set(brews);
@@ -250,7 +262,7 @@ export class MethodDetail implements OnInit {
   async deleteBrewMethod(): Promise<void> {
     if (!confirm('Delete this brew method?')) return;
     try {
-      await this.firestoreService.deleteBrewMethod(this.id);
+      await this.firestoreService.deleteBrewMethod(this.id());
       this.toastService.success('Deleted');
       this.router.navigate(['/methods']);
     } catch {

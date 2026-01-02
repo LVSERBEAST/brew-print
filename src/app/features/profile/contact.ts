@@ -15,7 +15,17 @@ import { AuthService } from '@core/services/auth.service';
     <div class="page">
       <header class="page-header">
         <button class="back-btn" (click)="goBack()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="m15 18-6-6 6-6" />
+          </svg>
           Back
         </button>
         <h1>Contact Us</h1>
@@ -23,8 +33,8 @@ import { AuthService } from '@core/services/auth.service';
 
       <brew-card class="contact-card">
         <p class="intro">
-          We'd love to hear from you! Whether you have a question, feedback, or just want to 
-          share your latest brew discovery, drop us a line.
+          We'd love to hear from you! Whether you have a question, feedback, or
+          just want to share your latest brew discovery, drop us a line.
         </p>
 
         <form (ngSubmit)="onSubmit()" class="contact-form">
@@ -45,7 +55,11 @@ import { AuthService } from '@core/services/auth.service';
 
           <div class="select-wrapper">
             <label class="select-label">Topic</label>
-            <select class="select-input" [(ngModel)]="formData.topic" name="topic">
+            <select
+              class="select-input"
+              [(ngModel)]="formData.topic"
+              name="topic"
+            >
               <option value="general">General Inquiry</option>
               <option value="feedback">Feedback</option>
               <option value="bug">Report a Bug</option>
@@ -82,16 +96,46 @@ import { AuthService } from '@core/services/auth.service';
         <div class="contact-methods">
           <a href="mailto:support@brewprint.app" class="contact-method">
             <span class="method-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                />
+                <polyline points="22,6 12,13 2,6" />
+              </svg>
             </span>
             <span class="method-info">
               <span class="method-label">Email</span>
               <span class="method-value">support&#64;brewprint.app</span>
             </span>
           </a>
-          <a href="https://twitter.com/brewprintapp" target="_blank" rel="noopener" class="contact-method">
+          <a
+            href="https://twitter.com/brewprintapp"
+            target="_blank"
+            rel="noopener"
+            class="contact-method"
+          >
             <span class="method-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"
+                />
+              </svg>
             </span>
             <span class="method-info">
               <span class="method-label">Twitter</span>
@@ -282,7 +326,11 @@ export class Contact {
   }
 
   isValid(): boolean {
-    return !!(this.formData.name && this.formData.email && this.formData.message);
+    return !!(
+      this.formData.name &&
+      this.formData.email &&
+      this.formData.message
+    );
   }
 
   async onSubmit(): Promise<void> {
@@ -293,7 +341,7 @@ export class Contact {
     // Simulate sending (in production, this would call a backend)
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    this.toastService.success('Message sent! We\'ll get back to you soon.');
+    this.toastService.success("Message sent! We'll get back to you soon.");
     this.formData.message = '';
     this.sending.set(false);
   }

@@ -5,6 +5,7 @@ import {
   computed,
   OnInit,
   Input,
+  input,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -16,17 +17,39 @@ import { Button } from '@shared/ui/button/button';
 import { InputComponent } from '@shared/ui/input/input';
 import { RatingComponent } from '@shared/ui/rating/rating';
 import { DEFAULT_BREW_PARAMS } from '@shared/constants/constants';
-import type { Bean, Equipment, BrewMethod, BrewLog, BrewParams, InputMode } from '@core/models/models';
+import type {
+  Bean,
+  Equipment,
+  BrewMethod,
+  BrewLog,
+  BrewParams,
+  InputMode,
+} from '@core/models/models';
 
 @Component({
   selector: 'brew-brew-log-form',
   standalone: true,
-  imports: [FormsModule, RouterLink, Card, Button, InputComponent, RatingComponent],
+  imports: [
+    FormsModule,
+    RouterLink,
+    Card,
+    Button,
+    InputComponent,
+    RatingComponent,
+  ],
   template: `
     <div class="page">
       <header class="page-header">
         <button class="back-btn" (click)="goBack()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
             <path d="m15 18-6-6 6-6" />
           </svg>
           Back
@@ -39,26 +62,29 @@ import type { Bean, Equipment, BrewMethod, BrewLog, BrewParams, InputMode } from
         <brew-card title="Beans" class="form-section">
           <div class="bean-selection">
             @if (beans().length === 0) {
-              <p class="no-items">
-                No beans added yet.
-                <a routerLink="/beans/new">Add beans first.</a>
-              </p>
+            <p class="no-items">
+              No beans added yet.
+              <a routerLink="/beans/new">Add beans first.</a>
+            </p>
             } @else {
-              <div class="checkbox-grid">
-                @for (bean of beans(); track bean.id) {
-                  <label class="checkbox-item" [class.selected]="selectedBeans().includes(bean.id!)">
-                    <input
-                      type="checkbox"
-                      [checked]="selectedBeans().includes(bean.id!)"
-                      (change)="toggleBean(bean.id!)"
-                    />
-                    <span class="checkbox-content">
-                      <span class="checkbox-title">{{ bean.name }}</span>
-                      <span class="checkbox-subtitle">{{ bean.roaster }}</span>
-                    </span>
-                  </label>
-                }
-              </div>
+            <div class="checkbox-grid">
+              @for (bean of beans(); track bean.id) {
+              <label
+                class="checkbox-item"
+                [class.selected]="selectedBeans().includes(bean.id!)"
+              >
+                <input
+                  type="checkbox"
+                  [checked]="selectedBeans().includes(bean.id!)"
+                  (change)="toggleBean(bean.id!)"
+                />
+                <span class="checkbox-content">
+                  <span class="checkbox-title">{{ bean.name }}</span>
+                  <span class="checkbox-subtitle">{{ bean.roaster }}</span>
+                </span>
+              </label>
+              }
+            </div>
             }
           </div>
         </brew-card>
@@ -66,26 +92,29 @@ import type { Bean, Equipment, BrewMethod, BrewLog, BrewParams, InputMode } from
         <!-- Equipment Selection -->
         <brew-card title="Equipment" class="form-section">
           @if (equipment().length === 0) {
-            <p class="no-items">
-              No equipment added yet.
-              <a routerLink="/equipment/new">Add equipment first.</a>
-            </p>
+          <p class="no-items">
+            No equipment added yet.
+            <a routerLink="/equipment/new">Add equipment first.</a>
+          </p>
           } @else {
-            <div class="checkbox-grid">
-              @for (equip of equipment(); track equip.id) {
-                <label class="checkbox-item" [class.selected]="selectedEquipment().includes(equip.id!)">
-                  <input
-                    type="checkbox"
-                    [checked]="selectedEquipment().includes(equip.id!)"
-                    (change)="toggleEquipment(equip.id!)"
-                  />
-                  <span class="checkbox-content">
-                    <span class="checkbox-title">{{ equip.name }}</span>
-                    <span class="checkbox-subtitle">{{ equip.category }}</span>
-                  </span>
-                </label>
-              }
-            </div>
+          <div class="checkbox-grid">
+            @for (equip of equipment(); track equip.id) {
+            <label
+              class="checkbox-item"
+              [class.selected]="selectedEquipment().includes(equip.id!)"
+            >
+              <input
+                type="checkbox"
+                [checked]="selectedEquipment().includes(equip.id!)"
+                (change)="toggleEquipment(equip.id!)"
+              />
+              <span class="checkbox-content">
+                <span class="checkbox-title">{{ equip.name }}</span>
+                <span class="checkbox-subtitle">{{ equip.category }}</span>
+              </span>
+            </label>
+            }
+          </div>
           }
         </brew-card>
 
@@ -100,11 +129,20 @@ import type { Bean, Equipment, BrewMethod, BrewLog, BrewParams, InputMode } from
             >
               <option [ngValue]="undefined">No brew method</option>
               @for (method of methods(); track method.id) {
-                <option [value]="method.id">{{ method.name }}</option>
+              <option [value]="method.id">{{ method.name }}</option>
               }
             </select>
-            <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="6 9 12 15 18 9"/>
+            <svg
+              class="select-arrow"
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="6 9 12 15 18 9" />
             </svg>
           </div>
         </brew-card>
@@ -132,60 +170,60 @@ import type { Bean, Equipment, BrewMethod, BrewLog, BrewParams, InputMode } from
 
           <div class="params-grid">
             @if (params.inputMode === 'ratio') {
-              <brew-input
-                label="Ratio"
-                type="number"
-                [min]="1"
-                [max]="30"
-                [step]="0.5"
-                prefix="1:"
-                [(ngModel)]="params.ratio"
-                name="ratio"
-                (ngModelChange)="calculateFromRatio()"
-              />
-              <brew-input
-                label="Coffee"
-                type="number"
-                [min]="1"
-                suffix="g"
-                [(ngModel)]="params.coffeeGrams"
-                name="coffeeGrams"
-                (ngModelChange)="calculateWaterFromRatio()"
-              />
-              <brew-input
-                label="Water (calculated)"
-                type="number"
-                suffix="g"
-                [readonly]="true"
-                [(ngModel)]="params.waterGrams"
-                name="waterGrams"
-              />
+            <brew-input
+              label="Ratio"
+              type="number"
+              [min]="1"
+              [max]="30"
+              [step]="0.5"
+              prefix="1:"
+              [(ngModel)]="params.ratio"
+              name="ratio"
+              (ngModelChange)="calculateFromRatio()"
+            />
+            <brew-input
+              label="Coffee"
+              type="number"
+              [min]="1"
+              suffix="g"
+              [(ngModel)]="params.coffeeGrams"
+              name="coffeeGrams"
+              (ngModelChange)="calculateWaterFromRatio()"
+            />
+            <brew-input
+              label="Water (calculated)"
+              type="number"
+              suffix="g"
+              [readonly]="true"
+              [(ngModel)]="params.waterGrams"
+              name="waterGrams"
+            />
             } @else {
-              <brew-input
-                label="Coffee"
-                type="number"
-                [min]="1"
-                suffix="g"
-                [(ngModel)]="params.coffeeGrams"
-                name="coffeeGramsAbs"
-                (ngModelChange)="calculateRatio()"
-              />
-              <brew-input
-                label="Water"
-                type="number"
-                [min]="1"
-                suffix="g"
-                [(ngModel)]="params.waterGrams"
-                name="waterGramsAbs"
-                (ngModelChange)="calculateRatio()"
-              />
-              <brew-input
-                label="Ratio (calculated)"
-                type="text"
-                [readonly]="true"
-                [ngModel]="'1:' + params.ratio"
-                name="ratioDisplay"
-              />
+            <brew-input
+              label="Coffee"
+              type="number"
+              [min]="1"
+              suffix="g"
+              [(ngModel)]="params.coffeeGrams"
+              name="coffeeGramsAbs"
+              (ngModelChange)="calculateRatio()"
+            />
+            <brew-input
+              label="Water"
+              type="number"
+              [min]="1"
+              suffix="g"
+              [(ngModel)]="params.waterGrams"
+              name="waterGramsAbs"
+              (ngModelChange)="calculateRatio()"
+            />
+            <brew-input
+              label="Ratio (calculated)"
+              type="text"
+              [readonly]="true"
+              [ngModel]="'1:' + params.ratio"
+              name="ratioDisplay"
+            />
             }
           </div>
 
@@ -243,9 +281,23 @@ import type { Bean, Equipment, BrewMethod, BrewLog, BrewParams, InputMode } from
         </brew-card>
 
         <!-- Save as Brew Method -->
-        <button type="button" class="save-method-btn" (click)="saveBrewMethod()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+        <button
+          type="button"
+          class="save-method-btn"
+          (click)="saveBrewMethod()"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"
+            />
             <polyline points="17 21 17 13 7 13 7 21" />
             <polyline points="7 3 7 8 15 8" />
           </svg>
@@ -257,7 +309,11 @@ import type { Bean, Equipment, BrewMethod, BrewLog, BrewParams, InputMode } from
           <brew-button type="button" variant="secondary" (onClick)="goBack()">
             Cancel
           </brew-button>
-          <brew-button type="submit" [loading]="saving()" [disabled]="!isValid()">
+          <brew-button
+            type="submit"
+            [loading]="saving()"
+            [disabled]="!isValid()"
+          >
             {{ isEdit ? 'Save Changes' : 'Log Brew' }}
           </brew-button>
         </div>
@@ -491,7 +547,7 @@ import type { Bean, Equipment, BrewMethod, BrewLog, BrewParams, InputMode } from
   `,
 })
 export class BrewLogForm implements OnInit {
-  @Input() id?: string;
+  id = input<string>();
 
   private router = inject(Router);
   private firestoreService = inject(FirestoreService);
@@ -512,7 +568,7 @@ export class BrewLogForm implements OnInit {
   notes = '';
 
   get isEdit(): boolean {
-    return !!this.id;
+    return !!this.id();
   }
 
   async ngOnInit(): Promise<void> {
@@ -548,8 +604,8 @@ export class BrewLogForm implements OnInit {
       this.formStateService.clearBrewLogFormState();
     }
 
-    if (this.id) {
-      const brew = await this.firestoreService.getBrewLog(this.id);
+    if (this.id()) {
+      const brew = await this.firestoreService.getBrewLog(this.id()!);
       if (brew) {
         this.selectedBeans.set(brew.beanIds);
         this.selectedEquipment.set(brew.equipmentIds);
@@ -607,13 +663,16 @@ export class BrewLogForm implements OnInit {
   calculateRatio(): void {
     if (this.params.coffeeGrams && this.params.waterGrams) {
       this.params.ratio =
-        Math.round((this.params.waterGrams / this.params.coffeeGrams) * 10) / 10;
+        Math.round((this.params.waterGrams / this.params.coffeeGrams) * 10) /
+        10;
     }
   }
 
   calculateFromRatio(): void {
     if (this.params.coffeeGrams && this.params.ratio) {
-      this.params.waterGrams = Math.round(this.params.coffeeGrams * this.params.ratio);
+      this.params.waterGrams = Math.round(
+        this.params.coffeeGrams * this.params.ratio
+      );
     }
   }
 
@@ -645,7 +704,7 @@ export class BrewLogForm implements OnInit {
       };
 
       if (this.isEdit) {
-        await this.firestoreService.updateBrewLog(this.id!, data);
+        await this.firestoreService.updateBrewLog(this.id()!, data);
         this.toastService.success('Brew updated!');
       } else {
         await this.firestoreService.createBrewLog(data as BrewLog);

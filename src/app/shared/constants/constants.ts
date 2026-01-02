@@ -2,7 +2,7 @@
 // BREWPRINT CONSTANTS
 // ============================================================================
 
-import { EquipmentCategory } from "@core/models/models";
+import { EquipmentCategory } from '@core/models/models';
 
 // ============================================================================
 // DEFAULT IMAGES
@@ -25,13 +25,40 @@ export const DEFAULT_CATEGORY_ICONS: Record<EquipmentCategory, string> = {
 };
 
 export const EQUIPMENT_ICONS = [
-  '☕', '⚙️', '🫖', '⚖️', '🔧', '📦', '🥤', '🍵',
-  '🔥', '💨', '🧊', '🥛', '🫗', '⏱️', '🌡️', '📊',
-  '🎚️', '🔩', '🪣', '🧹', '🧴', '🔌', '💡', '🎛️',
+  '☕',
+  '⚙️',
+  '🫖',
+  '⚖️',
+  '🔧',
+  '📦',
+  '🥤',
+  '🍵',
+  '🔥',
+  '💨',
+  '🧊',
+  '🥛',
+  '🫗',
+  '⏱️',
+  '🌡️',
+  '📊',
+  '🎚️',
+  '🔩',
+  '🪣',
+  '🧹',
+  '🧴',
+  '🔌',
+  '💡',
+  '🎛️',
 ];
 
 export const EQUIPMENT_CATEGORIES: EquipmentCategory[] = [
-  'brewer', 'grinder', 'kettle', 'scale', 'machine', 'accessory', 'other',
+  'brewer',
+  'grinder',
+  'kettle',
+  'scale',
+  'machine',
+  'accessory',
+  'other',
 ];
 
 // ============================================================================

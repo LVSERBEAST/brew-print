@@ -173,7 +173,7 @@ export interface BrewMethod {
 export interface BrewLog {
   id: string;
   userId: string;
-  date: Timestamp;
+  //date: Timestamp;
   beanIds: string[];
   equipmentIds: string[];
   brewMethodId?: string;

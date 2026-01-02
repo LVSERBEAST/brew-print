@@ -11,12 +11,22 @@ import { InputComponent } from '@shared/ui/input/input';
 @Component({
   selector: 'brew-settings',
   standalone: true,
-  imports: [FormsModule, Card, Button, InputComponent],
+  imports: [FormsModule, Card, Button],
   template: `
     <div class="page">
       <header class="page-header">
         <button class="back-btn" (click)="goBack()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="m15 18-6-6 6-6" />
+          </svg>
           Back
         </button>
         <h1>Settings</h1>
@@ -33,7 +43,9 @@ import { InputComponent } from '@shared/ui/input/input';
             placeholder="Your name"
           />
         </div>
-        <brew-button [loading]="savingProfile()" (onClick)="saveProfile()">Save Profile</brew-button>
+        <brew-button [loading]="savingProfile()" (onClick)="saveProfile()"
+          >Save Profile</brew-button
+        >
       </brew-card>
 
       <!-- Email Settings -->
@@ -60,7 +72,12 @@ import { InputComponent } from '@shared/ui/input/input';
             placeholder="Required to change email"
           />
         </div>
-        <brew-button [loading]="savingEmail()" [disabled]="!newEmail || !emailPassword" (onClick)="updateEmail()">Update Email</brew-button>
+        <brew-button
+          [loading]="savingEmail()"
+          [disabled]="!newEmail || !emailPassword"
+          (onClick)="updateEmail()"
+          >Update Email</brew-button
+        >
       </brew-card>
 
       <!-- Password Settings -->
@@ -94,9 +111,12 @@ import { InputComponent } from '@shared/ui/input/input';
         </div>
         <brew-button
           [loading]="savingPassword()"
-          [disabled]="!currentPassword || !newPassword || newPassword !== confirmPassword"
+          [disabled]="
+            !currentPassword || !newPassword || newPassword !== confirmPassword
+          "
           (onClick)="updatePassword()"
-        >Update Password</brew-button>
+          >Update Password</brew-button
+        >
       </brew-card>
 
       <!-- Appearance -->
@@ -165,7 +185,11 @@ import { InputComponent } from '@shared/ui/input/input';
       <brew-card title="Units" class="settings-card">
         <div class="setting-row">
           <label>Measurement System</label>
-          <select class="setting-select" [(ngModel)]="measurementSystem" (change)="saveMeasurement()">
+          <select
+            class="setting-select"
+            [(ngModel)]="measurementSystem"
+            (change)="saveMeasurement()"
+          >
             <option value="metric">Metric (grams, Celsius)</option>
             <option value="imperial">Imperial (ounces, Fahrenheit)</option>
           </select>
@@ -385,7 +409,8 @@ export class Settings {
   // Preferences
   notifications = {
     emailUpdates: this.user()?.preferences?.notifications?.emailUpdates ?? true,
-    brewReminders: this.user()?.preferences?.notifications?.brewReminders ?? false,
+    brewReminders:
+      this.user()?.preferences?.notifications?.brewReminders ?? false,
   };
   measurementSystem = this.user()?.preferences?.measurementSystem || 'metric';
 
@@ -398,7 +423,9 @@ export class Settings {
 
     this.savingProfile.set(true);
     try {
-      await this.authService.updateUserProfile({ displayName: this.displayName });
+      await this.authService.updateUserProfile({
+        displayName: this.displayName,
+      });
       this.toastService.success('Profile updated');
     } catch {
       this.toastService.error('Failed to update profile');
@@ -424,19 +451,28 @@ export class Settings {
   }
 
   async updatePassword(): Promise<void> {
-    if (!this.currentPassword || !this.newPassword || this.newPassword !== this.confirmPassword) {
+    if (
+      !this.currentPassword ||
+      !this.newPassword ||
+      this.newPassword !== this.confirmPassword
+    ) {
       return;
     }
 
     this.savingPassword.set(true);
     try {
-      await this.authService.updateUserPassword(this.currentPassword, this.newPassword);
+      await this.authService.updateUserPassword(
+        this.currentPassword,
+        this.newPassword
+      );
       this.toastService.success('Password updated');
       this.currentPassword = '';
       this.newPassword = '';
       this.confirmPassword = '';
     } catch {
-      this.toastService.error('Failed to update password. Check your current password.');
+      this.toastService.error(
+        'Failed to update password. Check your current password.'
+      );
     } finally {
       this.savingPassword.set(false);
     }

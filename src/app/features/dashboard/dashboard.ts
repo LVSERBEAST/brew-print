@@ -25,9 +25,9 @@ import { getBeanNames } from '@shared/utils/utils';
           <a routerLink="/profile" class="profile-btn mobile-only">
             <span class="avatar">
               @if (user()?.photoURL) {
-                <img [src]="user()!.photoURL" [alt]="user()!.displayName" />
+              <img [src]="user()!.photoURL" [alt]="user()!.displayName" />
               } @else {
-                {{ userInitials() }}
+              {{ userInitials() }}
               }
             </span>
           </a>
@@ -66,11 +66,11 @@ import { getBeanNames } from '@shared/utils/utils';
             </div>
           </div>
           <div class="streak-dots">
-            @for (day of weekDays; track day.label; let i = $index) {
-              <div class="streak-day" [class.active]="isStreakDay(i)">
-                <span class="day-label">{{ day.label }}</span>
-                <span class="day-dot"></span>
-              </div>
+            @for (day of weekDays; track $index; let i = $index) {
+            <div class="streak-day" [class.active]="isStreakDay(i)">
+              <span class="day-label">{{ day.label }}</span>
+              <span class="day-dot"></span>
+            </div>
             }
           </div>
         </brew-card>
@@ -81,7 +81,7 @@ import { getBeanNames } from '@shared/utils/utils';
             <div class="stat-icon">⭐</div>
             <div class="stat-info">
               <span class="stat-value">{{
-                (user()?.stats?.averageRating || 0) | number : '1.1-1'
+                user()?.stats?.averageRating || 0 | number : '1.1-1'
               }}</span>
               <span class="stat-label">Avg Rating</span>
             </div>
@@ -99,7 +99,9 @@ import { getBeanNames } from '@shared/utils/utils';
           <div class="stat-content">
             <div class="stat-icon">📖</div>
             <div class="stat-info">
-              <span class="stat-value">{{ user()?.stats?.totalBrewMethods || 0 }}</span>
+              <span class="stat-value">{{
+                user()?.stats?.totalBrewMethods || 0
+              }}</span>
               <span class="stat-label">Methods</span>
             </div>
           </div>
@@ -110,7 +112,9 @@ import { getBeanNames } from '@shared/utils/utils';
           <div class="stat-content">
             <div class="stat-icon">📅</div>
             <div class="stat-info">
-              <span class="stat-value">{{ user()?.stats?.currentStreak || 0 }}</span>
+              <span class="stat-value">{{
+                user()?.stats?.currentStreak || 0
+              }}</span>
               <span class="stat-label">Day Streak</span>
             </div>
           </div>
@@ -118,15 +122,19 @@ import { getBeanNames } from '@shared/utils/utils';
       </div>
 
       <!-- Activity Chart -->
-      <brew-card title="Brew Activity" subtitle="Last 30 days" class="chart-card">
+      <brew-card
+        title="Brew Activity"
+        subtitle="Last 30 days"
+        class="chart-card"
+      >
         <div class="activity-chart">
           @for (day of brewsByDay(); track day.date) {
-            <div
-              class="chart-bar"
-              [style.height.%]="getBarHeight(day.count)"
-              [class.chart-bar--today]="isToday(day.date)"
-              [title]="day.date + ': ' + day.count + ' brews'"
-            ></div>
+          <div
+            class="chart-bar"
+            [style.height.%]="getBarHeight(day.count)"
+            [class.chart-bar--today]="isToday(day.date)"
+            [title]="day.date + ': ' + day.count + ' brews'"
+          ></div>
           }
         </div>
         <div class="chart-labels">
@@ -143,49 +151,56 @@ import { getBeanNames } from '@shared/utils/utils';
         </div>
 
         @if (loading()) {
-          <div class="loading-state">
-            @for (i of [1, 2, 3]; track i) {
-              <div class="skeleton-card"></div>
-            }
-          </div>
+        <div class="loading-state">
+          @for (i of [1, 2, 3]; track i) {
+          <div class="skeleton-card"></div>
+          }
+        </div>
         } @else if (recentBrews().length === 0) {
-          <brew-card class="empty-state">
-            <div class="empty-content">
-              <span class="empty-icon">☕</span>
-              <h3>No brews yet</h3>
-              <p>Start tracking your coffee journey by logging your first brew.</p>
-              <a routerLink="/brews/new">
-                <brew-button>Log Your First Brew</brew-button>
-              </a>
-            </div>
-          </brew-card>
-        } @else {
-          <div class="brew-list">
-            @for (brew of recentBrews(); track brew.id) {
-              <a [routerLink]="['/brews', brew.id]" class="brew-item">
-                <brew-card [hoverable]="true">
-                  <div class="brew-content">
-                    <div class="brew-info">
-                      <span class="brew-beans">{{ getBeanNamesForBrew(brew) }}</span>
-                      <span class="brew-date">{{ brew.date | formatDate }}</span>
-                    </div>
-                    <div class="brew-meta">
-                      <span class="brew-params">
-                        {{ brew.params.coffeeGrams }}g · {{ brew.params.waterGrams }}g · 1:{{
-                          brew.params.ratio
-                        }}
-                      </span>
-                      <div class="brew-rating">
-                        @for (star of [1, 2, 3, 4, 5]; track star) {
-                          <span class="star" [class.filled]="brew.rating / 2 >= star">★</span>
-                        }
-                      </div>
-                    </div>
-                  </div>
-                </brew-card>
-              </a>
-            }
+        <brew-card class="empty-state">
+          <div class="empty-content">
+            <span class="empty-icon">☕</span>
+            <h3>No brews yet</h3>
+            <p>
+              Start tracking your coffee journey by logging your first brew.
+            </p>
+            <a routerLink="/brews/new">
+              <brew-button>Log Your First Brew</brew-button>
+            </a>
           </div>
+        </brew-card>
+        } @else {
+        <div class="brew-list">
+          @for (brew of recentBrews(); track brew.id) {
+          <a [routerLink]="['/brews', brew.id]" class="brew-item">
+            <brew-card [hoverable]="true">
+              <div class="brew-content">
+                <div class="brew-info">
+                  <span class="brew-beans">{{
+                    getBeanNamesForBrew(brew)
+                  }}</span>
+                  <span class="brew-date">{{
+                    brew.createdAt | formatDate
+                  }}</span>
+                </div>
+                <div class="brew-meta">
+                  <span class="brew-params">
+                    {{ brew.params.coffeeGrams }}g ·
+                    {{ brew.params.waterGrams }}g · 1:{{ brew.params.ratio }}
+                  </span>
+                  <div class="brew-rating">
+                    @for (star of [1, 2, 3, 4, 5]; track star) {
+                    <span class="star" [class.filled]="brew.rating / 2 >= star"
+                      >★</span
+                    >
+                    }
+                  </div>
+                </div>
+              </div>
+            </brew-card>
+          </a>
+          }
+        </div>
         }
       </section>
     </div>

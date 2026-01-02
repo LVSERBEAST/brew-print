@@ -21,7 +21,15 @@ import { SlicePipe } from '@angular/common';
         </div>
         <a routerLink="new">
           <brew-button>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
@@ -31,68 +39,69 @@ import { SlicePipe } from '@angular/common';
       </header>
 
       @if (loading()) {
-        <div class="loading-grid">
-          @for (i of [1, 2, 3, 4, 5, 6]; track i) {
-            <div class="skeleton-card"></div>
-          }
-        </div>
+      <div class="loading-grid">
+        @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+        <div class="skeleton-card"></div>
+        }
+      </div>
       } @else if (brewLogs().length === 0) {
-        <brew-card class="empty-state">
-          <div class="empty-content">
-            <span class="empty-icon">☕</span>
-            <h3>No brews yet</h3>
-            <p>Start tracking your coffee journey.</p>
-            <a routerLink="new">
-              <brew-button>Log Your First Brew</brew-button>
-            </a>
-          </div>
-        </brew-card>
-      } @else {
-        <div class="brew-grid">
-          @for (brew of brewLogs(); track brew.id) {
-            <a [routerLink]="[brew.id]" class="brew-link">
-              <brew-card [hoverable]="true" class="brew-card">
-                <div class="brew-header">
-                  <span class="brew-date">{{ brew.date | formatDate }}</span>
-                  <div class="brew-rating">
-                    @for (star of [1, 2, 3, 4, 5]; track star) {
-                      <span class="star" [class.filled]="brew.rating / 2 >= star">★</span>
-                    }
-                  </div>
-                </div>
-
-                <h3 class="brew-beans">{{ getBeanNamesForBrew(brew) }}</h3>
-
-                <div class="brew-params">
-                  <div class="param">
-                    <span class="param-value">{{ brew.params.coffeeGrams }}</span>
-                    <span class="param-label">g coffee</span>
-                  </div>
-                  <div class="param">
-                    <span class="param-value">{{ brew.params.waterGrams }}</span>
-                    <span class="param-label">g water</span>
-                  </div>
-                  <div class="param">
-                    <span class="param-value">1:{{ brew.params.ratio }}</span>
-                    <span class="param-label">ratio</span>
-                  </div>
-                </div>
-
-                @if (brew.brewMethodId) {
-                  <div class="brew-method">
-                    {{ getMethodNameById(brew.brewMethodId) }}
-                  </div>
-                }
-
-                @if (brew.notes) {
-                  <p class="brew-notes">
-                    {{ brew.notes | slice : 0 : 100 }}{{ brew.notes.length > 100 ? '...' : '' }}
-                  </p>
-                }
-              </brew-card>
-            </a>
-          }
+      <brew-card class="empty-state">
+        <div class="empty-content">
+          <span class="empty-icon">☕</span>
+          <h3>No brews yet</h3>
+          <p>Start tracking your coffee journey.</p>
+          <a routerLink="new">
+            <brew-button>Log Your First Brew</brew-button>
+          </a>
         </div>
+      </brew-card>
+      } @else {
+      <div class="brew-grid">
+        @for (brew of brewLogs(); track brew.id) {
+        <a [routerLink]="[brew.id]" class="brew-link">
+          <brew-card [hoverable]="true" class="brew-card">
+            <div class="brew-header">
+              <span class="brew-date">{{ brew.createdAt | formatDate }}</span>
+              <div class="brew-rating">
+                @for (star of [1, 2, 3, 4, 5]; track star) {
+                <span class="star" [class.filled]="brew.rating / 2 >= star"
+                  >★</span
+                >
+                }
+              </div>
+            </div>
+
+            <h3 class="brew-beans">{{ getBeanNamesForBrew(brew) }}</h3>
+
+            <div class="brew-params">
+              <div class="param">
+                <span class="param-value">{{ brew.params.coffeeGrams }}</span>
+                <span class="param-label">g coffee</span>
+              </div>
+              <div class="param">
+                <span class="param-value">{{ brew.params.waterGrams }}</span>
+                <span class="param-label">g water</span>
+              </div>
+              <div class="param">
+                <span class="param-value">1:{{ brew.params.ratio }}</span>
+                <span class="param-label">ratio</span>
+              </div>
+            </div>
+
+            @if (brew.brewMethodId) {
+            <div class="brew-method">
+              {{ getMethodNameById(brew.brewMethodId) }}
+            </div>
+            } @if (brew.notes) {
+            <p class="brew-notes">
+              {{ brew.notes | slice : 0 : 100
+              }}{{ brew.notes.length > 100 ? '...' : '' }}
+            </p>
+            }
+          </brew-card>
+        </a>
+        }
+      </div>
       }
     </div>
   `,

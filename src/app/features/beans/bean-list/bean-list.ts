@@ -19,7 +19,15 @@ import type { Bean } from '@core/models/models';
         </div>
         <a routerLink="new">
           <brew-button>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
@@ -29,52 +37,58 @@ import type { Bean } from '@core/models/models';
       </header>
 
       @if (loading()) {
-        <div class="loading-list">
-          @for (i of [1, 2, 3, 4]; track i) {
-            <div class="skeleton-card"></div>
-          }
-        </div>
+      <div class="loading-list">
+        @for (i of [1, 2, 3, 4]; track i) {
+        <div class="skeleton-card"></div>
+        }
+      </div>
       } @else if (beans().length === 0) {
-        <brew-card class="empty-state">
-          <div class="empty-content">
-            <span class="empty-icon">🫘</span>
-            <h3>No beans yet</h3>
-            <p>Add your first coffee beans to start tracking.</p>
-            <a routerLink="new">
-              <brew-button>Add Your First Beans</brew-button>
-            </a>
-          </div>
-        </brew-card>
-      } @else {
-        <div class="bean-list">
-          @for (bean of beans(); track bean.id) {
-            <a [routerLink]="[bean.id]" class="bean-link">
-              <brew-card [hoverable]="true" class="bean-card">
-                <div class="bean-row">
-                  <div class="bean-image">
-                    <img [src]="bean.photoURL || defaultImage" [alt]="bean.name" />
-                  </div>
-                  <div class="bean-content">
-                    <span class="bean-roaster">{{ bean.roaster }}</span>
-                    <h3 class="bean-name">{{ bean.name }}</h3>
-                    <div class="bean-meta">
-                      <span class="bean-origin">{{ bean.origin }}</span>
-                      <span class="bean-process">{{ bean.process }}</span>
-                    </div>
-                  </div>
-                  @if (bean.weight) {
-                    <div class="bean-weight">
-                      <div class="weight-bar">
-                        <div class="weight-fill" [style.width.%]="getWeightPercent(bean)"></div>
-                      </div>
-                      <span class="weight-text">{{ bean.weightRemaining || 0 }}{{ bean.weightUnit || 'g' }} left</span>
-                    </div>
-                  }
-                </div>
-              </brew-card>
-            </a>
-          }
+      <brew-card class="empty-state">
+        <div class="empty-content">
+          <span class="empty-icon">🫘</span>
+          <h3>No beans yet</h3>
+          <p>Add your first coffee beans to start tracking.</p>
+          <a routerLink="new">
+            <brew-button>Add Your First Beans</brew-button>
+          </a>
         </div>
+      </brew-card>
+      } @else {
+      <div class="bean-list">
+        @for (bean of beans(); track bean.id) {
+        <a [routerLink]="[bean.id]" class="bean-link">
+          <brew-card [hoverable]="true" class="bean-card">
+            <div class="bean-row">
+              <div class="bean-image">
+                <img [src]="bean.photoURL || defaultImage" [alt]="bean.name" />
+              </div>
+              <div class="bean-content">
+                <span class="bean-roaster">{{ bean.roaster }}</span>
+                <h3 class="bean-name">{{ bean.name }}</h3>
+                <div class="bean-meta">
+                  <span class="bean-origin">{{ bean.origin }}</span>
+                  <span class="bean-process">{{ bean.process }}</span>
+                </div>
+              </div>
+              @if (bean.weight) {
+              <div class="bean-weight">
+                <div class="weight-bar">
+                  <div
+                    class="weight-fill"
+                    [style.width.%]="getWeightPercent(bean)"
+                  ></div>
+                </div>
+                <span class="weight-text"
+                  >{{ bean.weightRemaining || 0
+                  }}{{ bean.weightUnit || 'g' }} left</span
+                >
+              </div>
+              }
+            </div>
+          </brew-card>
+        </a>
+        }
+      </div>
       }
     </div>
   `,

@@ -1,4 +1,4 @@
-import { Component, inject, signal, Input, OnInit } from '@angular/core';
+import { Component, inject, signal, Input, OnInit, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { FirestoreService } from '@core/services/firestore.service';
@@ -6,7 +6,11 @@ import { ToastService } from '@core/services/toast.service';
 import { Card } from '@shared/ui/card/card';
 import { Button } from '@shared/ui/button/button';
 import { InputComponent } from '@shared/ui/input/input';
-import { EQUIPMENT_CATEGORIES, EQUIPMENT_ICONS, DEFAULT_CATEGORY_ICONS } from '@shared/constants/constants';
+import {
+  EQUIPMENT_CATEGORIES,
+  EQUIPMENT_ICONS,
+  DEFAULT_CATEGORY_ICONS,
+} from '@shared/constants/constants';
 import type { Equipment, EquipmentCategory } from '@core/models/models';
 
 // interface CustomFieldForm extends CustomFieldDefinition {
@@ -21,7 +25,15 @@ import type { Equipment, EquipmentCategory } from '@core/models/models';
     <div class="page">
       <header class="page-header">
         <button class="back-btn" (click)="goBack()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
             <path d="m15 18-6-6 6-6" />
           </svg>
           Back
@@ -41,9 +53,13 @@ import type { Equipment, EquipmentCategory } from '@core/models/models';
           <div class="form-grid">
             <div class="select-wrapper">
               <label class="select-label">Category</label>
-              <select class="select-input" [(ngModel)]="formData.category" name="category">
+              <select
+                class="select-input"
+                [(ngModel)]="formData.category"
+                name="category"
+              >
                 @for (cat of categories; track cat) {
-                  <option [value]="cat">{{ cat }}</option>
+                <option [value]="cat">{{ cat }}</option>
                 }
               </select>
             </div>
@@ -66,14 +82,14 @@ import type { Equipment, EquipmentCategory } from '@core/models/models';
           <p class="hint">Choose an icon to represent this equipment</p>
           <div class="icon-grid">
             @for (icon of icons; track icon) {
-              <button
-                type="button"
-                class="icon-btn"
-                [class.selected]="formData.icon === icon"
-                (click)="formData.icon = icon"
-              >
-                {{ icon }}
-              </button>
+            <button
+              type="button"
+              class="icon-btn"
+              [class.selected]="formData.icon === icon"
+              (click)="formData.icon = icon"
+            >
+              {{ icon }}
+            </button>
             }
           </div>
         </brew-card>
@@ -135,8 +151,14 @@ import type { Equipment, EquipmentCategory } from '@core/models/models';
         </brew-card>
 
         <div class="form-actions">
-          <brew-button type="button" variant="secondary" (onClick)="goBack()">Cancel</brew-button>
-          <brew-button type="submit" [loading]="saving()" [disabled]="!isValid()">
+          <brew-button type="button" variant="secondary" (onClick)="goBack()"
+            >Cancel</brew-button
+          >
+          <brew-button
+            type="submit"
+            [loading]="saving()"
+            [disabled]="!isValid()"
+          >
             {{ isEdit ? 'Save' : 'Add Equipment' }}
           </brew-button>
         </div>
@@ -326,7 +348,7 @@ import type { Equipment, EquipmentCategory } from '@core/models/models';
   `,
 })
 export class EquipmentForm implements OnInit {
-  @Input() id?: string;
+  id = input<string>();
 
   private router = inject(Router);
   private firestoreService = inject(FirestoreService);
@@ -349,12 +371,12 @@ export class EquipmentForm implements OnInit {
   };
 
   get isEdit(): boolean {
-    return !!this.id;
+    return !!this.id();
   }
 
   async ngOnInit(): Promise<void> {
-    if (this.id) {
-      const equip = await this.firestoreService.getEquipment(this.id);
+    if (this.id()) {
+      const equip = await this.firestoreService.getEquipment(this.id()!);
       if (equip) {
         this.formData = { ...equip };
         // this.customFields = equip.customFields.map(f => ({
@@ -410,7 +432,7 @@ export class EquipmentForm implements OnInit {
       };
 
       if (this.isEdit) {
-        await this.firestoreService.updateEquipment(this.id!, data);
+        await this.firestoreService.updateEquipment(this.id()!, data);
         this.toastService.success('Equipment updated!');
       } else {
         await this.firestoreService.createEquipment(data);

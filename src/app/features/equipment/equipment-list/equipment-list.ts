@@ -19,7 +19,15 @@ import type { Equipment, EquipmentCategory } from '@core/models/models';
         </div>
         <a routerLink="new">
           <brew-button>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
@@ -29,44 +37,58 @@ import type { Equipment, EquipmentCategory } from '@core/models/models';
       </header>
 
       <div class="category-tabs">
-        <button class="tab" [class.active]="activeCategory() === 'all'" (click)="activeCategory.set('all')">All</button>
+        <button
+          class="tab"
+          [class.active]="activeCategory() === 'all'"
+          (click)="activeCategory.set('all')"
+        >
+          All
+        </button>
         @for (cat of categories; track cat) {
-          <button class="tab" [class.active]="activeCategory() === cat" (click)="activeCategory.set(cat)">{{ cat }}</button>
+        <button
+          class="tab"
+          [class.active]="activeCategory() === cat"
+          (click)="activeCategory.set(cat)"
+        >
+          {{ cat }}
+        </button>
         }
       </div>
 
       @if (loading()) {
-        <div class="loading-grid">
-          @for (i of [1, 2, 3, 4]; track i) {
-            <div class="skeleton-card"></div>
-          }
-        </div>
+      <div class="loading-grid">
+        @for (i of [1, 2, 3, 4]; track i) {
+        <div class="skeleton-card"></div>
+        }
+      </div>
       } @else if (filteredEquipment().length === 0) {
-        <brew-card class="empty-state">
-          <div class="empty-content">
-            <span class="empty-icon">⚙️</span>
-            <h3>No equipment</h3>
-            <p>Add your brewing gear to track usage.</p>
-            <a routerLink="new">
-              <brew-button>Add Equipment</brew-button>
-            </a>
-          </div>
-        </brew-card>
-      } @else {
-        <div class="equipment-grid">
-          @for (item of filteredEquipment(); track item.id) {
-            <a [routerLink]="[item.id]" class="equip-link">
-              <brew-card [hoverable]="true" class="equip-card">
-                <div class="equip-icon">{{ getIcon(item) }}</div>
-                <h3 class="equip-name">{{ item.name }}</h3>
-                <span class="equip-category">{{ item.category }}</span>
-                @if (item.brand) {
-                  <span class="equip-brand">{{ item.brand }}{{ item.model ? ' ' + item.model : '' }}</span>
-                }
-              </brew-card>
-            </a>
-          }
+      <brew-card class="empty-state">
+        <div class="empty-content">
+          <span class="empty-icon">⚙️</span>
+          <h3>No equipment</h3>
+          <p>Add your brewing gear to track usage.</p>
+          <a routerLink="new">
+            <brew-button>Add Equipment</brew-button>
+          </a>
         </div>
+      </brew-card>
+      } @else {
+      <div class="equipment-grid">
+        @for (item of filteredEquipment(); track item.id) {
+        <a [routerLink]="[item.id]" class="equip-link">
+          <brew-card [hoverable]="true" class="equip-card">
+            <div class="equip-icon">{{ getIcon(item) }}</div>
+            <h3 class="equip-name">{{ item.name }}</h3>
+            <span class="equip-category">{{ item.category }}</span>
+            @if (item.brand) {
+            <span class="equip-brand"
+              >{{ item.brand }}{{ item.model ? ' ' + item.model : '' }}</span
+            >
+            }
+          </brew-card>
+        </a>
+        }
+      </div>
       }
     </div>
   `,

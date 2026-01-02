@@ -20,7 +20,15 @@ import { SlicePipe } from '@angular/common';
         </div>
         <a routerLink="new">
           <brew-button>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
@@ -30,48 +38,47 @@ import { SlicePipe } from '@angular/common';
       </header>
 
       @if (loading()) {
-        <div class="loading-grid">
-          @for (i of [1, 2, 3]; track i) {
-            <div class="skeleton-card"></div>
-          }
-        </div>
+      <div class="loading-grid">
+        @for (i of [1, 2, 3]; track i) {
+        <div class="skeleton-card"></div>
+        }
+      </div>
       } @else if (methods().length === 0) {
-        <brew-card class="empty-state">
-          <div class="empty-content">
-            <span class="empty-icon">📖</span>
-            <h3>No brew methods yet</h3>
-            <p>Save your brewing recipes for quick access.</p>
-            <a routerLink="new">
-              <brew-button>Create Brew Method</brew-button>
-            </a>
-          </div>
-        </brew-card>
-      } @else {
-        <div class="method-grid">
-          @for (method of methods(); track method.id) {
-            <a [routerLink]="[method.id]" class="method-link">
-              <brew-card [hoverable]="true" class="method-card">
-                <h3 class="method-name">{{ method.name }}</h3>
-                @if (method.description) {
-                  <p class="method-desc">
-                    {{ method.description | slice : 0 : 80 }}{{ method.description.length > 80 ? '...' : '' }}
-                  </p>
-                }
-                <div class="method-params">
-                  @if (method.params.coffeeGrams) {
-                    <span>{{ method.params.coffeeGrams }}g</span>
-                  }
-                  @if (method.params.ratio) {
-                    <span>1:{{ method.params.ratio }}</span>
-                  }
-                  @if (method.params.brewTimeSeconds) {
-                    <span>{{ method.params.brewTimeSeconds | formatTime }}</span>
-                  }
-                </div>
-              </brew-card>
-            </a>
-          }
+      <brew-card class="empty-state">
+        <div class="empty-content">
+          <span class="empty-icon">📖</span>
+          <h3>No brew methods yet</h3>
+          <p>Save your brewing recipes for quick access.</p>
+          <a routerLink="new">
+            <brew-button>Create Brew Method</brew-button>
+          </a>
         </div>
+      </brew-card>
+      } @else {
+      <div class="method-grid">
+        @for (method of methods(); track method.id) {
+        <a [routerLink]="[method.id]" class="method-link">
+          <brew-card [hoverable]="true" class="method-card">
+            <h3 class="method-name">{{ method.name }}</h3>
+            @if (method.description) {
+            <p class="method-desc">
+              {{ method.description | slice : 0 : 80
+              }}{{ method.description.length > 80 ? '...' : '' }}
+            </p>
+            }
+            <div class="method-params">
+              @if (method.params.coffeeGrams) {
+              <span>{{ method.params.coffeeGrams }}g</span>
+              } @if (method.params.ratio) {
+              <span>1:{{ method.params.ratio }}</span>
+              } @if (method.params.brewTimeSeconds) {
+              <span>{{ method.params.brewTimeSeconds | formatTime }}</span>
+              }
+            </div>
+          </brew-card>
+        </a>
+        }
+      </div>
       }
     </div>
   `,

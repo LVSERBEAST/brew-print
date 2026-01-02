@@ -26,25 +26,29 @@ interface NavItem {
 
         <nav class="nav">
           @for (item of navItems; track item.path) {
-            <a
-              [routerLink]="item.path"
-              routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: item.path === '/' }"
-              class="nav-item"
-            >
-              <span class="nav-icon" [innerHTML]="item.icon | safeHtml"></span>
-              <span class="nav-label">{{ item.label }}</span>
-            </a>
+          <a
+            [routerLink]="item.path"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: item.path === '/' }"
+            class="nav-item"
+          >
+            <span class="nav-icon" [innerHTML]="item.icon | safeHtml"></span>
+            <span class="nav-label">{{ item.label }}</span>
+          </a>
           }
         </nav>
 
         <div class="sidebar-footer">
-          <a routerLink="/profile" routerLinkActive="active" class="nav-item profile-item">
+          <a
+            routerLink="/profile"
+            routerLinkActive="active"
+            class="nav-item profile-item"
+          >
             <span class="avatar">
               @if (user()?.photoURL) {
-                <img [src]="user()!.photoURL" [alt]="user()!.displayName" />
+              <img [src]="user()!.photoURL" [alt]="user()!.displayName" />
               } @else {
-                {{ userInitials() }}
+              {{ userInitials() }}
               }
             </span>
             <span class="nav-label">{{ user()?.displayName }}</span>
@@ -82,15 +86,18 @@ interface NavItem {
       <nav class="mobile-nav">
         <div class="mobile-nav-dock">
           @for (item of mobileNavItems; track item.path) {
-            <a
-              [routerLink]="item.path"
-              routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: item.path === '/' }"
-              class="mobile-nav-item"
-            >
-              <span class="mobile-nav-icon" [innerHTML]="item.icon"></span>
-              <span class="mobile-nav-label">{{ item.label }}</span>
-            </a>
+          <a
+            [routerLink]="item.path"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: item.path === '/' }"
+            class="mobile-nav-item"
+          >
+            <span
+              class="mobile-nav-icon"
+              [innerHTML]="item.icon | safeHtml"
+            ></span>
+            <span class="mobile-nav-label">{{ item.label }}</span>
+          </a>
           }
         </div>
       </nav>

@@ -1,4 +1,4 @@
-import { Component, inject, signal, Input, OnInit } from '@angular/core';
+import { Component, inject, signal, Input, OnInit, input } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FirestoreService } from '@core/services/firestore.service';
 import { ToastService } from '@core/services/toast.service';
@@ -15,106 +15,124 @@ import type { Bean, BrewLog } from '@core/models/models';
   template: `
     <div class="page">
       @if (bean()) {
-        <header class="page-header">
-          <button class="back-btn" (click)="goBack()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="m15 18-6-6 6-6" />
-            </svg>
-            Back
-          </button>
-          <div class="bean-hero">
-            <img [src]="bean()!.photoURL || defaultImage" [alt]="bean()!.name" />
+      <header class="page-header">
+        <button class="back-btn" (click)="goBack()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="m15 18-6-6 6-6" />
+          </svg>
+          Back
+        </button>
+        <div class="bean-hero">
+          <img [src]="bean()!.photoURL || defaultImage" [alt]="bean()!.name" />
+        </div>
+        <div class="header-content">
+          <span class="roaster">{{ bean()!.roaster }}</span>
+          <h1>{{ bean()!.name }}</h1>
+          <div class="origin-info">
+            {{ bean()!.origin
+            }}{{ bean()!.region ? ' · ' + bean()!.region : '' }}
           </div>
-          <div class="header-content">
-            <span class="roaster">{{ bean()!.roaster }}</span>
-            <h1>{{ bean()!.name }}</h1>
-            <div class="origin-info">
-              {{ bean()!.origin }}{{ bean()!.region ? ' · ' + bean()!.region : '' }}
+        </div>
+        <div class="header-actions">
+          <a [routerLink]="['edit']">
+            <brew-button variant="secondary">Edit</brew-button>
+          </a>
+          <brew-button variant="danger" (onClick)="deleteBean()"
+            >Delete</brew-button
+          >
+        </div>
+      </header>
+
+      <div class="detail-grid">
+        <brew-card title="Details">
+          <dl class="detail-list">
+            <div class="detail-item">
+              <dt>Process</dt>
+              <dd>{{ bean()!.process }}</dd>
             </div>
-          </div>
-          <div class="header-actions">
-            <a [routerLink]="['edit']">
-              <brew-button variant="secondary">Edit</brew-button>
-            </a>
-            <brew-button variant="danger" (onClick)="deleteBean()">Delete</brew-button>
-          </div>
-        </header>
+            <div class="detail-item">
+              <dt>Roast</dt>
+              <dd>{{ bean()!.roastLevel }}</dd>
+            </div>
+            @if (bean()!.variety) {
+            <div class="detail-item">
+              <dt>Variety</dt>
+              <dd>{{ bean()!.variety }}</dd>
+            </div>
+            } @if (bean()!.roastDate) {
+            <div class="detail-item">
+              <dt>Roast Date</dt>
+              <dd>{{ bean()!.roastDate | formatDate }}</dd>
+            </div>
+            } @if (bean()!.price) {
+            <div class="detail-item">
+              <dt>Price</dt>
+              <dd>\${{ bean()!.price }}</dd>
+            </div>
+            }
+          </dl>
+        </brew-card>
 
-        <div class="detail-grid">
-          <brew-card title="Details">
-            <dl class="detail-list">
-              <div class="detail-item">
-                <dt>Process</dt>
-                <dd>{{ bean()!.process }}</dd>
-              </div>
-              <div class="detail-item">
-                <dt>Roast</dt>
-                <dd>{{ bean()!.roastLevel }}</dd>
-              </div>
-              @if (bean()!.variety) {
-                <div class="detail-item">
-                  <dt>Variety</dt>
-                  <dd>{{ bean()!.variety }}</dd>
-                </div>
-              }
-              @if (bean()!.roastDate) {
-                <div class="detail-item">
-                  <dt>Roast Date</dt>
-                  <dd>{{ bean()!.roastDate | formatDate }}</dd>
-                </div>
-              }
-              @if (bean()!.price) {
-                <div class="detail-item">
-                  <dt>Price</dt>
-                  <dd>\${{ bean()!.price }}</dd>
-                </div>
-              }
-            </dl>
-          </brew-card>
+        @if (bean()!.weight) {
+        <brew-card title="Remaining">
+          <div class="weight-display">
+            <span class="weight-value"
+              >{{ bean()!.weightRemaining || 0
+              }}{{ bean()!.weightUnit || 'g' }}</span
+            >
+            <span class="weight-total"
+              >of {{ bean()!.weight }}{{ bean()!.weightUnit || 'g' }}</span
+            >
+          </div>
+          <div class="weight-bar">
+            <div class="weight-fill" [style.width.%]="getWeightPercent()"></div>
+          </div>
+        </brew-card>
+        }
+      </div>
 
-          @if (bean()!.weight) {
-            <brew-card title="Remaining">
-              <div class="weight-display">
-                <span class="weight-value">{{ bean()!.weightRemaining || 0 }}{{ bean()!.weightUnit || 'g' }}</span>
-                <span class="weight-total">of {{ bean()!.weight }}{{ bean()!.weightUnit || 'g' }}</span>
-              </div>
-              <div class="weight-bar">
-                <div class="weight-fill" [style.width.%]="getWeightPercent()"></div>
+      @if (bean()!.notes) {
+      <brew-card title="Notes">
+        <p class="notes">{{ bean()!.notes }}</p>
+      </brew-card>
+      }
+
+      <section class="brews-section">
+        <h2>Brews with this Bean</h2>
+        @if (brews().length === 0) {
+        <p class="no-brews">No brews yet with these beans.</p>
+        } @else {
+        <div class="brew-list">
+          @for (brew of brews(); track brew.id) {
+          <a [routerLink]="['/brews', brew.id]" class="brew-item">
+            <brew-card [hoverable]="true">
+              <div class="brew-row">
+                <span class="brew-date">{{ brew.createdAt | formatDate }}</span>
+                <span class="brew-params"
+                  >{{ brew.params.coffeeGrams }}g · 1:{{
+                    brew.params.ratio
+                  }}</span
+                >
+                <div class="brew-rating">
+                  @for (s of [1, 2, 3, 4, 5]; track s) {
+                  <span [class.filled]="brew.rating / 2 >= s">★</span>
+                  }
+                </div>
               </div>
             </brew-card>
+          </a>
           }
         </div>
-
-        @if (bean()!.notes) {
-          <brew-card title="Notes">
-            <p class="notes">{{ bean()!.notes }}</p>
-          </brew-card>
         }
-
-        <section class="brews-section">
-          <h2>Brews with this Bean</h2>
-          @if (brews().length === 0) {
-            <p class="no-brews">No brews yet with these beans.</p>
-          } @else {
-            <div class="brew-list">
-              @for (brew of brews(); track brew.id) {
-                <a [routerLink]="['/brews', brew.id]" class="brew-item">
-                  <brew-card [hoverable]="true">
-                    <div class="brew-row">
-                      <span class="brew-date">{{ brew.date | formatDate }}</span>
-                      <span class="brew-params">{{ brew.params.coffeeGrams }}g · 1:{{ brew.params.ratio }}</span>
-                      <div class="brew-rating">
-                        @for (s of [1, 2, 3, 4, 5]; track s) {
-                          <span [class.filled]="brew.rating / 2 >= s">★</span>
-                        }
-                      </div>
-                    </div>
-                  </brew-card>
-                </a>
-              }
-            </div>
-          }
-        </section>
+      </section>
       }
     </div>
   `,
@@ -307,7 +325,7 @@ import type { Bean, BrewLog } from '@core/models/models';
   `,
 })
 export class BeanDetail implements OnInit {
-  @Input() id!: string;
+  id = input.required<string>();
 
   private router = inject(Router);
   private firestoreService = inject(FirestoreService);
@@ -319,8 +337,8 @@ export class BeanDetail implements OnInit {
 
   async ngOnInit(): Promise<void> {
     const [bean, brews] = await Promise.all([
-      this.firestoreService.getBean(this.id),
-      this.firestoreService.getBrewLogsByBean(this.id),
+      this.firestoreService.getBean(this.id()),
+      this.firestoreService.getBrewLogsByBean(this.id()),
     ]);
     this.bean.set(bean);
     this.brews.set(brews);
@@ -335,7 +353,7 @@ export class BeanDetail implements OnInit {
   async deleteBean(): Promise<void> {
     if (!confirm('Delete these beans?')) return;
     try {
-      await this.firestoreService.deleteBean(this.id);
+      await this.firestoreService.deleteBean(this.id());
       this.toastService.success('Beans deleted');
       this.router.navigate(['/beans']);
     } catch {

@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, input } from '@angular/core';
 import { NgClass } from '@angular/common';
 
 type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
@@ -10,12 +10,12 @@ type ButtonSize = 'sm' | 'md' | 'lg';
   //imports: [NgClass],
   template: `
     <button
-      [type]="type"
-      [disabled]="disabled || loading"
+      [type]="type()"
+      [disabled]="disabled() || loading()"
       [class]="buttonClasses"
       (click)="onClick.emit($event)"
     >
-      @if (loading) {
+      @if (loading()) {
         <span class="spinner"></span>
       }
       <ng-content />
@@ -140,20 +140,20 @@ type ButtonSize = 'sm' | 'md' | 'lg';
   `
 })
 export class Button {
-  @Input() variant: ButtonVariant = 'primary';
-  @Input() size: ButtonSize = 'md';
-  @Input() type: 'button' | 'submit' | 'reset' = 'button';
-  @Input() disabled = false;
-  @Input() loading = false;
-  @Input() fullWidth = false;
+  variant = input<ButtonVariant>('primary');
+  size = input<ButtonSize>('md');
+  type = input<'button' | 'submit' | 'reset'>('button');
+  disabled = input<boolean>(false);
+  loading = input<boolean>(false);
+  fullWidth = input<boolean>(false);
   
   @Output() onClick = new EventEmitter<MouseEvent>();
   
   get buttonClasses(): string {
     return [
-      `btn--${this.variant}`,
-      `btn--${this.size}`,
-      this.fullWidth ? 'btn--full' : ''
+      `btn--${this.variant()}`,
+      `btn--${this.size()}`,
+      this.fullWidth() ? 'btn--full' : ''
     ].filter(Boolean).join(' ');
   }
 }

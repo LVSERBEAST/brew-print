@@ -1,4 +1,4 @@
-import { Component, inject, signal, Input, OnInit } from '@angular/core';
+import { Component, inject, signal, Input, OnInit, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { FirestoreService } from '@core/services/firestore.service';
@@ -18,14 +18,22 @@ import type { BrewMethod, BrewParams, InputMode } from '@core/models/models';
     <div class="page">
       <header class="page-header">
         <button class="back-btn" (click)="goBack()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
             <path d="m15 18-6-6 6-6" />
           </svg>
           Back
         </button>
         <h1>{{ isEdit ? 'Edit Brew Method' : 'New Brew Method' }}</h1>
         @if (fromBrewLog) {
-          <p class="from-brew-hint">Creating from brew parameters</p>
+        <p class="from-brew-hint">Creating from brew parameters</p>
         }
       </header>
 
@@ -72,60 +80,60 @@ import type { BrewMethod, BrewParams, InputMode } from '@core/models/models';
 
           <div class="params-grid">
             @if (params.inputMode === 'ratio') {
-              <brew-input
-                label="Ratio"
-                type="number"
-                prefix="1:"
-                [(ngModel)]="params.ratio"
-                name="ratio"
-                [min]="1"
-                [max]="30"
-                [step]="0.5"
-                (ngModelChange)="calcWater()"
-              />
-              <brew-input
-                label="Coffee"
-                type="number"
-                suffix="g"
-                [(ngModel)]="params.coffeeGrams"
-                name="coffee"
-                [min]="1"
-                (ngModelChange)="calcWater()"
-              />
-              <brew-input
-                label="Water (calc)"
-                type="number"
-                suffix="g"
-                [(ngModel)]="params.waterGrams"
-                name="water"
-                [readonly]="true"
-              />
+            <brew-input
+              label="Ratio"
+              type="number"
+              prefix="1:"
+              [(ngModel)]="params.ratio"
+              name="ratio"
+              [min]="1"
+              [max]="30"
+              [step]="0.5"
+              (ngModelChange)="calcWater()"
+            />
+            <brew-input
+              label="Coffee"
+              type="number"
+              suffix="g"
+              [(ngModel)]="params.coffeeGrams"
+              name="coffee"
+              [min]="1"
+              (ngModelChange)="calcWater()"
+            />
+            <brew-input
+              label="Water (calc)"
+              type="number"
+              suffix="g"
+              [(ngModel)]="params.waterGrams"
+              name="water"
+              [readonly]="true"
+            />
             } @else {
-              <brew-input
-                label="Coffee"
-                type="number"
-                suffix="g"
-                [(ngModel)]="params.coffeeGrams"
-                name="coffeeAbs"
-                [min]="1"
-                (ngModelChange)="calcRatio()"
-              />
-              <brew-input
-                label="Water"
-                type="number"
-                suffix="g"
-                [(ngModel)]="params.waterGrams"
-                name="waterAbs"
-                [min]="1"
-                (ngModelChange)="calcRatio()"
-              />
-              <brew-input
-                label="Ratio (calc)"
-                type="text"
-                [ngModel]="'1:' + params.ratio"
-                name="ratioDisp"
-                [readonly]="true"
-              />
+            <brew-input
+              label="Coffee"
+              type="number"
+              suffix="g"
+              [(ngModel)]="params.coffeeGrams"
+              name="coffeeAbs"
+              [min]="1"
+              (ngModelChange)="calcRatio()"
+            />
+            <brew-input
+              label="Water"
+              type="number"
+              suffix="g"
+              [(ngModel)]="params.waterGrams"
+              name="waterAbs"
+              [min]="1"
+              (ngModelChange)="calcRatio()"
+            />
+            <brew-input
+              label="Ratio (calc)"
+              type="text"
+              [ngModel]="'1:' + params.ratio"
+              name="ratioDisp"
+              [readonly]="true"
+            />
             }
           </div>
 
@@ -327,7 +335,7 @@ import type { BrewMethod, BrewParams, InputMode } from '@core/models/models';
   `,
 })
 export class MethodForm implements OnInit {
-  @Input() id?: string;
+  id = input<string>();
 
   private router = inject(Router);
   private firestoreService = inject(FirestoreService);
@@ -342,7 +350,7 @@ export class MethodForm implements OnInit {
   params: BrewParams = { ...DEFAULT_BREW_PARAMS };
 
   get isEdit(): boolean {
-    return !!this.id;
+    return !!(this.id());
   }
 
   async ngOnInit(): Promise<void> {
@@ -353,8 +361,8 @@ export class MethodForm implements OnInit {
       this.params = { ...DEFAULT_BREW_PARAMS, ...state.brewParams };
     }
 
-    if (this.id) {
-      const method = await this.firestoreService.getBrewMethod(this.id);
+    if (this.id()) {
+      const method = await this.firestoreService.getBrewMethod(this.id()!);
       if (method) {
         this.name = method.name;
         this.description = method.description || '';
@@ -394,7 +402,7 @@ export class MethodForm implements OnInit {
       let newId: string | undefined;
 
       if (this.isEdit) {
-        await this.firestoreService.updateBrewMethod(this.id!, data);
+        await this.firestoreService.updateBrewMethod(this.id()!, data);
       } else {
         newId = await this.firestoreService.createBrewMethod(
           data as BrewMethod

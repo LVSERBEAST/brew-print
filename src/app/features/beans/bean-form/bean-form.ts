@@ -1,4 +1,4 @@
-import { Component, inject, signal, Input, OnInit } from '@angular/core';
+import { Component, inject, signal, Input, OnInit, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { FirestoreService } from '@core/services/firestore.service';
@@ -8,7 +8,12 @@ import { Card } from '@shared/ui/card/card';
 import { Button } from '@shared/ui/button/button';
 import { InputComponent } from '@shared/ui/input/input';
 import { DEFAULT_BEAN_IMAGE } from '@shared/constants/constants';
-import type { Bean, RoastLevel, ProcessMethod, WeightUnit } from '@core/models/models';
+import type {
+  Bean,
+  RoastLevel,
+  ProcessMethod,
+  WeightUnit,
+} from '@core/models/models';
 import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
@@ -19,7 +24,15 @@ import { Timestamp } from '@angular/fire/firestore';
     <div class="page">
       <header class="page-header">
         <button class="back-btn" (click)="goBack()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
             <path d="m15 18-6-6 6-6" />
           </svg>
           Back
@@ -73,7 +86,11 @@ import { Timestamp } from '@angular/fire/firestore';
             <div class="select-wrapper">
               <label class="select-label">Process</label>
               <div class="select-container">
-                <select class="select-input" [(ngModel)]="process" name="process">
+                <select
+                  class="select-input"
+                  [(ngModel)]="process"
+                  name="process"
+                >
                   <option value="washed">Washed</option>
                   <option value="natural">Natural</option>
                   <option value="honey">Honey</option>
@@ -81,8 +98,17 @@ import { Timestamp } from '@angular/fire/firestore';
                   <option value="experimental">Experimental</option>
                   <option value="other">Other</option>
                 </select>
-                <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="6 9 12 15 18 9"/>
+                <svg
+                  class="select-arrow"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="6 9 12 15 18 9" />
                 </svg>
               </div>
             </div>
@@ -90,15 +116,28 @@ import { Timestamp } from '@angular/fire/firestore';
             <div class="select-wrapper">
               <label class="select-label">Roast Level</label>
               <div class="select-container">
-                <select class="select-input" [(ngModel)]="roastLevel" name="roastLevel">
+                <select
+                  class="select-input"
+                  [(ngModel)]="roastLevel"
+                  name="roastLevel"
+                >
                   <option value="light">Light</option>
                   <option value="light-medium">Light-Medium</option>
                   <option value="medium">Medium</option>
                   <option value="medium-dark">Medium-Dark</option>
                   <option value="dark">Dark</option>
                 </select>
-                <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="6 9 12 15 18 9"/>
+                <svg
+                  class="select-arrow"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="6 9 12 15 18 9" />
                 </svg>
               </div>
             </div>
@@ -141,13 +180,26 @@ import { Timestamp } from '@angular/fire/firestore';
             <div class="select-wrapper">
               <label class="select-label">Unit</label>
               <div class="select-container">
-                <select class="select-input" [(ngModel)]="weightUnit" name="weightUnit">
+                <select
+                  class="select-input"
+                  [(ngModel)]="weightUnit"
+                  name="weightUnit"
+                >
                   <option value="g">Grams (g)</option>
                   <option value="oz">Ounces (oz)</option>
                   <option value="lb">Pounds (lb)</option>
                 </select>
-                <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="6 9 12 15 18 9"/>
+                <svg
+                  class="select-arrow"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="6 9 12 15 18 9" />
                 </svg>
               </div>
             </div>
@@ -168,12 +220,31 @@ import { Timestamp } from '@angular/fire/firestore';
             <div class="photo-preview">
               <img [src]="photoPreview() || defaultImage" alt="Bean photo" />
               @if (photoPreview()) {
-                <button type="button" class="remove-photo" (click)="removePhoto()">×</button>
+              <button
+                type="button"
+                class="remove-photo"
+                (click)="removePhoto()"
+              >
+                ×
+              </button>
               }
             </div>
             <label class="upload-btn">
-              <input type="file" accept="image/*" (change)="onPhotoSelect($event)" hidden />
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <input
+                type="file"
+                accept="image/*"
+                (change)="onPhotoSelect($event)"
+                hidden
+              />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                 <polyline points="17 8 12 3 7 8" />
                 <line x1="12" y1="3" x2="12" y2="15" />
@@ -194,8 +265,14 @@ import { Timestamp } from '@angular/fire/firestore';
         </brew-card>
 
         <div class="form-actions">
-          <brew-button type="button" variant="secondary" (onClick)="goBack()">Cancel</brew-button>
-          <brew-button type="submit" [loading]="saving()" [disabled]="!isValid()">
+          <brew-button type="button" variant="secondary" (onClick)="goBack()"
+            >Cancel</brew-button
+          >
+          <brew-button
+            type="submit"
+            [loading]="saving()"
+            [disabled]="!isValid()"
+          >
             {{ isEdit ? 'Save' : 'Add Beans' }}
           </brew-button>
         </div>
@@ -400,7 +477,7 @@ import { Timestamp } from '@angular/fire/firestore';
   `,
 })
 export class BeanForm implements OnInit {
-  @Input() id?: string;
+  id = input<string>();
 
   private router = inject(Router);
   private firestoreService = inject(FirestoreService);
@@ -430,12 +507,12 @@ export class BeanForm implements OnInit {
   photoURL?: string;
 
   get isEdit(): boolean {
-    return !!this.id;
+    return !!this.id();
   }
 
   async ngOnInit(): Promise<void> {
-    if (this.id) {
-      const bean = await this.firestoreService.getBean(this.id);
+    if (this.id()) {
+      const bean = await this.firestoreService.getBean(this.id()!);
       if (bean) {
         this.name = bean.name;
         this.roaster = bean.roaster || '';
@@ -457,15 +534,17 @@ export class BeanForm implements OnInit {
 
         // Handle Firestore Timestamp for dates
         if (bean.roastDate) {
-          const date = bean.roastDate instanceof Timestamp
-            ? bean.roastDate.toDate()
-            : new Date(bean.roastDate as any);
+          const date =
+            bean.roastDate instanceof Timestamp
+              ? bean.roastDate.toDate()
+              : new Date(bean.roastDate as any);
           this.roastDateString = date.toISOString().split('T')[0];
         }
         if (bean.purchaseDate) {
-          const date = bean.purchaseDate instanceof Timestamp
-            ? bean.purchaseDate.toDate()
-            : new Date(bean.purchaseDate as any);
+          const date =
+            bean.purchaseDate instanceof Timestamp
+              ? bean.purchaseDate.toDate()
+              : new Date(bean.purchaseDate as any);
           this.purchaseDateString = date.toISOString().split('T')[0];
         }
       }
@@ -521,19 +600,24 @@ export class BeanForm implements OnInit {
         archived: false,
       };
 
-      let beanId = this.id;
+      let beanId = this.id();
       if (this.isEdit) {
-        await this.firestoreService.updateBean(this.id!, data);
+        await this.firestoreService.updateBean(this.id()!, data);
       } else {
         beanId = await this.firestoreService.createBean(data as Bean);
       }
 
       if (this.photoFile && beanId) {
-        const photoURL = await this.storageService.uploadBeanPhoto(this.photoFile, beanId);
+        const photoURL = await this.storageService.uploadBeanPhoto(
+          this.photoFile,
+          beanId
+        );
         await this.firestoreService.updateBean(beanId, { photoURL });
       }
 
-      this.toastService.success(this.isEdit ? 'Beans updated!' : 'Beans added!');
+      this.toastService.success(
+        this.isEdit ? 'Beans updated!' : 'Beans added!'
+      );
       this.router.navigate(['/beans']);
     } catch {
       this.toastService.error('Failed to save beans');

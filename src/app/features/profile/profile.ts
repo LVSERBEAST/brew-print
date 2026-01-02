@@ -23,9 +23,9 @@ import { DecimalPipe } from '@angular/common';
           <div class="avatar-section">
             <div class="avatar">
               @if (user()?.photoURL) {
-                <img [src]="user()!.photoURL" [alt]="user()!.displayName" />
+              <img [src]="user()!.photoURL" [alt]="user()!.displayName" />
               } @else {
-                {{ initials() }}
+              {{ initials() }}
               }
             </div>
             <div class="user-info">
@@ -38,29 +38,39 @@ import { DecimalPipe } from '@angular/common';
         <brew-card title="Statistics">
           <div class="stats-grid">
             <div class="stat">
-              <span class="stat-value">{{ user()?.stats?.totalBrews || 0 }}</span>
+              <span class="stat-value">{{
+                user()?.stats?.totalBrews || 0
+              }}</span>
               <span class="stat-label">Total Brews</span>
             </div>
             <div class="stat">
               <span class="stat-value">{{
-                (user()?.stats?.averageRating || 0) | number : '1.1-1'
+                user()?.stats?.averageRating || 0 | number : '1.1-1'
               }}</span>
               <span class="stat-label">Avg Rating</span>
             </div>
             <div class="stat">
-              <span class="stat-value">{{ user()?.stats?.currentStreak || 0 }}</span>
+              <span class="stat-value">{{
+                user()?.stats?.currentStreak || 0
+              }}</span>
               <span class="stat-label">Current Streak</span>
             </div>
             <div class="stat">
-              <span class="stat-value">{{ user()?.stats?.longestStreak || 0 }}</span>
+              <span class="stat-value">{{
+                user()?.stats?.longestStreak || 0
+              }}</span>
               <span class="stat-label">Best Streak</span>
             </div>
             <div class="stat">
-              <span class="stat-value">{{ user()?.stats?.totalBeans || 0 }}</span>
+              <span class="stat-value">{{
+                user()?.stats?.totalBeans || 0
+              }}</span>
               <span class="stat-label">Beans</span>
             </div>
             <div class="stat">
-              <span class="stat-value">{{ user()?.stats?.totalEquipment || 0 }}</span>
+              <span class="stat-value">{{
+                user()?.stats?.totalEquipment || 0
+              }}</span>
               <span class="stat-label">Equipment</span>
             </div>
           </div>
@@ -70,7 +80,20 @@ import { DecimalPipe } from '@angular/common';
         <nav class="menu-list">
           <a routerLink="settings" class="menu-item">
             <span class="menu-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="12" cy="12" r="3" />
+                <path
+                  d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"
+                />
+              </svg>
             </span>
             <span class="menu-label">Settings</span>
             <span class="menu-arrow">→</span>
@@ -78,7 +101,22 @@ import { DecimalPipe } from '@angular/common';
 
           <a routerLink="news" class="menu-item">
             <span class="menu-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"
+                />
+                <path d="M18 14h-8" />
+                <path d="M15 18h-5" />
+                <path d="M10 6h8v4h-8V6Z" />
+              </svg>
             </span>
             <span class="menu-label">News</span>
             <span class="menu-arrow">→</span>
@@ -86,7 +124,19 @@ import { DecimalPipe } from '@angular/common';
 
           <a routerLink="about" class="menu-item">
             <span class="menu-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="16" x2="12" y2="12" />
+                <line x1="12" y1="8" x2="12.01" y2="8" />
+              </svg>
             </span>
             <span class="menu-label">About</span>
             <span class="menu-arrow">→</span>
@@ -94,7 +144,20 @@ import { DecimalPipe } from '@angular/common';
 
           <a routerLink="contact" class="menu-item">
             <span class="menu-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                />
+                <polyline points="22,6 12,13 2,6" />
+              </svg>
             </span>
             <span class="menu-label">Contact</span>
             <span class="menu-arrow">→</span>
@@ -102,32 +165,82 @@ import { DecimalPipe } from '@angular/common';
 
           <a routerLink="faq" class="menu-item">
             <span class="menu-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+              </svg>
             </span>
             <span class="menu-label">FAQ</span>
             <span class="menu-arrow">→</span>
           </a>
 
           @if (user()?.isAdmin) {
-            <a routerLink="admin" class="menu-item menu-item--admin">
-              <span class="menu-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              </span>
-              <span class="menu-label">Admin</span>
-              <span class="menu-arrow">→</span>
-            </a>
+          <a routerLink="admin" class="menu-item menu-item--admin">
+            <span class="menu-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </span>
+            <span class="menu-label">Admin</span>
+            <span class="menu-arrow">→</span>
+          </a>
           }
         </nav>
 
         <!-- Sign Out -->
         <button class="sign-out-btn" (click)="signOut()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
           Sign Out
         </button>
 
         <!-- Delete Account -->
-        <button class="delete-account-btn" (click)="showDeleteConfirm.set(true)">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        <button
+          class="delete-account-btn"
+          (click)="showDeleteConfirm.set(true)"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polyline points="3 6 5 6 21 6" />
+            <path
+              d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+            />
+          </svg>
           Delete Account
         </button>
 
@@ -137,31 +250,36 @@ import { DecimalPipe } from '@angular/common';
 
       <!-- Delete Confirmation Modal -->
       @if (showDeleteConfirm()) {
-        <div class="modal-overlay" (click)="showDeleteConfirm.set(false)">
-          <div class="modal" (click)="$event.stopPropagation()">
-            <h3>Delete Account</h3>
-            <p>This action cannot be undone. All your data will be permanently deleted.</p>
-            <p>Enter your password to confirm:</p>
-            <input
-              type="password"
-              class="password-input"
-              [(ngModel)]="deletePassword"
-              placeholder="Password"
-            />
-            <div class="modal-actions">
-              <brew-button variant="secondary" (onClick)="showDeleteConfirm.set(false)"
-                >Cancel</brew-button
-              >
-              <brew-button
-                variant="danger"
-                [loading]="deleting()"
-                [disabled]="!deletePassword"
-                (onClick)="deleteAccount()"
-                >Delete Account</brew-button
-              >
-            </div>
+      <div class="modal-overlay" (click)="showDeleteConfirm.set(false)">
+        <div class="modal" (click)="$event.stopPropagation()">
+          <h3>Delete Account</h3>
+          <p>
+            This action cannot be undone. All your data will be permanently
+            deleted.
+          </p>
+          <p>Enter your password to confirm:</p>
+          <input
+            type="password"
+            class="password-input"
+            [(ngModel)]="deletePassword"
+            placeholder="Password"
+          />
+          <div class="modal-actions">
+            <brew-button
+              variant="secondary"
+              (onClick)="showDeleteConfirm.set(false)"
+              >Cancel</brew-button
+            >
+            <brew-button
+              variant="danger"
+              [loading]="deleting()"
+              [disabled]="!deletePassword"
+              (onClick)="deleteAccount()"
+              >Delete Account</brew-button
+            >
           </div>
         </div>
+      </div>
       }
     </div>
   `,

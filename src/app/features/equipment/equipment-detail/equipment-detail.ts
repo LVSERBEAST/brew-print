@@ -1,4 +1,4 @@
-import { Component, inject, signal, Input, OnInit } from '@angular/core';
+import { Component, inject, signal, Input, OnInit, input } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FirestoreService } from '@core/services/firestore.service';
 import { ToastService } from '@core/services/toast.service';
@@ -6,7 +6,11 @@ import { Card } from '@shared/ui/card/card';
 import { Button } from '@shared/ui/button/button';
 import { FormatDatePipe } from '@shared/pipes/format-date.pipe';
 import { DEFAULT_CATEGORY_ICONS } from '@shared/constants/constants';
-import type { Equipment, BrewLog, EquipmentCategory } from '@core/models/models';
+import type {
+  Equipment,
+  BrewLog,
+  EquipmentCategory,
+} from '@core/models/models';
 
 @Component({
   selector: 'brew-equipment-detail',
@@ -15,50 +19,67 @@ import type { Equipment, BrewLog, EquipmentCategory } from '@core/models/models'
   template: `
     <div class="page">
       @if (equipment()) {
-        <header class="page-header">
-          <button class="back-btn" (click)="goBack()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="m15 18-6-6 6-6" />
-            </svg>
-            Back
-          </button>
-          <div class="equip-icon">{{ getIcon() }}</div>
-          <span class="category-badge">{{ equipment()!.category }}</span>
-          <h1>{{ equipment()!.name }}</h1>
-          @if (equipment()!.brand) {
-            <p class="brand">{{ equipment()!.brand }}{{ equipment()!.model ? ' ' + equipment()!.model : '' }}</p>
-          }
-          <div class="header-actions">
-            <a [routerLink]="['edit']">
-              <brew-button variant="secondary">Edit</brew-button>
-            </a>
-            <brew-button variant="danger" (onClick)="deleteEquipment()">Delete</brew-button>
-          </div>
-        </header>
-
-        @if (equipment()!.notes) {
-          <brew-card title="Notes">
-            <p class="notes">{{ equipment()!.notes }}</p>
-          </brew-card>
+      <header class="page-header">
+        <button class="back-btn" (click)="goBack()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="m15 18-6-6 6-6" />
+          </svg>
+          Back
+        </button>
+        <div class="equip-icon">{{ getIcon() }}</div>
+        <span class="category-badge">{{ equipment()!.category }}</span>
+        <h1>{{ equipment()!.name }}</h1>
+        @if (equipment()!.brand) {
+        <p class="brand">
+          {{ equipment()!.brand
+          }}{{ equipment()!.model ? ' ' + equipment()!.model : '' }}
+        </p>
         }
+        <div class="header-actions">
+          <a [routerLink]="['edit']">
+            <brew-button variant="secondary">Edit</brew-button>
+          </a>
+          <brew-button variant="danger" (onClick)="deleteEquipment()"
+            >Delete</brew-button
+          >
+        </div>
+      </header>
 
-        <section class="brews-section">
-          <h2>Used in {{ brews().length }} brews</h2>
-          @if (brews().length > 0) {
-            <div class="brew-list">
-              @for (brew of brews().slice(0, 10); track brew.id) {
-                <a [routerLink]="['/brews', brew.id]" class="brew-item">
-                  <brew-card [hoverable]="true">
-                    <div class="brew-row">
-                      <span class="brew-date">{{ brew.date | formatDate }}</span>
-                      <span class="brew-params">{{ brew.params.coffeeGrams }}g · 1:{{ brew.params.ratio }}</span>
-                    </div>
-                  </brew-card>
-                </a>
-              }
-            </div>
+      @if (equipment()!.notes) {
+      <brew-card title="Notes">
+        <p class="notes">{{ equipment()!.notes }}</p>
+      </brew-card>
+      }
+
+      <section class="brews-section">
+        <h2>Used in {{ brews().length }} brews</h2>
+        @if (brews().length > 0) {
+        <div class="brew-list">
+          @for (brew of brews().slice(0, 10); track brew.id) {
+          <a [routerLink]="['/brews', brew.id]" class="brew-item">
+            <brew-card [hoverable]="true">
+              <div class="brew-row">
+                <span class="brew-date">{{ brew.createdAt | formatDate }}</span>
+                <span class="brew-params"
+                  >{{ brew.params.coffeeGrams }}g · 1:{{
+                    brew.params.ratio
+                  }}</span
+                >
+              </div>
+            </brew-card>
+          </a>
           }
-        </section>
+        </div>
+        }
+      </section>
       }
     </div>
   `,
@@ -169,7 +190,7 @@ import type { Equipment, BrewLog, EquipmentCategory } from '@core/models/models'
   `,
 })
 export class EquipmentDetail implements OnInit {
-  @Input() id!: string;
+  id = input.required<string>();
 
   private router = inject(Router);
   private firestoreService = inject(FirestoreService);
@@ -180,8 +201,8 @@ export class EquipmentDetail implements OnInit {
 
   async ngOnInit(): Promise<void> {
     const [equip, brews] = await Promise.all([
-      this.firestoreService.getEquipment(this.id),
-      this.firestoreService.getBrewLogsByEquipment(this.id),
+      this.firestoreService.getEquipment(this.id()),
+      this.firestoreService.getBrewLogsByEquipment(this.id()),
     ]);
     this.equipment.set(equip);
     this.brews.set(brews);
@@ -196,7 +217,7 @@ export class EquipmentDetail implements OnInit {
   async deleteEquipment(): Promise<void> {
     if (!confirm('Delete this equipment?')) return;
     try {
-      await this.firestoreService.deleteEquipment(this.id);
+      await this.firestoreService.deleteEquipment(this.id());
       this.toastService.success('Equipment deleted');
       this.router.navigate(['/equipment']);
     } catch {

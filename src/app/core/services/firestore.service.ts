@@ -17,7 +17,14 @@ import {
   Timestamp,
 } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
-import { Equipment, Bean, BrewMethod, BrewLog, BrewFilters, PaginationParams } from '@core/models/models';
+import {
+  Equipment,
+  Bean,
+  BrewMethod,
+  BrewLog,
+  BrewFilters,
+  PaginationParams,
+} from '@core/models/models';
 import { sanitizeForFirestore } from '@shared/utils/utils';
 
 type CollectionName = 'beans' | 'equipment' | 'brewMethods' | 'brewLogs';
@@ -73,11 +80,17 @@ export class FirestoreService {
     });
   }
 
-  private async delete(collectionName: CollectionName, docId: string): Promise<void> {
+  private async delete(
+    collectionName: CollectionName,
+    docId: string
+  ): Promise<void> {
     await deleteDoc(this.getDocRef(collectionName, docId));
   }
 
-  private async getOne<T>(collectionName: CollectionName, docId: string): Promise<T | null> {
+  private async getOne<T>(
+    collectionName: CollectionName,
+    docId: string
+  ): Promise<T | null> {
     const docSnap = await getDoc(this.getDocRef(collectionName, docId));
     if (!docSnap.exists()) return null;
     return { id: docSnap.id, ...docSnap.data() } as T;
@@ -97,15 +110,20 @@ export class FirestoreService {
     );
 
     const snapshot = await getDocs(q);
-    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as T);
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as T));
   }
 
   // ============================================================================
   // EQUIPMENT
   // ============================================================================
 
-  async createEquipment(data: Omit<Equipment, 'id' | 'userId' | 'createdAt' | 'updatedAt'>): Promise<string> {
-    return this.create<Record<string, unknown>>('equipment', data as unknown as Record<string, unknown>);
+  async createEquipment(
+    data: Omit<Equipment, 'id' | 'userId' | 'createdAt' | 'updatedAt'>
+  ): Promise<string> {
+    return this.create<Record<string, unknown>>(
+      'equipment',
+      data as unknown as Record<string, unknown>
+    );
   }
 
   async updateEquipment(id: string, data: Partial<Equipment>): Promise<void> {
@@ -140,8 +158,13 @@ export class FirestoreService {
   // BEANS
   // ============================================================================
 
-  async createBean(data: Omit<Bean, 'id' | 'userId' | 'createdAt' | 'updatedAt'>): Promise<string> {
-    return this.create<Record<string, unknown>>('beans', data as unknown as Record<string, unknown>);
+  async createBean(
+    data: Omit<Bean, 'id' | 'userId' | 'createdAt' | 'updatedAt'>
+  ): Promise<string> {
+    return this.create<Record<string, unknown>>(
+      'beans',
+      data as unknown as Record<string, unknown>
+    );
   }
 
   async updateBean(id: string, data: Partial<Bean>): Promise<void> {
@@ -175,8 +198,13 @@ export class FirestoreService {
   // BREW METHODS
   // ============================================================================
 
-  async createBrewMethod(data: Omit<BrewMethod, 'id' | 'userId' | 'createdAt' | 'updatedAt'>): Promise<string> {
-    return this.create<Record<string, unknown>>('brewMethods', data as unknown as Record<string, unknown>);
+  async createBrewMethod(
+    data: Omit<BrewMethod, 'id' | 'userId' | 'createdAt' | 'updatedAt'>
+  ): Promise<string> {
+    return this.create<Record<string, unknown>>(
+      'brewMethods',
+      data as unknown as Record<string, unknown>
+    );
   }
 
   async updateBrewMethod(id: string, data: Partial<BrewMethod>): Promise<void> {
@@ -203,8 +231,13 @@ export class FirestoreService {
   // BREW LOGS
   // ============================================================================
 
-  async createBrewLog(data: Omit<BrewLog, 'id' | 'userId' | 'createdAt' | 'updatedAt'>): Promise<string> {
-    const id = await this.create<Record<string, unknown>>('brewLogs', data as unknown as Record<string, unknown>);
+  async createBrewLog(
+    data: Omit<BrewLog, 'id' | 'userId' | 'createdAt' | 'updatedAt'>
+  ): Promise<string> {
+    const id = await this.create<Record<string, unknown>>(
+      'brewLogs',
+      data as unknown as Record<string, unknown>
+    );
 
     // Update bean weight remaining
     for (const beanId of data.beanIds) {
@@ -234,8 +267,11 @@ export class FirestoreService {
     return this.getOne<BrewLog>('brewLogs', id);
   }
 
-  async getBrewLogs(filters: BrewFilters = {}, pagination?: PaginationParams): Promise<BrewLog[]> {
-    const constraints: QueryConstraint[] = [orderBy('date', 'desc')];
+  async getBrewLogs(
+    filters: BrewFilters = {},
+    pagination?: PaginationParams
+  ): Promise<BrewLog[]> {
+    const constraints: QueryConstraint[] = [orderBy('createdAt', 'desc')];
 
     if (filters.beanId) {
       constraints.push(where('beanIds', 'array-contains', filters.beanId));
@@ -263,24 +299,29 @@ export class FirestoreService {
   async getBrewLogsByBean(beanId: string): Promise<BrewLog[]> {
     return this.getMany<BrewLog>('brewLogs', [
       where('beanIds', 'array-contains', beanId),
-      orderBy('date', 'desc'),
+      orderBy('createdAt', 'desc'),
     ]);
   }
 
   async getBrewLogsByEquipment(equipmentId: string): Promise<BrewLog[]> {
-    const allLogs = await this.getBrewLogs();
-    return allLogs.filter((log) => log.equipmentIds.includes(equipmentId));
+    return this.getMany<BrewLog>('brewLogs', [
+      where('equipmentIds', 'array-contains', equipmentId),
+      orderBy('createdAt', 'desc'),
+    ]);
   }
 
   async getBrewLogsByBrewMethod(brewMethodId: string): Promise<BrewLog[]> {
     return this.getMany<BrewLog>('brewLogs', [
       where('brewMethodId', '==', brewMethodId),
-      orderBy('date', 'desc'),
+      orderBy('createdAt', 'desc'),
     ]);
   }
 
   async getRecentBrewLogs(count: number = 10): Promise<BrewLog[]> {
-    return this.getMany<BrewLog>('brewLogs', [orderBy('date', 'desc'), limit(count)]);
+    return this.getMany<BrewLog>('brewLogs', [
+      orderBy('createdAt', 'desc'),
+      limit(count),
+    ]);
   }
 
   // ============================================================================
@@ -296,11 +337,14 @@ export class FirestoreService {
     const equipment = await this.getAllEquipment(true);
     const brewMethods = await this.getAllBrewMethods(true);
 
-    const { currentStreak, longestStreak, lastBrewDate } = this.calculateStreak(brewLogs);
+    const { currentStreak, longestStreak, lastBrewDate } =
+      this.calculateStreak(brewLogs);
 
     const ratings = brewLogs.map((b) => b.rating).filter((r) => r > 0);
     const averageRating =
-      ratings.length > 0 ? ratings.reduce((a, b) => a + b, 0) / ratings.length : 0;
+      ratings.length > 0
+        ? ratings.reduce((a, b) => a + b, 0) / ratings.length
+        : 0;
 
     const userRef = doc(this.firestore, 'users', uid);
     await updateDoc(userRef, {
@@ -327,18 +371,23 @@ export class FirestoreService {
 
     // Sort by date descending using Timestamp comparison
     const sorted = [...brewLogs].sort((a, b) => {
-      const aTime = a.date instanceof Timestamp ? a.date.toMillis() : 0;
-      const bTime = b.date instanceof Timestamp ? b.date.toMillis() : 0;
+      const aTime =
+        a.createdAt instanceof Timestamp ? a.createdAt.toMillis() : 0;
+      const bTime =
+        b.createdAt instanceof Timestamp ? b.createdAt.toMillis() : 0;
       return bTime - aTime;
     });
 
-    const lastBrewDate = sorted[0].date;
+    const lastBrewDate = sorted[0].createdAt;
 
     // Get unique dates (day level)
     const uniqueDates = [
       ...new Set(
         sorted.map((log) => {
-          const d = log.date instanceof Timestamp ? log.date.toDate() : new Date();
+          const d =
+            log.createdAt instanceof Timestamp
+              ? log.createdAt.toDate()
+              : new Date();
           return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
         })
       ),
@@ -370,7 +419,9 @@ export class FirestoreService {
     for (let i = 1; i < uniqueDates.length; i++) {
       const prev = new Date(uniqueDates[i - 1]);
       const curr = new Date(uniqueDates[i]);
-      const diffDays = Math.floor((prev.getTime() - curr.getTime()) / (1000 * 60 * 60 * 24));
+      const diffDays = Math.floor(
+        (prev.getTime() - curr.getTime()) / (1000 * 60 * 60 * 24)
+      );
 
       if (diffDays === 1) {
         tempStreak++;
@@ -392,7 +443,9 @@ export class FirestoreService {
     // Rating distribution
     const ratingDistribution: Record<number, number> = {};
     for (let i = 1; i <= 10; i++) {
-      ratingDistribution[i] = brewLogs.filter((b) => Math.ceil(b.rating) === i).length;
+      ratingDistribution[i] = brewLogs.filter(
+        (b) => Math.ceil(b.rating) === i
+      ).length;
     }
 
     // Brews by day (last 30 days)
@@ -404,7 +457,9 @@ export class FirestoreService {
       const dateStr = d.toISOString().split('T')[0];
       const count = brewLogs.filter((log) => {
         const logDate =
-          log.date instanceof Timestamp ? log.date.toDate() : new Date();
+          log.createdAt instanceof Timestamp
+            ? log.createdAt.toDate()
+            : new Date();
         return logDate.toISOString().split('T')[0] === dateStr;
       }).length;
       brewsByDay.push({ date: dateStr, count });
@@ -446,7 +501,10 @@ export class FirestoreService {
     const methodCounts = new Map<string, number>();
     brewLogs.forEach((log) => {
       if (log.brewMethodId) {
-        methodCounts.set(log.brewMethodId, (methodCounts.get(log.brewMethodId) || 0) + 1);
+        methodCounts.set(
+          log.brewMethodId,
+          (methodCounts.get(log.brewMethodId) || 0) + 1
+        );
       }
     });
     const topBrewMethods = [...methodCounts.entries()]

@@ -1,4 +1,11 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
+import {
+  Injectable,
+  inject,
+  signal,
+  computed,
+  runInInjectionContext,
+  NgZone,
+} from '@angular/core';
 import {
   Auth,
   authState,
@@ -16,7 +23,14 @@ import {
   reauthenticateWithCredential,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { Firestore, doc, setDoc, getDoc, deleteDoc, Timestamp } from '@angular/fire/firestore';
+import {
+  Firestore,
+  doc,
+  setDoc,
+  getDoc,
+  deleteDoc,
+  Timestamp,
+} from '@angular/fire/firestore';
 import { ThemeService } from './theme.service';
 import type { User, UserPreferences, UserStats } from '@core/models/models';
 
@@ -46,6 +60,7 @@ export class AuthService {
   private firestore = inject(Firestore);
   private router = inject(Router);
   private themeService = inject(ThemeService);
+  private ngZone = inject(NgZone);
 
   private _firebaseUser = signal<FirebaseUser | null>(null);
   private _userProfile = signal<User | null>(null);
@@ -58,27 +73,31 @@ export class AuthService {
   isAuthenticated = computed(() => !!this._firebaseUser());
 
   constructor() {
-    authState(this.auth).subscribe(async (user) => {
+    authState(this.auth).subscribe((user) => {
       this._firebaseUser.set(user);
 
       if (user) {
-        await this.loadUserProfile(user);
-        // Apply user's theme preference
-        const userProfile = this._userProfile();
-        if (userProfile?.preferences?.theme) {
-          this.themeService.setTheme(userProfile.preferences.theme);
-        }
+        this.ngZone.run(() => {
+          this.loadUserProfile(user).then(() => {
+            const userProfile = this._userProfile();
+            if (userProfile?.preferences?.theme) {
+              this.themeService.setTheme(userProfile.preferences.theme);
+            }
+            this._loading.set(false);
+          });
+        });
       } else {
         this._userProfile.set(null);
+        this._loading.set(false);
       }
-
-      this._loading.set(false);
     });
   }
 
   private async loadUserProfile(firebaseUser: FirebaseUser): Promise<void> {
     try {
-      const userDoc = await getDoc(doc(this.firestore, 'users', firebaseUser.uid));
+      const userDoc = await getDoc(
+        doc(this.firestore, 'users', firebaseUser.uid)
+      );
 
       if (userDoc.exists()) {
         this._userProfile.set(userDoc.data() as User);
@@ -96,7 +115,8 @@ export class AuthService {
     const user: User = {
       id: firebaseUser.uid,
       email: firebaseUser.email || '',
-      displayName: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'User',
+      displayName:
+        firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'User',
       photoURL: firebaseUser.photoURL,
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
@@ -114,7 +134,11 @@ export class AuthService {
     this._error.set(null);
 
     try {
-      const credential = await signInWithEmailAndPassword(this.auth, email, password);
+      const credential = await signInWithEmailAndPassword(
+        this.auth,
+        email,
+        password
+      );
       await this.loadUserProfile(credential.user);
       this.router.navigate(['/']);
     } catch (err: unknown) {
@@ -125,12 +149,20 @@ export class AuthService {
     }
   }
 
-  async signUpWithEmail(email: string, password: string, displayName: string): Promise<void> {
+  async signUpWithEmail(
+    email: string,
+    password: string,
+    displayName: string
+  ): Promise<void> {
     this._loading.set(true);
     this._error.set(null);
 
     try {
-      const credential = await createUserWithEmailAndPassword(this.auth, email, password);
+      const credential = await createUserWithEmailAndPassword(
+        this.auth,
+        email,
+        password
+      );
       await updateProfile(credential.user, { displayName });
       await this.loadUserProfile(credential.user);
       this.router.navigate(['/']);
@@ -164,7 +196,9 @@ export class AuthService {
     this.router.navigate(['/auth/login']);
   }
 
-  async updatePreferences(preferences: Partial<UserPreferences>): Promise<void> {
+  async updatePreferences(
+    preferences: Partial<UserPreferences>
+  ): Promise<void> {
     const user = this._userProfile();
     if (!user) return;
 
@@ -174,7 +208,9 @@ export class AuthService {
       updatedAt: Timestamp.now(),
     };
 
-    await setDoc(doc(this.firestore, 'users', user.id), updated, { merge: true });
+    await setDoc(doc(this.firestore, 'users', user.id), updated, {
+      merge: true,
+    });
     this._userProfile.set(updated);
 
     // Apply theme if changed
@@ -183,7 +219,10 @@ export class AuthService {
     }
   }
 
-  async updateUserProfile(data: { displayName?: string; photoURL?: string }): Promise<void> {
+  async updateUserProfile(data: {
+    displayName?: string;
+    photoURL?: string;
+  }): Promise<void> {
     const firebaseUser = this._firebaseUser();
     const userProfile = this._userProfile();
     if (!firebaseUser || !userProfile) return;
@@ -195,19 +234,29 @@ export class AuthService {
     const updated: User = {
       ...userProfile,
       displayName: data.displayName || userProfile.displayName,
-      photoURL: data.photoURL !== undefined ? data.photoURL : userProfile.photoURL,
+      photoURL:
+        data.photoURL !== undefined ? data.photoURL : userProfile.photoURL,
       updatedAt: Timestamp.now(),
     };
 
-    await setDoc(doc(this.firestore, 'users', userProfile.id), updated, { merge: true });
+    await setDoc(doc(this.firestore, 'users', userProfile.id), updated, {
+      merge: true,
+    });
     this._userProfile.set(updated);
   }
 
-  async updateUserEmail(newEmail: string, currentPassword: string): Promise<void> {
+  async updateUserEmail(
+    newEmail: string,
+    currentPassword: string
+  ): Promise<void> {
     const firebaseUser = this._firebaseUser();
-    if (!firebaseUser || !firebaseUser.email) throw new Error('Not authenticated');
+    if (!firebaseUser || !firebaseUser.email)
+      throw new Error('Not authenticated');
 
-    const credential = EmailAuthProvider.credential(firebaseUser.email, currentPassword);
+    const credential = EmailAuthProvider.credential(
+      firebaseUser.email,
+      currentPassword
+    );
     await reauthenticateWithCredential(firebaseUser, credential);
     await updateEmail(firebaseUser, newEmail);
 
@@ -218,16 +267,25 @@ export class AuthService {
         email: newEmail,
         updatedAt: Timestamp.now(),
       };
-      await setDoc(doc(this.firestore, 'users', userProfile.id), updated, { merge: true });
+      await setDoc(doc(this.firestore, 'users', userProfile.id), updated, {
+        merge: true,
+      });
       this._userProfile.set(updated);
     }
   }
 
-  async updateUserPassword(currentPassword: string, newPassword: string): Promise<void> {
+  async updateUserPassword(
+    currentPassword: string,
+    newPassword: string
+  ): Promise<void> {
     const firebaseUser = this._firebaseUser();
-    if (!firebaseUser || !firebaseUser.email) throw new Error('Not authenticated');
+    if (!firebaseUser || !firebaseUser.email)
+      throw new Error('Not authenticated');
 
-    const credential = EmailAuthProvider.credential(firebaseUser.email, currentPassword);
+    const credential = EmailAuthProvider.credential(
+      firebaseUser.email,
+      currentPassword
+    );
     await reauthenticateWithCredential(firebaseUser, credential);
     await updatePassword(firebaseUser, newPassword);
   }
@@ -235,9 +293,13 @@ export class AuthService {
   async deleteAccount(password: string): Promise<void> {
     const firebaseUser = this._firebaseUser();
     const userProfile = this._userProfile();
-    if (!firebaseUser || !firebaseUser.email || !userProfile) throw new Error('Not authenticated');
+    if (!firebaseUser || !firebaseUser.email || !userProfile)
+      throw new Error('Not authenticated');
 
-    const credential = EmailAuthProvider.credential(firebaseUser.email, password);
+    const credential = EmailAuthProvider.credential(
+      firebaseUser.email,
+      password
+    );
     await reauthenticateWithCredential(firebaseUser, credential);
 
     // Delete Firestore user document
@@ -262,7 +324,8 @@ export class AuthService {
       'auth/invalid-credential': 'Invalid credentials',
       'auth/too-many-requests': 'Too many attempts. Please try again later',
       'auth/popup-closed-by-user': 'Sign in cancelled',
-      'auth/requires-recent-login': 'Please sign in again to perform this action',
+      'auth/requires-recent-login':
+        'Please sign in again to perform this action',
     };
 
     return messages[code] || 'An error occurred. Please try again.';

@@ -1,4 +1,4 @@
-import { Component, inject, signal, Input, OnInit } from '@angular/core';
+import { Component, inject, signal, Input, OnInit, input } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FirestoreService } from '@core/services/firestore.service';
 import { ToastService } from '@core/services/toast.service';
@@ -6,7 +6,11 @@ import { Card } from '@shared/ui/card/card';
 import { Button } from '@shared/ui/button/button';
 import { FormatTimePipe } from '@shared/pipes/format-time.pipe';
 import { FormatDatePipe } from '@shared/pipes/format-date.pipe';
-import { getBeanNames, getEquipmentName, getBrewMethodName } from '@shared/utils/utils';
+import {
+  getBeanNames,
+  getEquipmentName,
+  getBrewMethodName,
+} from '@shared/utils/utils';
 import type { BrewLog, Bean, Equipment, BrewMethod } from '@core/models/models';
 
 @Component({
@@ -16,103 +20,116 @@ import type { BrewLog, Bean, Equipment, BrewMethod } from '@core/models/models';
   template: `
     <div class="page">
       @if (loading()) {
-        <div class="skeleton-detail"></div>
+      <div class="skeleton-detail"></div>
       } @else if (brew()) {
-        <header class="page-header">
-          <button class="back-btn" (click)="goBack()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="m15 18-6-6 6-6" />
-            </svg>
-            Back
-          </button>
-          <div class="header-content">
-            <span class="brew-date">{{ brew()?.date | formatDate }}</span>
-            <h1>{{ getBeanNamesDisplay() }}</h1>
-            <div class="brew-rating-large">
-              @for (star of [1, 2, 3, 4, 5]; track star) {
-                <span class="star" [class.filled]="brew()!.rating / 2 >= star">★</span>
-              }
-              <span class="rating-value">{{ (brew()!.rating / 2).toFixed(1) }}</span>
-            </div>
+      <header class="page-header">
+        <button class="back-btn" (click)="goBack()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="m15 18-6-6 6-6" />
+          </svg>
+          Back
+        </button>
+        <div class="header-content">
+          <span class="brew-date">{{ brew()?.createdAt | formatDate }}</span>
+          <h1>{{ getBeanNamesDisplay() }}</h1>
+          <div class="brew-rating-large">
+            @for (star of [1, 2, 3, 4, 5]; track star) {
+            <span class="star" [class.filled]="brew()!.rating / 2 >= star"
+              >★</span
+            >
+            }
+            <span class="rating-value">{{
+              (brew()!.rating / 2).toFixed(1)
+            }}</span>
           </div>
-          <div class="header-actions">
-            <a [routerLink]="['edit']">
-              <brew-button variant="secondary">Edit</brew-button>
-            </a>
-            <brew-button variant="danger" (onClick)="deleteBrew()">Delete</brew-button>
-          </div>
-        </header>
+        </div>
+        <div class="header-actions">
+          <a [routerLink]="['edit']">
+            <brew-button variant="secondary">Edit</brew-button>
+          </a>
+          <brew-button variant="danger" (onClick)="deleteBrew()"
+            >Delete</brew-button
+          >
+        </div>
+      </header>
 
-        <!-- Parameters -->
-        <brew-card title="Brew Parameters" class="detail-card">
-          <div class="params-display">
-            <div class="param-item">
-              <span class="param-value">{{ brew()!.params.coffeeGrams }}</span>
-              <span class="param-label">g coffee</span>
-            </div>
-            <div class="param-item">
-              <span class="param-value">{{ brew()!.params.waterGrams }}</span>
-              <span class="param-label">g water</span>
-            </div>
-            <div class="param-item">
-              <span class="param-value">1:{{ brew()!.params.ratio }}</span>
-              <span class="param-label">ratio</span>
-            </div>
-            @if (brew()!.params.waterTemp) {
-              <div class="param-item">
-                <span class="param-value">{{ brew()!.params.waterTemp }}°</span>
-                <span class="param-label">temp (C)</span>
-              </div>
-            }
-            @if (brew()!.params.brewTimeSeconds) {
-              <div class="param-item">
-                <span class="param-value">{{ brew()!.params.brewTimeSeconds | formatTime }}</span>
-                <span class="param-label">brew time</span>
-              </div>
-            }
-            @if (brew()!.params.yieldGrams) {
-              <div class="param-item">
-                <span class="param-value">{{ brew()!.params.yieldGrams }}</span>
-                <span class="param-label">g yield</span>
-              </div>
-            }
+      <!-- Parameters -->
+      <brew-card title="Brew Parameters" class="detail-card">
+        <div class="params-display">
+          <div class="param-item">
+            <span class="param-value">{{ brew()!.params.coffeeGrams }}</span>
+            <span class="param-label">g coffee</span>
           </div>
-          @if (brew()!.params.grindDescription) {
-            <div class="grind-info">
-              <span class="grind-label">Grind:</span>
-              {{ brew()!.params.grindDescription }}
-            </div>
+          <div class="param-item">
+            <span class="param-value">{{ brew()!.params.waterGrams }}</span>
+            <span class="param-label">g water</span>
+          </div>
+          <div class="param-item">
+            <span class="param-value">1:{{ brew()!.params.ratio }}</span>
+            <span class="param-label">ratio</span>
+          </div>
+          @if (brew()!.params.waterTemp) {
+          <div class="param-item">
+            <span class="param-value">{{ brew()!.params.waterTemp }}°</span>
+            <span class="param-label">temp (C)</span>
+          </div>
+          } @if (brew()!.params.brewTimeSeconds) {
+          <div class="param-item">
+            <span class="param-value">{{
+              brew()!.params.brewTimeSeconds | formatTime
+            }}</span>
+            <span class="param-label">brew time</span>
+          </div>
+          } @if (brew()!.params.yieldGrams) {
+          <div class="param-item">
+            <span class="param-value">{{ brew()!.params.yieldGrams }}</span>
+            <span class="param-label">g yield</span>
+          </div>
           }
-        </brew-card>
-
-        <!-- Equipment -->
-        @if (brew()!.equipmentIds.length > 0) {
-          <brew-card title="Equipment Used" class="detail-card">
-            <div class="tag-list">
-              @for (equipId of brew()!.equipmentIds; track equipId) {
-                <span class="tag">{{ getEquipmentNameById(equipId) }}</span>
-              }
-            </div>
-          </brew-card>
+        </div>
+        @if (brew()!.params.grindDescription) {
+        <div class="grind-info">
+          <span class="grind-label">Grind:</span>
+          {{ brew()!.params.grindDescription }}
+        </div>
         }
+      </brew-card>
 
-        <!-- Method -->
-        @if (method()) {
-          <brew-card title="Method" class="detail-card">
-            <h3 class="method-name">{{ method()!.name }}</h3>
-            @if (method()!.description) {
-              <p class="method-desc">{{ method()!.description }}</p>
-            }
-          </brew-card>
-        }
-
-        <!-- Notes -->
-        @if (brew()!.notes) {
-          <brew-card title="Notes" class="detail-card">
-            <p class="notes-text">{{ brew()!.notes }}</p>
-          </brew-card>
-        }
+      <!-- Equipment -->
+      @if (brew()!.equipmentIds.length > 0) {
+      <brew-card title="Equipment Used" class="detail-card">
+        <div class="tag-list">
+          @for (equipId of brew()!.equipmentIds; track equipId) {
+          <span class="tag">{{ getEquipmentNameById(equipId) }}</span>
+          }
+        </div>
+      </brew-card>
       }
+
+      <!-- Method -->
+      @if (method()) {
+      <brew-card title="Method" class="detail-card">
+        <h3 class="method-name">{{ method()!.name }}</h3>
+        @if (method()!.description) {
+        <p class="method-desc">{{ method()!.description }}</p>
+        }
+      </brew-card>
+      }
+
+      <!-- Notes -->
+      @if (brew()!.notes) {
+      <brew-card title="Notes" class="detail-card">
+        <p class="notes-text">{{ brew()!.notes }}</p>
+      </brew-card>
+      } }
     </div>
   `,
   styles: `
@@ -265,7 +282,7 @@ import type { BrewLog, Bean, Equipment, BrewMethod } from '@core/models/models';
   `,
 })
 export class BrewLogDetail implements OnInit {
-  @Input() id!: string;
+  id = input.required<string>();
 
   private router = inject(Router);
   private firestoreService = inject(FirestoreService);
@@ -279,7 +296,7 @@ export class BrewLogDetail implements OnInit {
 
   async ngOnInit(): Promise<void> {
     const [brew, beans, equipment] = await Promise.all([
-      this.firestoreService.getBrewLog(this.id),
+      this.firestoreService.getBrewLog(this.id()),
       this.firestoreService.getAllBeans(),
       this.firestoreService.getAllEquipment(),
     ]);
@@ -289,7 +306,9 @@ export class BrewLogDetail implements OnInit {
     this.equipment.set(equipment);
 
     if (brew?.brewMethodId) {
-      const method = await this.firestoreService.getBrewMethod(brew.brewMethodId);
+      const method = await this.firestoreService.getBrewMethod(
+        brew.brewMethodId
+      );
       this.method.set(method);
     }
 
@@ -310,7 +329,7 @@ export class BrewLogDetail implements OnInit {
     if (!confirm('Delete this brew?')) return;
 
     try {
-      await this.firestoreService.deleteBrewLog(this.id);
+      await this.firestoreService.deleteBrewLog(this.id());
       this.toastService.success('Brew deleted');
       this.router.navigate(['/brews']);
     } catch {

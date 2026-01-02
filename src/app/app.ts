@@ -41,7 +41,7 @@ import { ToastContainer } from '@shared/ui/toast/toast-container';
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.5; transform: scale(0.95); }
     }
-  `
+  `,
 })
 export class App {
   authService = inject(AuthService);
